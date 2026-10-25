@@ -1,0 +1,10 @@
+{
+  "stage": "bands",
+  "rows": 700000,
+  "expected_rows": 700000,
+  "shards": 400,
+  "duplicate_identities": 0,
+  "failures_retained": true,
+  "groups": 700,
+  "plan": "experiments/single_index/gaussian_fixed_bands.toml"
+}

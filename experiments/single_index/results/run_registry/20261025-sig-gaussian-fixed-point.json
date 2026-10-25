@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "run_id": "20261025-sig-gaussian-fixed-point",
+  "status": "validated",
+  "purpose": "Independent fixed-penalty and bandwidth development after the index gate passed.",
+  "authorization": "User explicitly authorizes Discovery simulations and sufficient resources in this conversation.",
+  "resources": {
+    "nodes": 2,
+    "cpus": 32,
+    "memory_gb": 64,
+    "wall_minutes": 60
+  },
+  "recreation": {
+    "working_directory": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-gaussian-fixed-point",
+    "source_base": "05148528bc29be9110ac3ab979e9b0cafd0554b6",
+    "source_snapshot": "source.tar.gz",
+    "protocol": "docs/single_index/GAUSSIAN_FIXED_SUPPORT.md",
+    "frozen_index": "experiments/single_index/results/gaussian_fixed_index/frozen_index.json",
+    "plan": "experiments/single_index/gaussian_fixed_point_development.toml",
+    "command": "sbatch --parsable --job-name=sig-20261025-gf-point experiments/single_index/gaussian_fixed.sbatch experiments/single_index/gaussian_fixed_point_development.toml results",
+    "source_overlay": "worker-repair.tar.gz"
+  },
+  "jobs": [
+    {
+      "job_id": "13422312",
+      "purpose": "production-path canary",
+      "scheduler_state": "FAILED",
+      "exit_code": "1:0",
+      "reason": "Julia variable scope in newly added union-support diagnostics"
+    },
+    {
+      "job_id": "13422316",
+      "purpose": "repaired production canary",
+      "scheduler_state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:00:27"
+    },
+    {
+      "job_id": "13422320",
+      "purpose": "independent 200-replication pointwise grid in two passing settings",
+      "scheduler_state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:07:50"
+    },
+    {
+      "job_id": "13422325",
+      "purpose": "coverage surface report",
+      "scheduler_state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:00:01"
+    }
+  ],
+  "validation": {
+    "canary_rows": 128,
+    "expected_rows": 777600,
+    "duplicate_identities": 0,
+    "pointwise_fits_inspected": true,
+    "shards": 80,
+    "rows": 777600,
+    "groups": 3888,
+    "failures_retained": true
+  },
+  "outputs": [
+    "results/summary.csv",
+    "results/pointwise_surface.csv",
+    "results/canonical.json",
+    "results/receipt.json"
+  ],
+  "source_sha256": "9521294e81a6ab50dbd66bfccf06662185aeaf6ad7421f5ce38c2fd1ad8ee67c",
+  "source_overlay_sha256": "d092bc7d7d53617b2e05b9d12b55279af15beaa51b119f1b950ebce1a722f542",
+  "retention": "Raw shards, logs and exact source snapshots retained in task-owned Discovery directory; compact reporting inputs versioned locally. Recreate into a fresh output directory."
+}

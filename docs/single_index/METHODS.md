@@ -47,6 +47,16 @@ The penalty is a supplied multiplier times the square root of twice the log
 predictor count divided by the realized Kish sample size. Zero-loading
 predictors are removed. A singular active set is a failure, not a ridge refit.
 
+`penalty_rule=:normal` instead uses a fixed safety constant times a normal
+quantile and the largest realized weighted predictor score scale. The squared
+kernel weights enter that scale. This avoids penalty CV while accounting for
+local effective sample size and predictor variation. It is a first-order
+homoskedastic calibration, not a generated-index coverage theorem. The exact
+formula and fixed-support Gaussian study are in
+[GAUSSIAN_FIXED_SUPPORT.md](GAUSSIAN_FIXED_SUPPORT.md). Defaults retain the
+original rate penalty. Regression support sets, actual penalties and effective
+sizes are available in `fit.settings.nuisance_diagnostics`.
+
 At each evaluation point, hold the nuisance coefficient fixed for every
 observation. Form its residual products, fit a degree-two local polynomial,
 and invert its intercept matrix. This is the manuscript's same-bandwidth

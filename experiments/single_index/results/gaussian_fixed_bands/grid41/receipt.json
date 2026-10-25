@@ -1,0 +1,10 @@
+{
+  "stage": "bands",
+  "rows": 26000,
+  "expected_rows": 26000,
+  "shards": 20,
+  "duplicate_identities": 0,
+  "failures_retained": true,
+  "groups": 130,
+  "plan": "experiments/single_index/gaussian_fixed_grid_refinement.toml"
+}

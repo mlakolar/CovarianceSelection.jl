@@ -1,8 +1,30 @@
 # Scientific definitions are independent of inference code.
 using LinearAlgebra, Random
 
+# Fixed signed support for every real index. The main chain blocks are
+# strictly diagonally dominant; the separate probe block has unit covariance
+# diagonals and a positive correlation bounded away from zero and one.
+function fixed_precision_truth(t,p)
+    p >= 6 || throw(ArgumentError("fixed-support design needs p>=6"))
+    d = 1.25+0.10tanh(t)
+    e = -(0.38+0.06tanh(2t))
+    O = zeros(p,p)
+    for start in 1:4:p-2
+        stop = min(start+3,p-2)
+        for j in start:stop
+            O[j,j] = d
+            j < stop && (O[j,j+1]=O[j+1,j]=e)
+        end
+    end
+    rho = 0.55+0.40tanh(2t)
+    O[p-1:p,p-1:p] = [1.0 -rho;-rho 1.0]/(1-rho^2)
+    O
+end
+
 function covariance_truth(t,p;graph="block",varying=false,curvature=1.0,signal=0.7,degree=4)
-    if graph == "chain"
+    if graph == "fixed_chain"
+        return inv(Symmetric(fixed_precision_truth(t,p)))
+    elseif graph == "chain"
         rho = 0.25+0.12tanh(curvature*t)
         S = [rho^abs(a-b) for a in 1:p,b in 1:p]
         return S
@@ -43,6 +65,7 @@ function generate_data(seed,c)
     gamma = zeros(d)
     gamma[1] = sg == 1 ? 1.0 : inv(sqrt(2))
     sg > 1 && (gamma[2:sg] .= inv(sqrt(2*(sg-1))))
+    get(c,"index_equal",false) && (gamma[1:sg] .= inv(sqrt(sg)))
     Z = randn(rng,n,d)
     score = copy(Z)
     design = get(c,"design","gaussian")
@@ -67,7 +90,22 @@ function generate_data(seed,c)
     degree = Int(get(c,"graph_degree",4))
     truth(s) = covariance_truth(s,p;graph,varying,curvature,signal,degree)
     X = randn(rng,n,p)
-    if graph == "block"
+    if graph == "fixed_chain"
+        d = 1.25 .+ 0.10tanh.(t)
+        e = -(0.38 .+ 0.06tanh.(2t))
+        for start in 1:4:p-2
+            ids = start:min(start+3,p-2)
+            m = length(ids)
+            adjacency = zeros(m,m)
+            for j in 1:m-1
+                adjacency[j,j+1] = adjacency[j+1,j] = 1.0
+            end
+            F = eigen(Symmetric(adjacency))
+            X[:,ids] = (X[:,ids] ./ sqrt.(d .+ e.*F.values'))*F.vectors'
+        end
+        rho = 0.55 .+ 0.40tanh.(2t)
+        X[:,p] = rho.*X[:,p-1] .+ sqrt.(1 .- rho.^2).*X[:,p]
+    elseif graph == "block"
         r = min(degree-2,p-4)
         q = 1-0.35^2
         for k in 1:n

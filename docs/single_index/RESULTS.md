@@ -308,3 +308,28 @@ The PR remains draft while these coverage gaps persist.
 
 Compact run records, source hashes, job IDs and recreation commands are
 versioned in [the run registry](../../experiments/single_index/results/run_registry/).
+
+## Fixed-support Gaussian study with fixed penalties
+
+The new [staged Gaussian study](GAUSSIAN_FIXED_SUPPORT.md) holds precision
+support and signs constant and keeps active main-graph edges bounded away from
+zero. It first compares six feasible index procedures, then freezes an
+ordinary-mean/support-selected OLS index refit before independent inference
+experiments. All true index variables were retained in every favorable-regime
+confirmation replication; exact support was about 99%, with a few extra
+variables. Smaller samples failed the prespecified development gate and were
+not advanced.
+
+Fixed normal-score penalties replace lambda CV. C=1.1, common-union WLS refits,
+pilot bandwidth 5*n^(-1/5), and final bandwidth 2.5*n^(-1/5) give useful
+performance in this strong-signal design. Independent pointwise diagonal
+coverage ranges were 94.2–95.1% and 93.3–94.9% across three points in the two
+settings; active-edge ranges were 93.3–94.7% and 93.9–94.3%. Mild deficits
+persist. The extra finite-sample corrections changed little.
+
+With 1000 independent replications and 1999 multipliers, feasible joint coverage
+for three entries on a 21-point grid was 94.7% and 95.4%; true-index controls
+were 95.2% and 95.1%. The paired 41-point check and every adverse result remain
+in the protocol/results document. These finite-grid results do not establish
+continuum coverage or a universal bandwidth rule. Validation passed 92 existing
+inference checks and 107 focused design/penalty/worker checks on Discovery.

@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "run_id": "20261025-sig-gaussian-fixed-confirmation",
+  "status": "validated",
+  "purpose": "Independent 1000-replication fixed-penalty pointwise confirmation.",
+  "authorization": "User explicitly authorizes Discovery simulations and sufficient resources in this conversation.",
+  "resources": {
+    "nodes": 4,
+    "cpus": 64,
+    "memory_gb": 128,
+    "wall_minutes": 60
+  },
+  "recreation": {
+    "working_directory": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-gaussian-fixed-confirmation",
+    "source_base": "05148528bc29be9110ac3ab979e9b0cafd0554b6",
+    "source_snapshot": "source.tar.gz",
+    "plan": "experiments/single_index/gaussian_fixed_point_confirmation.toml",
+    "protocol": "docs/single_index/GAUSSIAN_FIXED_SUPPORT.md",
+    "seed_base": 853000000,
+    "command": "sbatch --parsable --nodes=4 --ntasks=64 --ntasks-per-node=16 --job-name=sig-20261025-gf-confirm experiments/single_index/gaussian_fixed.sbatch experiments/single_index/gaussian_fixed_point_confirmation.toml results",
+    "oracle_plan": "experiments/single_index/gaussian_fixed_oracle_confirmation.toml",
+    "focused_test_source_snapshot": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-gaussian-fixed-bands/source.tar.gz"
+  },
+  "jobs": [
+    {
+      "job_id": "13422352",
+      "purpose": "fixed-C pointwise confirmation",
+      "scheduler_state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:02:09"
+    },
+    {
+      "job_id": "13422356",
+      "purpose": "paired true-nuisance control",
+      "scheduler_state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:02:02"
+    },
+    {
+      "job_id": "13422357",
+      "purpose": "confirmation surface report",
+      "scheduler_state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:00:02"
+    },
+    {
+      "job_id": "13422367",
+      "purpose": "focused checks after diagnostics repair",
+      "scheduler_state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:00:24"
+    }
+  ],
+  "validation": {
+    "pointwise_rows": 324000,
+    "expected_pointwise_rows": 324000,
+    "pointwise_shards": 100,
+    "oracle_rows": 18000,
+    "oracle_shards": 40,
+    "duplicate_identities": 0,
+    "failures_retained": true,
+    "focused_tests_passed": 107
+  },
+  "outputs": [
+    "results/summary.csv",
+    "results/pointwise_surface.csv",
+    "results/canonical.json",
+    "results/receipt.json",
+    "oracle/summary.csv",
+    "oracle/receipt.json"
+  ],
+  "source_sha256": "efb86bc61899c5bd88be344e4665ffd15a8f24cb7c816a476b2e735246095b3e",
+  "retention": "Raw shards, logs and exact source snapshots retained in task-owned Discovery directory; compact reporting inputs versioned locally. Recreate into a fresh output directory."
+}

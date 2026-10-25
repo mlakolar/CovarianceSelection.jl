@@ -117,12 +117,32 @@ function _scaled_regression(S,A,c,lambda;refit::Bool=false)
     beta
 end
 
-function _regression(X,t,point,h,J,A,multiplier,kernel;refit::Bool=false)
+# A normal-quantile calibration for the normalized square-root loss. With
+# homoskedastic residuals its coordinate score scale is approximately
+# sqrt(sum(w.^2 .* X_j.^2) / sum(w .* X_j.^2)). Keep the largest scale so
+# the existing solver can retain its standard predictor loadings. This is
+# design-aware, unlike replacing n by the Kish size alone. Local approximation
+# error, heteroskedasticity and estimated-index error are not calibrated away.
+function _regression_penalty(X,A,L,constant,rule,probability,tests)
+    rule === :rate && return constant*sqrt(2log(max(length(A),2))/L.effective_n)
+    rule === :normal || throw(ArgumentError("unknown regression penalty rule"))
+    0 < probability < 1 || throw(ArgumentError("penalty probability must lie in (0,1)"))
+    tests isa Integer && tests >= 1 || throw(ArgumentError("penalty tests must be positive"))
+    scales = [sqrt(sum(L.weights.^2 .* X[:,j].^2)/L.covariance[j,j])
+              for j in A if L.covariance[j,j]>0]
+    isempty(scales) && return constant*sqrt(2)*erfcinv(probability/(max(length(A),1)*tests))/sqrt(L.effective_n)
+    quantile = sqrt(2)*erfcinv(probability/(max(length(A),1)*tests))
+    constant*quantile*maximum(scales)
+end
+
+function _regression(X,t,point,h,J,A,multiplier,kernel;refit::Bool=false,
+                     penalty_rule::Symbol=:rate,penalty_probability::Real=0.1,
+                     penalty_tests::Integer=1)
     L = local_covariance(X,t,point,h;kernel)
     L.effective_n >= 5 || throw(DomainError(L.effective_n,"pilot effective sample size below 5"))
-    lambda = multiplier*sqrt(2log(max(length(A),2))/L.effective_n)
+    lambda = _regression_penalty(X,A,L,multiplier,penalty_rule,penalty_probability,penalty_tests)
     B = hcat([_scaled_regression(L.covariance,A,c,lambda;refit) for c in J]...)
-    (coefficients=B,effective_n=L.effective_n)
+    (coefficients=B,effective_n=L.effective_n,penalty=lambda)
 end
 
 # Refit each selected neighborhood, then use the parent's minimum-absolute-entry

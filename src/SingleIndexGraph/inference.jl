@@ -18,7 +18,8 @@ end
     fit_precision(X, index; points, entries, bandwidth, pilot_bandwidth=bandwidth,
                   pilot=:sqrtlasso, correction=:block, multiplier=1, delta=2,
                   degree=2, refit=false, kernel=biweight, oracle_coefficients=nothing,
-                  residual_adjustment=:none, studentization=:hc0, inverse_bias=:none)
+                  residual_adjustment=:none, studentization=:hc0, inverse_bias=:none,
+                  penalty_rule=:rate, penalty_probability=0.1, penalty_tests=1)
 
 Estimate selected precision entries, including diagonals. The default fits
 common-complement weighted square-root lasso regressions, smooths their
@@ -35,6 +36,13 @@ coefficients may be supplied by `(point,J,A)->B` for simulation benchmarks.
 by its WLS residual-maker row norm. `studentization=:hc3` corrects final smoothing
 leverage. `inverse_bias=:secondorder` subtracts plug-in inverse curvature bias.
 See `docs/single_index/DIAGONAL_TUNING.md` for formulas and limitations.
+`penalty_rule=:normal` replaces the default rate penalty with a fixed normal
+quantile times the largest realized weighted predictor score scale. `multiplier`
+is its safety constant; `penalty_probability` is the tail probability, and
+`penalty_tests` can allocate it across a prespecified collection of regressions.
+This first-order homoskedastic calibration is not an exact finite-sample local
+or generated-index guarantee. Actual penalties, support sets and pilot effective
+sizes are returned in `settings.nuisance_diagnostics` for the regression pilot.
 Every requested point/entry is attempted; numerical failures are recorded, never
 silently dropped or repaired. Input errors throw before fitting.
 """
@@ -44,10 +52,16 @@ function fit_precision(X::AbstractMatrix,t::AbstractVector;points,entries,
                        multiplier::Real=1,delta::Real=2,degree::Integer=2,refit::Bool=false,
                        kernel=biweight,oracle_coefficients=nothing,
                        residual_adjustment::Symbol=:none,studentization::Symbol=:hc0,
-                       inverse_bias::Symbol=:none)
+                       inverse_bias::Symbol=:none,penalty_rule::Symbol=:rate,
+                       penalty_probability::Real=0.1,penalty_tests::Integer=1)
     _data(X,t)
     all(x -> isfinite(x) && x > 0,(bandwidth,pilot_bandwidth,multiplier,delta)) ||
         throw(ArgumentError("bandwidths and tuning constants must be positive and finite"))
+    penalty_rule in (:rate,:normal) || throw(ArgumentError("unknown regression penalty rule"))
+    0 < penalty_probability < 1 || throw(ArgumentError("invalid penalty probability"))
+    penalty_tests >= 1 || throw(ArgumentError("invalid penalty tests"))
+    penalty_rule !== :rate && pilot !== :sqrtlasso &&
+        throw(ArgumentError("normal penalty calibration requires the regression pilot"))
     pilot in (:sqrtlasso,:scaledlasso,:aclime) || throw(ArgumentError("unknown pilot"))
     correction in (:block,:onestep) || throw(ArgumentError("unknown correction"))
     correction === :onestep && pilot === :sqrtlasso && throw(ArgumentError("one-step needs a full pilot"))
@@ -78,6 +92,7 @@ function fit_precision(X::AbstractMatrix,t::AbstractVector;points,entries,
     influences = fill(NaN,n,G*E)
     failures = fill("",G,E)
     diagnostics = NamedTuple[]
+    nuisance_diagnostics = NamedTuple[]
     for (g,point) in enumerate(pts)
         design = nothing
         P = nothing
@@ -106,7 +121,12 @@ function fit_precision(X::AbstractMatrix,t::AbstractVector;points,entries,
                     B = if oracle_coefficients !== nothing
                         Matrix{Float64}(oracle_coefficients(point,J,A))
                     elseif pilot === :sqrtlasso
-                        _regression(X,t,point,pilot_bandwidth,J,A,multiplier,kernel;refit).coefficients
+                        regression = _regression(X,t,point,pilot_bandwidth,J,A,multiplier,kernel;
+                            refit,penalty_rule,penalty_probability,penalty_tests)
+                        push!(nuisance_diagnostics,(point=point,entry=(a,b),targets=J,
+                            supports=[A[findall(!iszero,regression.coefficients[:,j])] for j in eachindex(J)],
+                            effective_n=regression.effective_n,penalty=regression.penalty))
+                        regression.coefficients
                     else
                         isposdef(Symmetric(P[J,J])) || throw(DomainError(point,"nonpositive pilot target block"))
                         -P[A,J]/P[J,J]
@@ -160,7 +180,8 @@ function fit_precision(X::AbstractMatrix,t::AbstractVector;points,entries,
     PrecisionCurve(pts,es,est,se,influences,failures,diagnostics,
        (;bandwidth=Float64(bandwidth),pilot_bandwidth=Float64(pilot_bandwidth),
          pilot,correction,multiplier=Float64(multiplier),delta=Float64(delta),degree,refit,
-         residual_adjustment,studentization,inverse_bias))
+         residual_adjustment,studentization,inverse_bias,penalty_rule,
+         penalty_probability=Float64(penalty_probability),penalty_tests,nuisance_diagnostics))
 end
 
 function _endpoints(f,critical,diagonal_transform)

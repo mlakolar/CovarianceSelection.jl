@@ -1,0 +1,10 @@
+{
+  "stage": "pointwise",
+  "rows": 324000,
+  "expected_rows": 324000,
+  "shards": 100,
+  "duplicate_identities": 0,
+  "failures_retained": true,
+  "groups": 324,
+  "plan": "experiments/single_index/gaussian_fixed_point_confirmation.toml"
+}

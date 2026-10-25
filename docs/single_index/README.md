@@ -12,7 +12,9 @@ extensions. Simulation success is evidence about tested designs, not a general
 coverage theorem. See [METHODS.md](METHODS.md), [SIMULATIONS.md](SIMULATIONS.md), and
 [RESULTS.md](RESULTS.md). Finite-sample corrections and the new CV rules are
 described in [DIAGONAL_TUNING.md](DIAGONAL_TUNING.md). First-stage selection is
-described in [INDEX_TUNING.md](INDEX_TUNING.md).
+described in [INDEX_TUNING.md](INDEX_TUNING.md). The staged fixed-support Gaussian
+study and fixed normal-quantile penalties are specified in
+[GAUSSIAN_FIXED_SUPPORT.md](GAUSSIAN_FIXED_SUPPORT.md).
 
 ```julia
 using CovarianceSelection

@@ -1,0 +1,50 @@
+stage = "pointwise"
+seed_base = 829000000
+shard_size = 5
+penalty_probability = 0.1
+
+[[scenario]]
+id = 1
+name = "n4800_p40_d20"
+n = 4800
+p = 40
+d = 20
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["known", "mean_ols"]
+index_multipliers = [1.25]
+replicates = 200
+constants = [0.75, 1.0, 1.1, 1.25]
+h_factors = [0.6, 1.0, 1.4]
+pilot_factors = [1.5, 2.0, 3.0]
+variants = ["plain", "union_refit", "corrected"]
+grid_min = -0.5
+grid_max = 0.5
+grid_n = 3
+draws = 0
+
+[[scenario]]
+id = 2
+name = "n9600_p80_d50"
+n = 9600
+p = 80
+d = 50
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["known", "mean_ols"]
+index_multipliers = [1.25]
+replicates = 200
+constants = [0.75, 1.0, 1.1, 1.25]
+h_factors = [0.6, 1.0, 1.4]
+pilot_factors = [1.5, 2.0, 3.0]
+variants = ["plain", "union_refit", "corrected"]
+grid_min = -0.5
+grid_max = 0.5
+grid_n = 3
+draws = 0
