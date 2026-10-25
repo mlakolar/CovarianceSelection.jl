@@ -1,0 +1,10 @@
+{
+  "stage": "paired",
+  "rows": 259200,
+  "expected": 259200,
+  "unique": 259200,
+  "failures": 0,
+  "summary_rows": 864,
+  "coverage_recomputed": true,
+  "failed_fits_count_as_noncoverage": true
+}

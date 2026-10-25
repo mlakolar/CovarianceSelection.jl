@@ -23,6 +23,8 @@ The fixed-rule covariance-weighting and learned-probe comparison is specified in
 [PROBE_AGGREGATION.md](PROBE_AGGREGATION.md).
 The stronger Gaussian covariance families and their index-only comparison are
 specified in [FOUR_GAUSSIAN_DESIGNS.md](FOUR_GAUSSIAN_DESIGNS.md).
+The paired known-versus-estimated-index pointwise coverage experiment is specified
+in [PROMISING_POINTWISE_COVERAGE.md](PROMISING_POINTWISE_COVERAGE.md).
 
 ```julia
 using CovarianceSelection

@@ -1,0 +1,10 @@
+{
+  "stage": "grid",
+  "rows": 1166400,
+  "expected": 1166400,
+  "unique": 1166400,
+  "failures": 11,
+  "summary_rows": 3888,
+  "coverage_recomputed": true,
+  "failed_fits_count_as_noncoverage": true
+}

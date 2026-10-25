@@ -1,0 +1,10 @@
+{
+  "stage": "canary_fixed",
+  "rows": 7776,
+  "expected": 7776,
+  "unique": 7776,
+  "failures": 0,
+  "summary_rows": 3888,
+  "coverage_recomputed": true,
+  "failed_fits_count_as_noncoverage": true
+}

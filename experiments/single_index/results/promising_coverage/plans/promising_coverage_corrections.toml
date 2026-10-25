@@ -1,0 +1,233 @@
+stage = "corrections"
+seed = 421736511
+shard_size = 10
+points = [-0.5, 0.0, 0.5]
+indices = ["known"]
+
+[[scenario]]
+id = 1
+design = "opposed_scale"
+amplitude = 0.6
+bank = "mixed"
+p = 40
+d = 20
+n = 200
+ntrain = 200
+replicates = 300
+
+[[scenario]]
+id = 2
+design = "opposed_scale"
+amplitude = 0.6
+bank = "mixed"
+p = 40
+d = 20
+n = 400
+ntrain = 400
+replicates = 300
+
+[[scenario]]
+id = 3
+design = "opposed_scale"
+amplitude = 0.6
+bank = "mixed"
+p = 40
+d = 20
+n = 800
+ntrain = 800
+replicates = 300
+
+[[scenario]]
+id = 4
+design = "opposed_scale"
+amplitude = 0.6
+bank = "mixed"
+p = 40
+d = 20
+n = 1600
+ntrain = 1600
+replicates = 300
+
+[[scenario]]
+id = 5
+design = "noncommuting"
+amplitude = 0.6
+bank = "complete"
+p = 40
+d = 20
+n = 200
+ntrain = 200
+replicates = 300
+
+[[scenario]]
+id = 6
+design = "noncommuting"
+amplitude = 0.6
+bank = "complete"
+p = 40
+d = 20
+n = 400
+ntrain = 400
+replicates = 300
+
+[[scenario]]
+id = 7
+design = "noncommuting"
+amplitude = 0.6
+bank = "complete"
+p = 40
+d = 20
+n = 800
+ntrain = 800
+replicates = 300
+
+[[scenario]]
+id = 8
+design = "noncommuting"
+amplitude = 0.6
+bank = "complete"
+p = 40
+d = 20
+n = 1600
+ntrain = 1600
+replicates = 300
+
+[[scenario]]
+id = 9
+design = "correlation"
+amplitude = 0.55
+bank = "complete"
+p = 40
+d = 20
+n = 200
+ntrain = 200
+replicates = 300
+
+[[scenario]]
+id = 10
+design = "correlation"
+amplitude = 0.55
+bank = "complete"
+p = 40
+d = 20
+n = 400
+ntrain = 400
+replicates = 300
+
+[[scenario]]
+id = 11
+design = "correlation"
+amplitude = 0.55
+bank = "complete"
+p = 40
+d = 20
+n = 800
+ntrain = 800
+replicates = 300
+
+[[scenario]]
+id = 12
+design = "correlation"
+amplitude = 0.55
+bank = "complete"
+p = 40
+d = 20
+n = 1600
+ntrain = 1600
+replicates = 300
+
+[[candidate]]
+id = 6
+C = 0.75
+hfactor = 1.5
+pilot_ratio = 3.0
+adjustment = "basic"
+design = "correlation"
+
+[[candidate]]
+id = 106
+C = 0.75
+hfactor = 1.5
+pilot_ratio = 3.0
+adjustment = "df"
+design = "correlation"
+
+[[candidate]]
+id = 206
+C = 0.75
+hfactor = 1.5
+pilot_ratio = 3.0
+adjustment = "hc3"
+design = "correlation"
+
+[[candidate]]
+id = 306
+C = 0.75
+hfactor = 1.5
+pilot_ratio = 3.0
+adjustment = "inverse"
+design = "correlation"
+
+[[candidate]]
+id = 8
+C = 0.75
+hfactor = 2.0
+pilot_ratio = 2.0
+adjustment = "basic"
+design = "noncommuting"
+
+[[candidate]]
+id = 108
+C = 0.75
+hfactor = 2.0
+pilot_ratio = 2.0
+adjustment = "df"
+design = "noncommuting"
+
+[[candidate]]
+id = 208
+C = 0.75
+hfactor = 2.0
+pilot_ratio = 2.0
+adjustment = "hc3"
+design = "noncommuting"
+
+[[candidate]]
+id = 308
+C = 0.75
+hfactor = 2.0
+pilot_ratio = 2.0
+adjustment = "inverse"
+design = "noncommuting"
+
+[[candidate]]
+id = 3
+C = 0.75
+hfactor = 1.0
+pilot_ratio = 3.0
+adjustment = "basic"
+design = "opposed_scale"
+
+[[candidate]]
+id = 103
+C = 0.75
+hfactor = 1.0
+pilot_ratio = 3.0
+adjustment = "df"
+design = "opposed_scale"
+
+[[candidate]]
+id = 203
+C = 0.75
+hfactor = 1.0
+pilot_ratio = 3.0
+adjustment = "hc3"
+design = "opposed_scale"
+
+[[candidate]]
+id = 303
+C = 0.75
+hfactor = 1.0
+pilot_ratio = 3.0
+adjustment = "inverse"
+design = "opposed_scale"

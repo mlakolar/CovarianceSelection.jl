@@ -1,0 +1,119 @@
+stage = "double_training"
+seed = 321736511
+shard_size = 10
+points = [-0.5, 0.0, 0.5]
+indices = ["known", "estimated"]
+
+[[scenario]]
+id = 1
+design = "opposed_scale"
+amplitude = 0.6
+bank = "mixed"
+p = 40
+d = 20
+n = 400
+ntrain = 800
+replicates = 300
+
+[[scenario]]
+id = 2
+design = "opposed_scale"
+amplitude = 0.6
+bank = "mixed"
+p = 40
+d = 20
+n = 800
+ntrain = 1600
+replicates = 300
+
+[[scenario]]
+id = 3
+design = "noncommuting"
+amplitude = 0.6
+bank = "complete"
+p = 40
+d = 20
+n = 400
+ntrain = 800
+replicates = 300
+
+[[scenario]]
+id = 4
+design = "noncommuting"
+amplitude = 0.6
+bank = "complete"
+p = 40
+d = 20
+n = 800
+ntrain = 1600
+replicates = 300
+
+[[scenario]]
+id = 5
+design = "correlation"
+amplitude = 0.55
+bank = "complete"
+p = 40
+d = 20
+n = 400
+ntrain = 800
+replicates = 300
+
+[[scenario]]
+id = 6
+design = "correlation"
+amplitude = 0.55
+bank = "complete"
+p = 40
+d = 20
+n = 800
+ntrain = 1600
+replicates = 300
+
+[[candidate]]
+id = 14
+C = 1.1
+hfactor = 1.5
+pilot_ratio = 2.0
+adjustment = "basic"
+design = "correlation"
+
+[[candidate]]
+id = 6
+C = 0.75
+hfactor = 1.5
+pilot_ratio = 3.0
+adjustment = "basic"
+design = "correlation"
+
+[[candidate]]
+id = 14
+C = 1.1
+hfactor = 1.5
+pilot_ratio = 2.0
+adjustment = "basic"
+design = "noncommuting"
+
+[[candidate]]
+id = 8
+C = 0.75
+hfactor = 2.0
+pilot_ratio = 2.0
+adjustment = "basic"
+design = "noncommuting"
+
+[[candidate]]
+id = 14
+C = 1.1
+hfactor = 1.5
+pilot_ratio = 2.0
+adjustment = "basic"
+design = "opposed_scale"
+
+[[candidate]]
+id = 3
+C = 0.75
+hfactor = 1.0
+pilot_ratio = 3.0
+adjustment = "basic"
+design = "opposed_scale"

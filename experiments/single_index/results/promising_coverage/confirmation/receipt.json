@@ -1,0 +1,10 @@
+{
+  "stage": "confirmation",
+  "rows": 1152000,
+  "expected": 1152000,
+  "unique": 1152000,
+  "failures": 6,
+  "summary_rows": 576,
+  "coverage_recomputed": true,
+  "failed_fits_count_as_noncoverage": true
+}

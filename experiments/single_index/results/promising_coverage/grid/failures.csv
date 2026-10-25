@@ -1,0 +1,12 @@
+scenario,replicate,index,config,point,target,reason
+1,190,known,1,-0.5,edge,DomainError with -0.5: nonpositive final residual covariance
+1,190,known,2,-0.5,edge,DomainError with -0.5: nonpositive final residual covariance
+1,190,known,10,-0.5,edge,DomainError with -0.5: nonpositive final residual covariance
+1,190,known,11,-0.5,edge,DomainError with -0.5: nonpositive final residual covariance
+1,190,known,12,-0.5,edge,DomainError with -0.5: nonpositive final residual covariance
+1,190,known,19,-0.5,edge,DomainError with -0.5: nonpositive final residual covariance
+1,190,known,20,-0.5,edge,DomainError with -0.5: nonpositive final residual covariance
+1,190,known,21,-0.5,edge,DomainError with -0.5: nonpositive final residual covariance
+1,217,known,1,0.5,zero,DomainError with 0.5: nonpositive final residual covariance
+5,110,known,1,0.0,zero,DomainError with 0.0: nonpositive final residual covariance
+5,290,known,1,-0.5,constant_edge,DomainError with -0.5: nonpositive final residual covariance

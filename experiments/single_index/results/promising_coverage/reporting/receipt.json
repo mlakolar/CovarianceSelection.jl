@@ -1,0 +1,67 @@
+{
+  "stages": {
+    "grid": {
+      "stage": "grid",
+      "rows": 1166400,
+      "expected": 1166400,
+      "unique": 1166400,
+      "failures": 11,
+      "summary_rows": 3888,
+      "coverage_recomputed": true,
+      "failed_fits_count_as_noncoverage": true
+    },
+    "paired": {
+      "stage": "paired",
+      "rows": 259200,
+      "expected": 259200,
+      "unique": 259200,
+      "failures": 0,
+      "summary_rows": 864,
+      "coverage_recomputed": true,
+      "failed_fits_count_as_noncoverage": true
+    },
+    "corrections": {
+      "stage": "corrections",
+      "rows": 172800,
+      "expected": 172800,
+      "unique": 172800,
+      "failures": 0,
+      "summary_rows": 576,
+      "coverage_recomputed": true,
+      "failed_fits_count_as_noncoverage": true
+    },
+    "confirmation": {
+      "stage": "confirmation",
+      "rows": 1152000,
+      "expected": 1152000,
+      "unique": 1152000,
+      "failures": 6,
+      "summary_rows": 576,
+      "coverage_recomputed": true,
+      "failed_fits_count_as_noncoverage": true
+    },
+    "double_training": {
+      "stage": "double_training",
+      "rows": 86400,
+      "expected": 86400,
+      "unique": 86400,
+      "failures": 0,
+      "summary_rows": 288,
+      "coverage_recomputed": true,
+      "failed_fits_count_as_noncoverage": true
+    }
+  },
+  "paired_rows": 1440,
+  "summary_rows": 6192,
+  "confirmation_replicates": 2000,
+  "primary_corrections": false,
+  "full_failures_retained": true,
+  "figures": [
+    "central_coverage.png",
+    "central_coverage.pdf",
+    "diagonal_coverage.png",
+    "diagonal_coverage.pdf",
+    "edge_coverage.png",
+    "edge_coverage.pdf"
+  ]
+}

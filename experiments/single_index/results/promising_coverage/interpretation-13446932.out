@@ -1,0 +1,120 @@
+MAIN opposed_scale 200 diagonal_plus known cov 0.9445 bias 0.2016523647670779 sd 0.4873059730977585 rmsse 0.849267272712649 loss 0.0 flip 0.0
+MAIN opposed_scale 200 diagonal_plus estimated cov 0.933 bias 0.23166716140952962 sd 0.49942527701697004 rmsse 0.568436958346835 loss 0.040366230630286694 flip 0.0045
+MAIN opposed_scale 200 edge known cov 0.94 bias -0.051202116590284494 sd 0.3499679204839629 rmsse 0.32272973374426284 loss 0.0 flip 0.0
+MAIN opposed_scale 200 edge estimated cov 0.947 bias -0.07001668632352427 sd 0.37975060860711957 rmsse 0.5263095154496051 loss 0.040366230630286694 flip 0.0045
+PAIRED_EDGE opposed_scale 200 [{'stage': 'confirmation', 'design': 'opposed_scale', 'n': '200', 'ntrain': '200', 'config': '3', 'point': '0.5', 'target': 'edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.94', 'comparison_coverage': '0.947', 'coverage_difference': '0.007', 'coverage_difference_mcse': '0.006595244394585553', 'both_successful': '2000', 'length_difference': '0.08589756952889337'}]
+MAIN opposed_scale 400 diagonal_plus known cov 0.934 bias 0.11640268080791916 sd 0.268500111146881 rmsse 0.24498429446908163 loss 0.0 flip 0.0
+MAIN opposed_scale 400 diagonal_plus estimated cov 0.9305 bias 0.12717215699971 sd 0.29031326242434397 rmsse 0.2550624244404431 loss 0.01795380520206668 flip 0.0
+MAIN opposed_scale 400 edge known cov 0.947 bias -0.036069282563693586 sd 0.1958206709328833 rmsse 0.1835364799461431 loss 0.0 flip 0.0
+MAIN opposed_scale 400 edge estimated cov 0.9535 bias -0.03484028309900654 sd 0.20250634537391865 rmsse 0.18748594184767547 loss 0.01795380520206668 flip 0.0
+PAIRED_EDGE opposed_scale 400 [{'stage': 'confirmation', 'design': 'opposed_scale', 'n': '400', 'ntrain': '400', 'config': '3', 'point': '0.5', 'target': 'edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.947', 'comparison_coverage': '0.9535', 'coverage_difference': '0.0065', 'coverage_difference_mcse': '0.006383513893210574', 'both_successful': '2000', 'length_difference': '0.006332982206510268'}]
+MAIN opposed_scale 800 diagonal_plus known cov 0.9325 bias 0.05635372905914255 sd 0.18548324182527076 rmsse 0.17039809735579847 loss 0.0 flip 0.0
+MAIN opposed_scale 800 diagonal_plus estimated cov 0.939 bias 0.06021452295268914 sd 0.18343406876165505 rmsse 0.17101589811895526 loss 0.008233492998799441 flip 0.0
+MAIN opposed_scale 800 edge known cov 0.9465 bias -0.01616691771130591 sd 0.13451101262011675 rmsse 0.12755798051839384 loss 0.0 flip 0.0
+MAIN opposed_scale 800 edge estimated cov 0.9485 bias -0.01687519336940293 sd 0.13273279831645285 rmsse 0.12744740695402448 loss 0.008233492998799441 flip 0.0
+PAIRED_EDGE opposed_scale 800 [{'stage': 'confirmation', 'design': 'opposed_scale', 'n': '800', 'ntrain': '800', 'config': '3', 'point': '0.5', 'target': 'edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.9465', 'comparison_coverage': '0.9485', 'coverage_difference': '0.002', 'coverage_difference_mcse': '0.0058322386357000065', 'both_successful': '2000', 'length_difference': '0.0007654739905838425'}]
+MAIN opposed_scale 1600 diagonal_plus known cov 0.9405 bias 0.03758760765585749 sd 0.1308261825084477 rmsse 0.12578564093037242 loss 0.0 flip 0.0
+MAIN opposed_scale 1600 diagonal_plus estimated cov 0.943 bias 0.036864796107347074 sd 0.1293801395967342 rmsse 0.12616462109364524 loss 0.004053907404434321 flip 0.0
+MAIN opposed_scale 1600 edge known cov 0.943 bias -0.007333221543109802 sd 0.09417238734383383 rmsse 0.09210821309081121 loss 0.0 flip 0.0
+MAIN opposed_scale 1600 edge estimated cov 0.94 bias -0.007544360317142481 sd 0.09631455885879249 rmsse 0.09231972627678255 loss 0.004053907404434321 flip 0.0
+PAIRED_EDGE opposed_scale 1600 [{'stage': 'confirmation', 'design': 'opposed_scale', 'n': '1600', 'ntrain': '1600', 'config': '3', 'point': '0.5', 'target': 'edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.943', 'comparison_coverage': '0.94', 'coverage_difference': '-0.003', 'coverage_difference_mcse': '0.0060426614069000436', 'both_successful': '2000', 'length_difference': '0.0008761535425657053'}]
+CORRECTION_DIAGONAL_ZERO opposed_scale 200 [('df', '0.9333333333333333', '0.22295446124363938', '1.5391342766993372'), ('hc3', '0.9433333333333334', '0.24892774152935335', '1.67213475395196'), ('basic', '0.94', '0.24892774152935335', '1.5723789713961118'), ('inverse', '0.9366666666666666', '0.12033051644474622', '1.5723789713961118')]
+CORRECTION_DIAGONAL_ZERO opposed_scale 400 [('df', '0.9533333333333334', '0.12719188043730012', '1.105504588458371'), ('hc3', '0.9533333333333334', '0.14433589419906337', '1.159036586150783'), ('basic', '0.9533333333333334', '0.14433589419906337', '1.1214076756963665'), ('inverse', '0.9533333333333334', '0.07481763565064506', '1.1214076756963665')]
+CORRECTION_DIAGONAL_ZERO opposed_scale 800 [('df', '0.9433333333333334', '0.049924633596147384', '0.7822263367147902'), ('hc3', '0.9433333333333334', '0.05872968730815875', '0.8035081681360514'), ('basic', '0.9433333333333334', '0.05872968730815875', '0.7886660286075216'), ('inverse', '0.9466666666666667', '0.022096103112474254', '0.7886660286075216')]
+CORRECTION_DIAGONAL_ZERO opposed_scale 1600 [('df', '0.9433333333333334', '0.020021867530651428', '0.5821111039294107'), ('hc3', '0.9433333333333334', '0.02549516638286546', '0.5914192634285627'), ('basic', '0.9433333333333334', '0.02549516638286546', '0.5851699607679456'), ('inverse', '0.9466666666666667', '0.004793644338371442', '0.5851699607679456')]
+SENSITIVITY_EDGE_HALF opposed_scale paired 200 200 estimated 0.95 loss 0.03900610957619345 flip 0.0033333333333333335
+SENSITIVITY_EDGE_HALF opposed_scale paired 200 200 estimated_full 0.9766666666666667 loss 0.070681354341022 flip 0.016666666666666666
+SENSITIVITY_EDGE_HALF opposed_scale paired 200 200 known 0.9566666666666667 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale paired 400 400 estimated 0.9566666666666667 loss 0.017686754516652668 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale paired 400 400 estimated_full 0.9666666666666667 loss 0.032975495017047184 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale paired 400 400 known 0.9533333333333334 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale paired 800 800 estimated 0.9666666666666667 loss 0.008461338331808465 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale paired 800 800 estimated_full 0.9633333333333334 loss 0.015438208678696613 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale paired 800 800 known 0.9566666666666667 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale paired 1600 1600 estimated 0.9233333333333333 loss 0.004131005521086102 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale paired 1600 1600 estimated_full 0.9466666666666667 loss 0.007417795935286012 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale paired 1600 1600 known 0.9533333333333334 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale double_training 400 800 estimated 0.9433333333333334 loss 0.008604671566599739 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale double_training 400 800 known 0.9466666666666667 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale double_training 800 1600 estimated 0.9666666666666667 loss 0.004161201008055684 flip 0.0
+SENSITIVITY_EDGE_HALF opposed_scale double_training 800 1600 known 0.95 loss 0.0 flip 0.0
+MAIN noncommuting 200 diagonal known cov 0.938 bias 0.1101644621304869 sd 0.2953414709678299 rmsse 0.27626820435611693 loss 0.0 flip 0.0
+MAIN noncommuting 200 diagonal estimated cov 0.9265 bias 0.07773356572285671 sd 0.2885568207504353 rmsse 0.2675800514652409 loss 0.13833495741042073 flip 0.0875
+MAIN noncommuting 200 varying_edge known cov 0.9465 bias 0.03463132959071126 sd 0.23509596985550946 rmsse 0.21895932359555637 loss 0.0 flip 0.0
+MAIN noncommuting 200 varying_edge estimated cov 0.88 bias -0.04264195618352133 sd 0.261987492485642 rmsse 0.21150997932030166 loss 0.13833495741042073 flip 0.0875
+PAIRED_EDGE noncommuting 200 [{'stage': 'confirmation', 'design': 'noncommuting', 'n': '200', 'ntrain': '200', 'config': '8', 'point': '0.5', 'target': 'varying_edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.9465', 'comparison_coverage': '0.88', 'coverage_difference': '-0.0665', 'coverage_difference_mcse': '0.008400842938719932', 'both_successful': '2000', 'length_difference': '-0.019089176206325397'}]
+MAIN noncommuting 400 diagonal known cov 0.9435 bias 0.07312640095094956 sd 0.2089136560279698 rmsse 0.2005802833318961 loss 0.0 flip 0.0
+MAIN noncommuting 400 diagonal estimated cov 0.938 bias 0.06486572473556183 sd 0.2143942655989674 rmsse 0.1990906093935791 loss 0.023501908423381186 flip 0.001
+MAIN noncommuting 400 varying_edge known cov 0.9405 bias 0.016062864164394695 sd 0.15780246849226875 rmsse 0.15009244811002534 loss 0.0 flip 0.0
+MAIN noncommuting 400 varying_edge estimated cov 0.938 bias 0.010586586498010347 sd 0.15841541483684526 rmsse 0.1495341733342648 loss 0.023501908423381186 flip 0.001
+PAIRED_EDGE noncommuting 400 [{'stage': 'confirmation', 'design': 'noncommuting', 'n': '400', 'ntrain': '400', 'config': '8', 'point': '0.5', 'target': 'varying_edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.9405', 'comparison_coverage': '0.938', 'coverage_difference': '-0.0025', 'coverage_difference_mcse': '0.005723919690938559', 'both_successful': '2000', 'length_difference': '-0.002486946109374929'}]
+MAIN noncommuting 800 diagonal known cov 0.948 bias 0.05222530202353541 sd 0.15485118698717043 rmsse 0.1474593201270282 loss 0.0 flip 0.0
+MAIN noncommuting 800 diagonal estimated cov 0.9435 bias 0.05033216091873288 sd 0.15445858551407524 rmsse 0.14737693444457795 loss 0.008251090903753151 flip 0.0
+MAIN noncommuting 800 varying_edge known cov 0.9545 bias 0.013046263814651812 sd 0.10912599826294579 rmsse 0.10875959010102546 loss 0.0 flip 0.0
+MAIN noncommuting 800 varying_edge estimated cov 0.9445 bias 0.010323098729300671 sd 0.10992680799497896 rmsse 0.10860960140919976 loss 0.008251090903753151 flip 0.0
+PAIRED_EDGE noncommuting 800 [{'stage': 'confirmation', 'design': 'noncommuting', 'n': '800', 'ntrain': '800', 'config': '8', 'point': '0.5', 'target': 'varying_edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.9545', 'comparison_coverage': '0.9445', 'coverage_difference': '-0.01', 'coverage_difference_mcse': '0.004791813930065543', 'both_successful': '2000', 'length_difference': '-0.0007584179806672881'}]
+MAIN noncommuting 1600 diagonal known cov 0.9505 bias 0.02866477744186598 sd 0.10871108613511231 rmsse 0.10861102350446307 loss 0.0 flip 0.0
+MAIN noncommuting 1600 diagonal estimated cov 0.9545 bias 0.02824146519414923 sd 0.10793962839590047 rmsse 0.10847582024234888 loss 0.003273903405978035 flip 0.0
+MAIN noncommuting 1600 varying_edge known cov 0.951 bias 0.004537964786023859 sd 0.07995637846770061 rmsse 0.08002230452092332 loss 0.0 flip 0.0
+MAIN noncommuting 1600 varying_edge estimated cov 0.952 bias 0.004003052932867889 sd 0.07933883588573695 rmsse 0.08004980558371136 loss 0.003273903405978035 flip 0.0
+PAIRED_EDGE noncommuting 1600 [{'stage': 'confirmation', 'design': 'noncommuting', 'n': '1600', 'ntrain': '1600', 'config': '8', 'point': '0.5', 'target': 'varying_edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.951', 'comparison_coverage': '0.952', 'coverage_difference': '0.001', 'coverage_difference_mcse': '0.003937925040781427', 'both_successful': '2000', 'length_difference': '0.0001582672551259495'}]
+CORRECTION_DIAGONAL_ZERO noncommuting 200 [('df', '0.9366666666666666', '0.10501053239950316', '0.9819967432559231'), ('hc3', '0.95', '0.11699071280183276', '1.0233471321031198'), ('inverse', '0.9366666666666666', '0.05763572655225083', '0.9937144982288824'), ('basic', '0.94', '0.11699071280183276', '0.9937144982288824')]
+CORRECTION_DIAGONAL_ZERO noncommuting 400 [('df', '0.97', '0.06853912101097624', '0.7170434999797515'), ('hc3', '0.9733333333333334', '0.0748552746951256', '0.7334045475461999'), ('inverse', '0.9766666666666667', '0.042721254501003225', '0.7214870131110245'), ('basic', '0.9666666666666667', '0.0748552746951256', '0.7214870131110245')]
+CORRECTION_DIAGONAL_ZERO noncommuting 800 [('df', '0.9566666666666667', '0.026113884895230484', '0.520989364498384'), ('hc3', '0.96', '0.03037076710693943', '0.5282036471577659'), ('inverse', '0.9566666666666667', '0.012833408848174173', '0.5232878367055344'), ('basic', '0.96', '0.03037076710693943', '0.5232878367055344')]
+CORRECTION_DIAGONAL_ZERO noncommuting 1600 [('df', '0.9466666666666667', '0.018831416283552147', '0.39127383526124676'), ('hc3', '0.9466666666666667', '0.022038931332134738', '0.3946497716145297'), ('inverse', '0.95', '0.01214724526213797', '0.39256158917432077'), ('basic', '0.9466666666666667', '0.022038931332134738', '0.39256158917432077')]
+SENSITIVITY_EDGE_HALF noncommuting paired 200 200 estimated 0.88 loss 0.138485634509672 flip 0.1
+SENSITIVITY_EDGE_HALF noncommuting paired 200 200 estimated_full 0.9 loss 0.13529284893602514 flip 0.06333333333333334
+SENSITIVITY_EDGE_HALF noncommuting paired 200 200 known 0.9533333333333334 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting paired 400 400 estimated 0.95 loss 0.022409515787366115 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting paired 400 400 estimated_full 0.9566666666666667 loss 0.044797770850584395 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting paired 400 400 known 0.9566666666666667 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting paired 800 800 estimated 0.9566666666666667 loss 0.008098957886344689 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting paired 800 800 estimated_full 0.9633333333333334 loss 0.015730090790079653 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting paired 800 800 known 0.94 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting paired 1600 1600 estimated 0.96 loss 0.0032384459285741307 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting paired 1600 1600 estimated_full 0.9366666666666666 loss 0.006200280181045662 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting paired 1600 1600 known 0.97 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting double_training 400 800 estimated 0.94 loss 0.00815815988083045 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting double_training 400 800 known 0.94 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting double_training 800 1600 estimated 0.9466666666666667 loss 0.0033142455092098153 flip 0.0
+SENSITIVITY_EDGE_HALF noncommuting double_training 800 1600 known 0.9533333333333334 loss 0.0 flip 0.0
+MAIN correlation 200 diagonal_1 known cov 0.9345 bias 0.17413055932892055 sd 0.43312605627861445 rmsse 0.4012299702139171 loss 0.0 flip 0.0
+MAIN correlation 200 diagonal_1 estimated cov 0.908 bias 0.06816208438960389 sd 0.4164317764606341 rmsse 0.3732480961625617 loss 0.5223288686111499 flip 0.2705
+MAIN correlation 200 edge known cov 0.9465 bias -0.08556891983522871 sd 0.37296360719201566 rmsse 0.3387953512382611 loss 0.0 flip 0.0
+MAIN correlation 200 edge estimated cov 0.7525 bias 0.18881004882335364 sd 0.4447739759598037 rmsse 0.461580000013499 loss 0.5223288686111499 flip 0.2705
+PAIRED_EDGE correlation 200 [{'stage': 'confirmation', 'design': 'correlation', 'n': '200', 'ntrain': '200', 'config': '6', 'point': '0.5', 'target': 'edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.9465', 'comparison_coverage': '0.7525', 'coverage_difference': '-0.194', 'coverage_difference_mcse': '0.010734971812254792', 'both_successful': '2000', 'length_difference': '-0.0608739150072294'}]
+MAIN correlation 400 diagonal_1 known cov 0.9375 bias 0.10018063279232854 sd 0.2893054114444632 rmsse 0.27968631863462423 loss 0.0 flip 0.0
+MAIN correlation 400 diagonal_1 estimated cov 0.932 bias 0.07414149335550532 sd 0.30524131577916896 rmsse 0.2755531033507956 loss 0.08822190684956742 flip 0.047
+MAIN correlation 400 edge known cov 0.9495 bias -0.04556501770359041 sd 0.23379071235615986 rmsse 0.21956997620356214 loss 0.0 flip 0.0
+MAIN correlation 400 edge estimated cov 0.892 bias 0.016725463164902976 sd 0.2697426060884408 rmsse 0.2165945883089579 loss 0.08822190684956742 flip 0.047
+PAIRED_EDGE correlation 400 [{'stage': 'confirmation', 'design': 'correlation', 'n': '400', 'ntrain': '400', 'config': '6', 'point': '0.5', 'target': 'edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.9495', 'comparison_coverage': '0.892', 'coverage_difference': '-0.0575', 'coverage_difference_mcse': '0.007976759325983976', 'both_successful': '2000', 'length_difference': '-0.01671995672662267'}]
+MAIN correlation 800 diagonal_1 known cov 0.949 bias 0.043470125164023404 sd 0.19631779421663859 rmsse 0.19800687745406342 loss 0.0 flip 0.0
+MAIN correlation 800 diagonal_1 estimated cov 0.9495 bias 0.043382045465441464 sd 0.20104040798301862 rmsse 0.19921874521153524 loss 0.015249255679195987 flip 0.0
+MAIN correlation 800 edge known cov 0.9445 bias -0.029502782391009705 sd 0.15483633641378095 rmsse 0.15487562492699355 loss 0.0 flip 0.0
+MAIN correlation 800 edge estimated cov 0.941 bias -0.019124326747110617 sd 0.15856798341989561 rmsse 0.15598573264929685 loss 0.015249255679195987 flip 0.0
+PAIRED_EDGE correlation 800 [{'stage': 'confirmation', 'design': 'correlation', 'n': '800', 'ntrain': '800', 'config': '6', 'point': '0.5', 'target': 'edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.9445', 'comparison_coverage': '0.941', 'coverage_difference': '-0.0035', 'coverage_difference_mcse': '0.005938139923652561', 'both_successful': '2000', 'length_difference': '0.003179216437812193'}]
+MAIN correlation 1600 diagonal_1 known cov 0.9515 bias 0.02286246332205365 sd 0.1518395510005078 rmsse 0.14829399263122378 loss 0.0 flip 0.0
+MAIN correlation 1600 diagonal_1 estimated cov 0.9435 bias 0.022638784796971075 sd 0.1555491447865216 rmsse 0.1486141018051845 loss 0.005382043480855009 flip 0.0
+MAIN correlation 1600 edge known cov 0.943 bias -0.010417972754261831 sd 0.115655042513458 rmsse 0.11417970901465697 loss 0.0 flip 0.0
+MAIN correlation 1600 edge estimated cov 0.947 bias -0.00648323316522296 sd 0.11520610318163288 rmsse 0.11445487092978661 loss 0.005382043480855009 flip 0.0
+PAIRED_EDGE correlation 1600 [{'stage': 'confirmation', 'design': 'correlation', 'n': '1600', 'ntrain': '1600', 'config': '6', 'point': '0.5', 'target': 'edge', 'comparison': 'estimated', 'replicates': '2000', 'baseline_coverage': '0.943', 'comparison_coverage': '0.947', 'coverage_difference': '0.004', 'coverage_difference_mcse': '0.00489938792105713', 'both_successful': '2000', 'length_difference': '0.0008433863505247841'}]
+CORRECTION_DIAGONAL_ZERO correlation 200 [('df', '0.9466666666666667', '0.13145029363922078', '1.1375701618159682'), ('hc3', '0.95', '0.14573891411475348', '1.197835920395036'), ('inverse', '0.95', '0.06832406235947559', '1.1523149864639861'), ('basic', '0.9466666666666667', '0.14573891411475348', '1.1523149864639861')]
+CORRECTION_DIAGONAL_ZERO correlation 400 [('df', '0.9533333333333334', '0.07725795545697564', '0.8308851918677181'), ('hc3', '0.9533333333333334', '0.08543968664823944', '0.855771000743262'), ('inverse', '0.96', '0.04316179437231615', '0.8371502417692122'), ('basic', '0.95', '0.08543968664823944', '0.8371502417692122')]
+CORRECTION_DIAGONAL_ZERO correlation 800 [('df', '0.94', '0.03345233186719899', '0.6139409760840927'), ('hc3', '0.94', '0.038809225555065385', '0.6247583631669407'), ('inverse', '0.9366666666666666', '0.015077053268695961', '0.617045965552329'), ('basic', '0.94', '0.038809225555065385', '0.617045965552329')]
+CORRECTION_DIAGONAL_ZERO correlation 1600 [('df', '0.9366666666666666', '0.010912369119649074', '0.4579281962893359'), ('hc3', '0.9433333333333334', '0.014404532937332432', '0.4627357418485095'), ('inverse', '0.9366666666666666', '0.0010153442791194537', '0.459468341427389'), ('basic', '0.94', '0.014404532937332432', '0.459468341427389')]
+SENSITIVITY_EDGE_HALF correlation paired 400 400 estimated 0.9 loss 0.09660537652476794 flip 0.05333333333333334
+SENSITIVITY_EDGE_HALF correlation paired 400 400 estimated_full 0.8933333333333333 loss 0.0995409214829089 flip 0.02666666666666667
+SENSITIVITY_EDGE_HALF correlation paired 400 400 known 0.9533333333333334 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF correlation paired 800 800 estimated 0.93 loss 0.015931387124546104 flip 0.0
+SENSITIVITY_EDGE_HALF correlation paired 800 800 estimated_full 0.94 loss 0.029963885247986786 flip 0.0
+SENSITIVITY_EDGE_HALF correlation paired 800 800 known 0.9166666666666666 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF correlation paired 1600 1600 estimated 0.9433333333333334 loss 0.005372997943072328 flip 0.0
+SENSITIVITY_EDGE_HALF correlation paired 1600 1600 estimated_full 0.9533333333333334 loss 0.010693396394791983 flip 0.0
+SENSITIVITY_EDGE_HALF correlation paired 1600 1600 known 0.93 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF correlation paired 200 200 estimated 0.7733333333333333 loss 0.5163698975135352 flip 0.25666666666666665
+SENSITIVITY_EDGE_HALF correlation paired 200 200 estimated_full 0.81 loss 0.4099457845445424 flip 0.20666666666666667
+SENSITIVITY_EDGE_HALF correlation paired 200 200 known 0.9633333333333334 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF correlation double_training 400 800 estimated 0.94 loss 0.015834337974524736 flip 0.0
+SENSITIVITY_EDGE_HALF correlation double_training 400 800 known 0.9566666666666667 loss 0.0 flip 0.0
+SENSITIVITY_EDGE_HALF correlation double_training 800 1600 estimated 0.9266666666666666 loss 0.005211736877903648 flip 0.0
+SENSITIVITY_EDGE_HALF correlation double_training 800 1600 known 0.93 loss 0.0 flip 0.0

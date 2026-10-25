@@ -1,0 +1,10 @@
+{
+  "stage": "double_training",
+  "rows": 86400,
+  "expected": 86400,
+  "unique": 86400,
+  "failures": 0,
+  "summary_rows": 288,
+  "coverage_recomputed": true,
+  "failed_fits_count_as_noncoverage": true
+}
