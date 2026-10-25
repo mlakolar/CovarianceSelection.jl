@@ -6,8 +6,8 @@
 ####################################
 
 """
-    groupGraphicalLasso(S, λ; λ1=0, weights=fill(1/K, K), penalize_diag=true, options=ADMMOptions(), info=ADMMInfo())
-    groupGraphicalLasso!(Z, U, S, λ; λ1=0, weights=fill(1/K, K), penalize_diag=true, options=ADMMOptions(), info=ADMMInfo())
+    group_graphical_lasso(S, λ; λ1=0, weights=fill(1/K, K), penalize_diag=true, options=ADMMOptions(), info=ADMMInfo())
+    group_graphical_lasso!(Z, U, S, λ; λ1=0, weights=fill(1/K, K), penalize_diag=true, options=ADMMOptions(), info=ADMMInfo())
 
 K precision matrices that share their sparsity pattern, by ADMM:
 
@@ -40,9 +40,9 @@ scaled by the data as in [`covsel!`](@ref), with `s` the average of the
 when the weights are equal, and the absolute tolerance of the dual residual is
 `abstol s w̄`.
 
-See [`tvCovSel`](@ref) for graphs that vary over time.
+See [`tv_covsel`](@ref) for graphs that vary over time.
 """
-function groupGraphicalLasso!(
+function group_graphical_lasso!(
   Z::Array{T, 3},
   U::Array{T, 3},
   S::Union{AbstractArray{<:Real, 3}, AbstractVector{<:AbstractMatrix}},
@@ -69,20 +69,20 @@ function groupGraphicalLasso!(
 
   # ρ has the units of the weighted Σ², the primal residual those of Ω and the
   # dual one those of the weighted Σ
-  s = _dataScale(sum(k -> tr(_covslice(S, k)), 1:K) / (p * K))
+  s = _data_scale(sum(k -> tr(_covslice(S, k)), 1:K) / (p * K))
   w̄ = sum(weights) / K
   method = ADMMSolver(; ρ = T(options.ρ * s^2 * w̄), α = T(options.α), adaptive = options.adaptive,
                       abstol = T(options.abstol / s), abstol_dual = T(options.abstol * s * w̄), reltol = T(options.reltol))
   r = solve!(Z, f, g, method, ProximalOptions(; maxiter = options.maxiter); u = U)
-  _finish!(info, "groupGraphicalLasso!", r.iterations, r.converged, r.ρ, s^2 * w̄, r.r_norm, r.s_norm)
+  _finish!(info, "group_graphical_lasso!", r.iterations, r.converged, r.ρ, s^2 * w̄, r.r_norm, r.s_norm)
   Z
 end
 
-function groupGraphicalLasso(S::Union{AbstractArray{<:Real, 3}, AbstractVector{<:AbstractMatrix}}, λ::Real; kwargs...)
+function group_graphical_lasso(S::Union{AbstractArray{<:Real, 3}, AbstractVector{<:AbstractMatrix}}, λ::Real; kwargs...)
   K = _nslices(S)
   p = size(_covslice(S, 1), 1)
   T = float(eltype(_covslice(S, 1)))
-  groupGraphicalLasso!(zeros(T, p, p, K), zeros(T, p, p, K), S, λ; kwargs...)
+  group_graphical_lasso!(zeros(T, p, p, K), zeros(T, p, p, K), S, λ; kwargs...)
 end
 
 _nslices(S::AbstractArray{<:Real, 3}) = size(S, 3)
@@ -92,7 +92,7 @@ _covslice(S::AbstractVector{<:AbstractMatrix}, k) = S[k]
 
 
 """
-    kernelCovariances(X, t, τ, h; kernel=:epanechnikov, center=true)
+    kernel_covariances(X, t, τ, h; kernel=:epanechnikov, center=true)
 
 The covariance matrices at the time points `τ₁, …, τ_K` of the observations
 `xᵢ`, the rows of `X`, made at the times `tᵢ`, by kernel smoothing (Zhou,
@@ -104,7 +104,7 @@ with `x̄ₖ` the weighted mean of the observations, or zero with
 `center=false`. The kernel `K` is `:epanechnikov`, `3(1 - u²)/4` for `|u| ≤
 1`, `:gaussian`, or a function. Returns the `p × p × K` array of the `Sₖ`.
 """
-function kernelCovariances(X::AbstractMatrix{<:Real}, t::AbstractVector{<:Real}, τ::AbstractVector{<:Real}, h::Real;
+function kernel_covariances(X::AbstractMatrix{<:Real}, t::AbstractVector{<:Real}, τ::AbstractVector{<:Real}, h::Real;
                            kernel = :epanechnikov, center::Bool = true)
   n, p = size(X)
   length(t) == n || throw(DimensionMismatch("X has $n rows and t has length $(length(t))"))
@@ -137,18 +137,18 @@ end
 
 
 """
-    tvCovSel(X, t, τ, h, λ; kernel=:epanechnikov, center=true, weights=fill(1/K, K), penalize_diag=true,
+    tv_covsel(X, t, τ, h, λ; kernel=:epanechnikov, center=true, weights=fill(1/K, K), penalize_diag=true,
              options=ADMMOptions(), info=ADMMInfo())
 
 Time-varying graphical models: the precision matrices at the time points
 `τ₁, …, τ_K` of the observations `xᵢ` (the rows of `X`) made at the times
-`tᵢ`. It is the [`groupGraphicalLasso`](@ref) of the covariance matrices that
-[`kernelCovariances`](@ref) estimates with the bandwidth `h`: each time point
+`tᵢ`. It is the [`group_graphical_lasso`](@ref) of the covariance matrices that
+[`kernel_covariances`](@ref) estimates with the bandwidth `h`: each time point
 has the kernel-smoothed likelihood of Zhou, Lafferty and Wasserman (2010), and
 the group penalty makes the K graphs share their edges. Returns the `p × p × K`
 array of the estimates.
 """
-function tvCovSel(X::AbstractMatrix{<:Real}, t::AbstractVector{<:Real}, τ::AbstractVector{<:Real}, h::Real, λ::Real;
+function tv_covsel(X::AbstractMatrix{<:Real}, t::AbstractVector{<:Real}, τ::AbstractVector{<:Real}, h::Real, λ::Real;
                   kernel = :epanechnikov, center::Bool = true, kwargs...)
-  groupGraphicalLasso(kernelCovariances(X, t, τ, h; kernel, center), λ; kwargs...)
+  group_graphical_lasso(kernel_covariances(X, t, τ, h; kernel, center), λ; kwargs...)
 end

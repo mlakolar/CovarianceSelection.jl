@@ -1,5 +1,5 @@
 # A naive reference solver for the ℓ1 penalized direct difference estimator,
-# used by the tests and the benchmarks to check differencePrecisionActiveShooting.
+# used by the tests and the benchmarks to check difference_precision_active_shooting.
 # It shares no code with the package: full coordinate descent sweeps over a
 # dense Δ, updating the whole of A = Σx⋅Δ⋅Σy after every coordinate.
 module Reference
@@ -7,21 +7,21 @@ module Reference
 soft(v, t) = sign(v) * max(abs(v) - t, zero(v))
 
 """
-    differencePrecisionNaive(Σx, Σy, λ, ω; maxIter=10_000, optTol=1e-7)
+    differencePrecisionNaive(Σx, Σy, λ, ω; maxiter=10_000, optTol=1e-7)
 
 Minimize `tr(Σx⋅Δ⋅Σy⋅Δ)/2 - tr(Δ⋅(Σy - Σx)) + λ ∑_{a≤b} ω[a,b] |Δ[a,b]|` over
 symmetric `Δ` by cyclic coordinate descent over the lower triangle, until no
 coordinate changes by more than `optTol` in a sweep. Returns `Δ` as a dense
 matrix.
 """
-function differencePrecisionNaive(Σx, Σy, λ, ω; maxIter=10_000, optTol=1e-7)
+function differencePrecisionNaive(Σx, Σy, λ, ω; maxiter=10_000, optTol=1e-7)
   p = size(Σx, 1)
 
   Δ = zeros(p, p)
   A = zeros(p, p)
 
   iter = 1;
-  while iter < maxIter
+  while iter < maxiter
     fDone = true
     for a=1:p
       for b=a:p

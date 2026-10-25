@@ -10,16 +10,16 @@ Methods for learning high-dimensional Gaussian graphical models:
 * the precision matrix by the scaled lasso of each column, which needs no
   tuning ([`slassoinv`](@ref));
 * the graphical lasso by ADMM ([`covsel!`](@ref), [`covselpath`](@ref));
-* the fused graphical lasso for K groups ([`fusedGraphicalLasso`](@ref)) and
-  fused neighborhood selection ([`fusedNeighborhoodSelection`](@ref));
+* the fused graphical lasso for K groups ([`fused_graphical_lasso`](@ref)) and
+  fused neighborhood selection ([`fused_neighborhood_selection`](@ref));
 * K precision matrices with a shared sparsity pattern, the group graphical
-  lasso ([`groupGraphicalLasso`](@ref)), and graphs that vary over time by
-  kernel smoothing ([`tvCovSel`](@ref), [`kernelCovariances`](@ref));
+  lasso ([`group_graphical_lasso`](@ref)), and graphs that vary over time by
+  kernel smoothing ([`tv_covsel`](@ref), [`kernel_covariances`](@ref));
 * direct estimation of the difference of two precision matrices by coordinate
-  descent ([`differencePrecisionActiveShooting`](@ref),
-  [`differencePrecisionRefit`](@ref)) or iterative hard thresholding, with an
-  optional low rank component ([`differencePrecisionIHT`](@ref),
-  [`differenceLatentPrecisionIHT`](@ref)).
+  descent ([`difference_precision_active_shooting`](@ref),
+  [`difference_precision_refit`](@ref)) or iterative hard thresholding, with an
+  optional low rank component ([`difference_precision_iht`](@ref),
+  [`difference_latent_precision_iht`](@ref)).
 
 The losses and penalties are those of ProximalBase, and the graphical lasso and
 the direct difference estimator are solved by the ADMM and the coordinate
@@ -37,22 +37,22 @@ using SpecialFunctions: erfcinv
 export
   ADMMOptions, ADMMInfo, IHTOptions,
   covsel!, covselpath,
-  covselLatentIHT!,
+  covsel_latent_iht!,
 
   # difference estimation
   #
-  fusedGraphicalLasso, fusedGraphicalLasso!,   # Danaher et al.
-  fusedNeighborhoodSelection,
+  fused_graphical_lasso, fused_graphical_lasso!,   # Danaher et al.
+  fused_neighborhood_selection,
 
   # K precision matrices: shared support, time-varying graphs
-  groupGraphicalLasso, groupGraphicalLasso!, kernelCovariances, tvCovSel,
+  group_graphical_lasso, group_graphical_lasso!, kernel_covariances, tv_covsel,
 
   # Direct Difference Estimation and Inference
-  differencePrecisionActiveShooting, differencePrecisionActiveShooting!, differencePrecisionRefit,
-  directDifferenceLoss, diffLoss,
+  difference_precision_active_shooting, difference_precision_active_shooting!, difference_precision_refit,
+  direct_difference_loss, diff_loss,
 
-  differencePrecisionIHT,
-  differenceLatentPrecisionIHT, differenceLatentPrecisionIHT!,
+  difference_precision_iht,
+  difference_latent_precision_iht, difference_latent_precision_iht!,
 
   # CLIME and ACLIME
   clime, aclime, CLIMEPath, climecv, aclimecv, CLIMECV, bestestimate,
@@ -69,7 +69,7 @@ include("LatentCovarianceSelection_IHT.jl")
 include("directDifference.jl")
 include("automaticIHT.jl")
 include("fusedDifference.jl")
-include("groupGraphicalLasso.jl")
+include("group_graphical_lasso.jl")
 
 include("clime_simplex.jl")
 include("clime.jl")
@@ -80,6 +80,7 @@ include("slassoinv.jl")
 include("generate.jl")
 include("evaluation.jl")
 
+include("deprecated_naming.jl")
 include("precompile.jl")
 
 end

@@ -6,8 +6,8 @@ function _threshold(v::Vector{T}, s::Int) where {T<:AbstractFloat}
 end
 
 """
-    HardThreshold!(out, X, s, diagonal=true)
-    HardThreshold!(X, s, diagonal=true)
+    hard_threshold!(out, X, s, diagonal=true)
+    hard_threshold!(X, s, diagonal=true)
 
 Keep the `s` largest entries of the symmetric matrix `X` in absolute value and
 set the rest to zero. Only entries on or below the main diagonal are ranked.
@@ -15,7 +15,7 @@ With `diagonal=false` the diagonal is excluded from the ranking and always kept.
 Ties at the threshold are all kept, and an entry and its transpose are kept or
 dropped together. `out` is a dense matrix or a `SymmetricSparseIterate`.
 """
-function HardThreshold!(out::StridedMatrix{T}, X::StridedMatrix{T}, s::Int, diagonal::Bool=true) where {T<:AbstractFloat}
+function hard_threshold!(out::StridedMatrix{T}, X::StridedMatrix{T}, s::Int, diagonal::Bool=true) where {T<:AbstractFloat}
   size(out) == size(X) || throw(DimensionMismatch())
   if s <= 0
     for c in axes(X, 2), r in axes(X, 1)
@@ -38,9 +38,9 @@ function HardThreshold!(out::StridedMatrix{T}, X::StridedMatrix{T}, s::Int, diag
   out
 end
 
-HardThreshold!(X::StridedMatrix, s::Int, diagonal::Bool=true) = HardThreshold!(X, X, s, diagonal)
+hard_threshold!(X::StridedMatrix, s::Int, diagonal::Bool=true) = hard_threshold!(X, X, s, diagonal)
 
-function HardThreshold!(out::SymmetricSparseIterate{T}, X::StridedMatrix{T}, s::Int, diagonal::Bool=true) where {T<:AbstractFloat}
+function hard_threshold!(out::SymmetricSparseIterate{T}, X::StridedMatrix{T}, s::Int, diagonal::Bool=true) where {T<:AbstractFloat}
   p = size(X, 1)
   size(out) == size(X) || throw(DimensionMismatch())
 
@@ -52,12 +52,12 @@ function HardThreshold!(out::SymmetricSparseIterate{T}, X::StridedMatrix{T}, s::
 end
 
 """
-    HardThreshold!(X::SymmetricSparseIterate, s)
+    hard_threshold!(X::SymmetricSparseIterate, s)
 
 Keep the `s` largest stored entries of `X` in absolute value (ties at the
 threshold are all kept) and drop the rest.
 """
-function HardThreshold!(X::SymmetricSparseIterate{T}, s::Int) where {T<:AbstractFloat}
+function hard_threshold!(X::SymmetricSparseIterate{T}, s::Int) where {T<:AbstractFloat}
   val = s <= 0 ? T(Inf) : _threshold(abs.(view(X.nzval, 1:nnz(X))), s)
   for i=1:nnz(X)
     if abs(X.nzval[i]) < val
@@ -75,6 +75,6 @@ end
 #################################
 
 # tr(Σ Ω) - log det Ω
-covSel_objective(Σ, S) = tr(Σ*S) - logdet(S)
+covsel_objective(Σ, S) = tr(Σ*S) - logdet(S)
 
-covSel_objective(Σ, S, L) = tr(Σ*(S+L)) - logdet(S+L)
+covsel_objective(Σ, S, L) = tr(Σ*(S+L)) - logdet(S+L)

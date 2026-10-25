@@ -1,7 +1,7 @@
 # The solvers of CovarianceSelection (CovSel before 0.1.0) before and after the
 # move onto ProximalSolvers, run by the
 # version in the active environment: old/ (CovSel master with its own
-# coordinate descent loss and ADMM loop, on CoordinateDescent 0.6.0 and
+# coordinate descent loss and ADMM loop, on HighDimensionalModels 0.6.0 and
 # ProximalBase 0.4.1) or new/ (this checkout, on ProximalSolvers 0.1 and
 # ProximalBase 0.5). The data come from Random and LinearAlgebra only, so that
 # both sides solve the same problems. Each case runs once to compile, then
@@ -30,9 +30,9 @@ end
 const ONLY = Regex(length(ARGS) > 1 ? ARGS[2] : ".")
 const SEED = 20261023
 
-# the coordinate descent of differencePrecisionActiveShooting, with its passes
+# the coordinate descent of difference_precision_active_shooting, with its passes
 if OLD
-  using CoordinateDescent
+  using HighDimensionalModels
   function dtrace(Sx, Sy, λ, order)
     x = SymmetricSparseIterate(size(Sx, 1))
     info = CDInfo()
@@ -43,7 +43,7 @@ else
   using ProximalSolvers
   function dtrace(Sx, Sy, λ, order)
     x = SymmetricSparseIterate(size(Sx, 1))
-    r = solve!(x, directDifferenceLoss(Sx, Sy), NormL1(λ), CDSolver(; order))
+    r = solve!(x, direct_difference_loss(Sx, Sy), NormL1(λ), CDSolver(; order))
     x, r.passes
   end
 end
@@ -100,7 +100,7 @@ function refit_cases()
   for p in (50, 100)
     P = difference_problem(p)
     S = [LinearIndices((p, p))[r, c] for c=1:p for r=1:p if abs(r - c) <= 1]
-    run_case("differencePrecisionRefit p=$p", () -> (vec(Matrix(differencePrecisionRefit(P.Sx, P.Sy, S))), 0))
+    run_case("difference_precision_refit p=$p", () -> (vec(Matrix(difference_precision_refit(P.Sx, P.Sy, S))), 0))
   end
 end
 
@@ -121,9 +121,9 @@ function admm_cases()
     (vec(Z), info.iterations)
   end)
   run_case("covselpath p=50 4λ", () -> (reduce(vcat, vec.(covselpath(S, [0.5, 0.2, 0.1, 0.05]))), 0))
-  run_case("fusedGraphicalLasso p=50", () -> begin
+  run_case("fused_graphical_lasso p=50", () -> begin
     info = ADMMInfo()
-    Zx, Zy = fusedGraphicalLasso(Matrix(P.Sx), 1000, S, 1000, 0.05, 0.05; info)
+    Zx, Zy = fused_graphical_lasso(Matrix(P.Sx), 1000, S, 1000, 0.05, 0.05; info)
     (vcat(vec(Zx), vec(Zy)), info.iterations)
   end)
   rng = Xoshiro(3)
@@ -132,9 +132,9 @@ function admm_cases()
   β1 = [i <= 5 ? 1.0 : 0.0 for i=1:p]
   β2 = [2 <= i <= 5 ? 1.0 : 0.0 for i=1:p]
   b1, b2 = A1 * β1 + randn(rng, n), A2 * β2 + randn(rng, n)
-  run_case("fusedNeighborhoodSelection n=200 p=100", () -> begin
+  run_case("fused_neighborhood_selection n=200 p=100", () -> begin
     info = ADMMInfo()
-    z1, z2 = fusedNeighborhoodSelection(A1, b1, A2, b2, 0.1, 0.1; info)
+    z1, z2 = fused_neighborhood_selection(A1, b1, A2, b2, 0.1, 0.1; info)
     (vcat(z1, z2), info.iterations)
   end)
 end
@@ -145,10 +145,10 @@ function iht_cases()
   Sx, Sy = P.Sx, P.Sy
   s = 2p - 1
   η = 1 / (opnorm(Sx) * opnorm(Sy))
-  run_case("differencePrecisionIHT p=50 s=$s", () -> ((Δ, fvals) = differencePrecisionIHT(Sx, Sy, η, s); (vec(Matrix(Δ)), length(fvals))))
-  ηU = η / (4 * opnorm(CS.differenceLatentPrecisionIHT_init(Sx, Sy, s, 1)[2]))
-  run_case("differenceLatentPrecisionIHT p=50 s=$s r=1", () -> begin
-    Δ, L, U, fvals, iter = differenceLatentPrecisionIHT(Sx, Sy, η, ηU, s, 1; options=IHTOptions(; epsTol=1e-8, maxIter=500))
+  run_case("difference_precision_iht p=50 s=$s", () -> ((Δ, fvals) = difference_precision_iht(Sx, Sy, η, s); (vec(Matrix(Δ)), length(fvals))))
+  ηU = η / (4 * opnorm(CS.difference_latent_precision_iht_init(Sx, Sy, s, 1)[2]))
+  run_case("difference_latent_precision_iht p=50 s=$s r=1", () -> begin
+    Δ, L, U, fvals, iter = difference_latent_precision_iht(Sx, Sy, η, ηU, s, 1; options=IHTOptions(; eps_tol=1e-8, maxiter=500))
     (vcat(vec(Matrix(Δ)), vec(L)), iter)
   end)
 end
@@ -157,7 +157,7 @@ function loss_cases()
   p = 100
   P = difference_problem(p)
   Δ = SymmetricSparseIterate(sparse(P.Δ))
-  run_case("diffLoss p=100 tridiagonal Δ", () -> ([diffLoss(P.Sx, Δ, P.Sy, 2), diffLoss(P.Sx, Δ, P.Sy, Inf)], 0))
+  run_case("diff_loss p=100 tridiagonal Δ", () -> ([diff_loss(P.Sx, Δ, P.Sy, 2), diff_loss(P.Sx, Δ, P.Sy, Inf)], 0))
 end
 
 dtrace_cases()

@@ -3,7 +3,7 @@
 This example recreates the simulation **design** behind Figure 2, Section 7.1
 of [The joint graphical lasso for inverse covariance estimation across multiple
 classes](https://pmc.ncbi.nlm.nih.gov/articles/PMC4012833/), using
-`CovarianceSelection.fusedGraphicalLasso`. It compares FGL at four levels of
+`CovarianceSelection.fused_graphical_lasso`. It compares FGL at four levels of
 fusion with separate graphical lassos, the same solver with zero fusion.
 It writes every replicate, Monte Carlo means and standard errors, and the
 five types of comparison plotted in the paper. The original graph, random

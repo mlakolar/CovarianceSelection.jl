@@ -115,8 +115,8 @@ function _sl_direction!(ws::_SLWorkspace{T}) where {T}
     ws.x[q] = S[l, j]
     ws.y[q] = ws.w[l] * ws.s[q]
   end
-  _mulN!(ws.a, ws.N, ws.x, k)
-  _mulN!(ws.d, ws.N, ws.y, k)
+  _mul_n!(ws.a, ws.N, ws.x, k)
+  _mul_n!(ws.d, ws.N, ws.y, k)
   @inbounds for q in 1:k
     ws.d[q] = -ws.d[q]
   end
@@ -185,7 +185,7 @@ function _sl_join!(ws::_SLWorkspace{T}, l::Int, s::T) where {T}
   @inbounds for q in 1:k
     g[q] = S[ws.A[q], l]
   end
-  _mulN!(b, N, g, k)
+  _mul_n!(b, N, g, k)
   γ = S[l, l]
   @inbounds for q in 1:k
     γ -= g[q] * b[q]

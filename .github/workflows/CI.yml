@@ -51,21 +51,15 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v3
-      # ProximalSolvers (0.1.0 is JuliaRegistries/General#173068) and the
-      # ProximalBase with SliceSum and FiberSum are not registered yet: their
-      # masters. Julia 1.11 and later take them from [sources] in Project.toml;
-      # Julia 1.10 ignores [sources], and resolves each Pkg.add with the whole
-      # project, so both are added in one call. Remove this step and [sources]
-      # once they are registered.
-      - name: Add ProximalBase and ProximalSolvers from GitHub on Julia 1.10
-        if: matrix.version == 'lts'
-        shell: julia --color=yes --project=. {0}
-        run: |
-          using Pkg
-          Pkg.add([PackageSpec(url="https://github.com/mlakolar/ProximalBase.jl", rev="master"),
-                   PackageSpec(url="https://github.com/mlakolar/ProximalSolvers.jl", rev="master")])
+      - name: Check naming conventions
+        run: ${{ runner.os == 'Windows' && 'python' || 'python3' }} scripts/check_naming.py
+      - name: Resolve dependencies from master checkouts
+        run: julia --color=yes scripts/instantiate.jl
       - uses: julia-actions/julia-buildpkg@v1
-      - uses: julia-actions/julia-runtest@v1
+      - name: Test against dependency master checkouts
+        run: julia --color=yes scripts/test_master.jl
+        env:
+          JULIA_TEST_COVERAGE: "true"
       - uses: julia-actions/julia-processcoverage@v1
       - uses: codecov/codecov-action@v7
         with:
@@ -89,7 +83,7 @@ jobs:
         env:
           COVSEL_EXAMPLES_QUICK: '1'
         run: |
-          julia --project=examples -e 'using Pkg; Pkg.instantiate()'
+          julia scripts/instantiate.jl examples
           for f in examples/*.jl; do
             echo "::group::$f"
             julia --project=examples "$f"
@@ -99,5 +93,5 @@ jobs:
         env:
           COVSEL_BENCHMARK_QUICK: '1'
         run: |
-          julia --project=benchmark -e 'using Pkg; Pkg.instantiate()'
+          julia scripts/instantiate.jl benchmark
           julia --project=benchmark benchmark/run.jl

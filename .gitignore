@@ -11,3 +11,9 @@
 /benchmark/compare/*/Manifest*.toml
 /benchmark/compare/results/
 /examples/danaher2014/output/
+
+# Generated master dependency test environments
+.master-test-env/
+
+# Local Julia-minor environments are regenerated from master checkouts
+/Manifest-v*.toml

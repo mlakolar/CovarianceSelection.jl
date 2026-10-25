@@ -2,7 +2,7 @@
     ConfusionMatrix(tp, fp, fn, tn)
 
 Counts of true and false positives and negatives of an estimated support,
-computed by [`getConfusionMatrix`](@ref). See also `tpr` (the true positive
+computed by [`get_confusion_matrix`](@ref). See also `tpr` (the true positive
 rate, or recall), `fpr` and `precision`.
 """
 struct ConfusionMatrix
@@ -13,7 +13,7 @@ struct ConfusionMatrix
 end
 
 """
-    getConfusionMatrix(Δ, hΔ, thr=1e-4; diagonal=true)
+    get_confusion_matrix(Δ, hΔ, thr=1e-4; diagonal=true)
 
 Compare the support of the lower triangle of the true symmetric matrix `Δ`
 with that of the estimate `hΔ`, whose entries count as nonzero when larger
@@ -22,7 +22,7 @@ than `thr` in absolute value. The diagonal is included unless
 precision matrix always has a nonzero diagonal. `hΔ` can be any matrix, for
 example a `SymmetricSparseIterate` or a `SparseMatrixCSC`.
 """
-function getConfusionMatrix(Δ::AbstractMatrix{T}, hΔ::AbstractMatrix{T}, thr=1e-4; diagonal::Bool=true) where T
+function get_confusion_matrix(Δ::AbstractMatrix{T}, hΔ::AbstractMatrix{T}, thr=1e-4; diagonal::Bool=true) where T
   p = size(Δ, 1)
 
   tp = fp = fn = tn = 0

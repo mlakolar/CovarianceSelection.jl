@@ -1,31 +1,57 @@
 """
-    IHTOptions(; epsTol=1e-2, maxIter=500, checkEvery=10)
+    IHTOptions(; eps_tol=1e-2, maxiter=500, check_every=10)
 
 Options for the iterative hard thresholding solvers. The iterations stop when
-the largest gradient entry falls below `epsTol`, or when the objective, checked
-every `checkEvery` iterations, changes by at most `epsTol`.
+the largest gradient entry falls below `eps_tol`, or when the objective, checked
+every `check_every` iterations, changes by at most `eps_tol`.
 """
 struct IHTOptions
- epsTol::Float64
- maxIter::Int64
- checkEvery::Int64
+ eps_tol::Float64
+ maxiter::Int64
+ check_every::Int64
 end
 
 
-IHTOptions(;epsTol::Real=1e-2, maxIter::Integer=500, checkEvery::Integer=10) =
-  IHTOptions(epsTol, maxIter, checkEvery)
+function _naming_keyword(value, legacy, default, canonical::Symbol, old::Symbol)
+  if legacy !== nothing
+    value === nothing || throw(ArgumentError("supply only $canonical, not both $canonical and $old"))
+    Base.depwarn("keyword $old is deprecated; use $canonical", old)
+    return legacy
+  end
+  value === nothing ? default : value
+end
+
+function IHTOptions(; eps_tol::Union{Nothing,Real}=nothing,
+                    maxiter::Union{Nothing,Integer}=nothing,
+                    check_every::Union{Nothing,Integer}=nothing,
+                    epsTol::Union{Nothing,Real}=nothing,
+                    maxIter::Union{Nothing,Integer}=nothing,
+                    checkEvery::Union{Nothing,Integer}=nothing)
+  IHTOptions(_naming_keyword(eps_tol, epsTol, 1e-2, :eps_tol, :epsTol),
+             _naming_keyword(maxiter, maxIter, 500, :maxiter, :maxIter),
+             _naming_keyword(check_every, checkEvery, 10, :check_every, :checkEvery))
+end
+
+function Base.getproperty(options::IHTOptions, name::Symbol)
+  canonical = name === :epsTol ? :eps_tol : name === :maxIter ? :maxiter :
+              name === :checkEvery ? :check_every : name
+  canonical === name || Base.depwarn("field $name is deprecated; use $canonical", name)
+  getfield(options, canonical)
+end
+Base.propertynames(::IHTOptions, private::Bool=false) =
+  (fieldnames(IHTOptions)..., :epsTol, :maxIter, :checkEvery)
 
 
 
   # gradient of tr(Σ(S + L)) - log det(S + L) with respect to S
-  function covselLatentIHT_grad_S!(gS, Σ, S, L)
+  function covsel_latent_iht_grad_s!(gS, Σ, S, L)
     gS .= Symmetric(Σ) - inv(Symmetric(S + L))
     gS
   end
 
   # gradient with respect to U, where L = UU'
-  function covselLatentIHT_grad_U!(gU, gS, Σ, S, L, U)
-    covselLatentIHT_grad_S!(gS, Σ, S, L)
+  function covsel_latent_iht_grad_u!(gU, gS, Σ, S, L, U)
+    covsel_latent_iht_grad_s!(gS, Σ, S, L)
     rmul!(gS, 2.)
     mul!(gU, gS, U)
   end
@@ -33,8 +59,12 @@ IHTOptions(;epsTol::Real=1e-2, maxIter::Integer=500, checkEvery::Integer=10) =
   # minimize tr(Σ(S + L)) - log det(S + L) over S with at most s nonzero
   # off-diagonal entries (lower triangle) and L = UU' of rank r, by gradient
   # descent with step sizes ηS and ηU and hard thresholding of S
-  function covselLatentIHT!(Σ::StridedMatrix, ηS, ηU, s, r;
-    epsTol=1e-2, maxIter=100, checkEvery=5, callback=nothing)
+  function covsel_latent_iht!(Σ::StridedMatrix, ηS, ηU, s, r;
+    eps_tol=nothing, maxiter=nothing, check_every=nothing, callback=nothing,
+    epsTol=nothing, maxIter=nothing, checkEvery=nothing)
+    eps_tol = _naming_keyword(eps_tol, epsTol, 1e-2, :eps_tol, :epsTol)
+    maxiter = _naming_keyword(maxiter, maxIter, 100, :maxiter, :maxIter)
+    check_every = _naming_keyword(check_every, checkEvery, 5, :check_every, :checkEvery)
 
     p = size(Σ, 1)
 
@@ -45,7 +75,7 @@ IHTOptions(;epsTol::Real=1e-2, maxIter::Integer=500, checkEvery::Integer=10) =
 
     # init
     tmp = Matrix(inv(Symmetric(Σ)))
-    HardThreshold!(S, tmp, s, false)
+    hard_threshold!(S, tmp, s, false)
 
     tmp .= tmp - S
     F = svd(tmp)
@@ -56,19 +86,19 @@ IHTOptions(;epsTol::Real=1e-2, maxIter::Integer=500, checkEvery::Integer=10) =
     fvals = Float64[]
     # gradient descent
     #
-    fv = covSel_objective(Σ, S, L)
+    fv = covsel_objective(Σ, S, L)
     push!(fvals, fv)
     iter = 0
-    while iter < maxIter
+    while iter < maxiter
       iter += 1
       # update S
-      covselLatentIHT_grad_S!(gS, Σ, S, L)
+      covsel_latent_iht_grad_s!(gS, Σ, S, L)
       @. S -= ηS * gS
-      HardThreshold!(S, S, s, false)
+      hard_threshold!(S, S, s, false)
       max_gS = maximum( abs.(gS) )
 
       # update U and L
-      covselLatentIHT_grad_U!(gU, gS, Σ, S, L, U)
+      covsel_latent_iht_grad_u!(gU, gS, Σ, S, L, U)
       @. U -= ηU * gU
       mul!(L, U, U')
       max_gU = maximum( abs.(gU) )
@@ -76,12 +106,12 @@ IHTOptions(;epsTol::Real=1e-2, maxIter::Integer=500, checkEvery::Integer=10) =
         callback(Σ, S, L)
       end
 
-      done = max(max_gS, max_gU) < epsTol
+      done = max(max_gS, max_gU) < eps_tol
       # check for convergence
-      if mod(iter, checkEvery) == 0
-        fv_new = covSel_objective(Σ, S, L)
+      if mod(iter, check_every) == 0
+        fv_new = covsel_objective(Σ, S, L)
         push!(fvals, fv_new)
-        done = abs(fv_new - fv) <= epsTol
+        done = abs(fv_new - fv) <= eps_tol
         fv = fv_new
       end
       done && break
