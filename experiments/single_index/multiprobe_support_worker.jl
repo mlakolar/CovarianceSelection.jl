@@ -1,4 +1,4 @@
-"""Replay selected rows only. Primary direction estimates are not recomputed."""
+# Replay selected rows only. Primary direction estimates are not recomputed.
 include("multiprobe_common.jl")
 
 function main(planfile,task,out)
