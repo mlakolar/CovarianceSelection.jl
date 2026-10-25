@@ -109,8 +109,14 @@
     },
     {
       "job_id": "13424115",
+      "reason": "Julia docstring attached to include; repaired as a comment.",
       "stage": "support_diagnostic_correction",
-      "state": "submitted"
+      "state": "FAILED"
+    },
+    {
+      "job_id": "13424313",
+      "stage": "support_diagnostic_correction_retry",
+      "state": "COMPLETED"
     }
   ],
   "outputs": [
@@ -122,6 +128,13 @@
     "action": "Cancel owned initial confirmation; retain partial records; restart all scenarios with fresh independent seed and nine candidates.",
     "original_confirmation_estimates_inspected": false,
     "reason": "Global development averaging omitted complete-quadratic specialist for constant-variance design. Add complete OLS and its existing k6/k10 refits before inspecting any confirmation estimates."
+  },
+  "publication": {
+    "commit": "21619339c7914eab6aab6e0b270535a85a3c966f",
+    "draft": true,
+    "github_ci_conclusion": "success",
+    "github_ci_run": 40194918029,
+    "pull_request": "https://github.com/mlakolar/CovarianceSelection.jl/pull/29"
   },
   "purpose": "Low-dimensional Gaussian multiple-probe Stein index development and independent tuning confirmation. No precision coverage.",
   "recovery_policy": "Retain all complete per-replicate groups, including failed numerical outcomes. Change batching only to one replicate; original scientific plan, fitting code and deterministic seeds unchanged. Recompute incomplete dataset groups only. Validate full final identities and row counts.",
@@ -140,8 +153,8 @@
     "primary_failures": 0,
     "primary_rows": 690000,
     "primary_tables_complete": true,
-    "publication_pending": true,
-    "selected_support_columns_withheld": true
+    "publication_pending": false,
+    "selected_support_columns_withheld": false
   },
   "resources": {
     "concurrent_cpus": 16,
@@ -150,7 +163,7 @@
     "wall_minutes": 45,
     "workers_per_node": 8
   },
-  "revision": 23,
+  "revision": 26,
   "run_id": "20261025-sig-multiprobe",
   "schema_version": 1,
   "scientific_plan": {
@@ -167,30 +180,31 @@
     "specialists.tar.gz",
     "preflight.tar.gz"
   ],
-  "status": "primary_validated_support_replay_queued",
+  "status": "complete_support_correction_validated",
   "submission_intent": null,
   "support_correction": {
-    "job_id": "13424115",
+    "job_id": "13424313",
     "method": "Replay selected row sets from unchanged full OLS projection. Normal-equation ranking checked against direct QR, with QR fallback for near ties. Do not recompute primary estimates.",
-    "reason": "QOSMaxJobsPerUserLimit",
+    "reason": "105600 development and 120000 confirmation rows; primary summaries exactly unchanged.",
     "root": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-multiprobe-support",
     "source_commit": "a3fcd19",
     "source_snapshots": [
       "source.tar.gz",
       "report-patch.tar.gz"
     ],
-    "state": "PENDING"
+    "state": "validated"
   },
-  "unresolved": [
-    "Selected-row diagnostic replay and new exact-zero Discovery tests await a per-user concurrent-job slot. Other tasks jobs were not changed."
-  ],
-  "updated_utc": "2026-10-25T12:47:52.105639Z",
+  "unresolved": [],
+  "updated_utc": "2026-10-25T17:56:14.203700Z",
   "validation": {
     "confirmation_failures": 0,
     "confirmation_rows": 330000,
     "design_population_rows": 12,
     "duplicate_identities": 0,
-    "focused_checks": 138,
+    "exact_zero_tests": "passed on Discovery and prior GitHub CI",
+    "focused_checks": 140,
+    "github_ci": "success",
+    "github_ci_run": 40194918029,
     "largest_case_worker_failures": 0,
     "largest_case_worker_rows": 11,
     "primary_fitting_hashes_identical": true,

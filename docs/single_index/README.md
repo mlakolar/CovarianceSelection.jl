@@ -19,6 +19,8 @@ The known-index sample-size ladder and two-stage uncertainty study are described
 in [SAMPLE_SIZE.md](SAMPLE_SIZE.md).
 The index-only multiple-probe study, including first- and second-order Stein
 estimators and OLS refitting, is specified in [MULTIPROBE_INDEX.md](MULTIPROBE_INDEX.md).
+The fixed-rule covariance-weighting and learned-probe comparison is specified in
+[PROBE_AGGREGATION.md](PROBE_AGGREGATION.md).
 
 ```julia
 using CovarianceSelection

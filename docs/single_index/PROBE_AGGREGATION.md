@@ -110,3 +110,11 @@ Keep the source revision/snapshot, plans, raw compact CSV shards on Discovery,
 and version compact summaries, paired results, receipts, and the execution recipe.
 Do not advance to precision coverage automatically. Evaluate aggregation gains and
 the informative-probe controls first.
+
+## Execution status
+
+Canary job `13432568` completed with 16 algebra checks and 332 expected records
+across six datasets, no duplicates, and no failed fits. Development job `13433102`
+and dependent confirmation job `13433104` were submitted. Production results are
+pending. The authoritative current run registry is
+`SingleIndexGraph/.slurm/runs/20261025-sig-aggregation.json`.
