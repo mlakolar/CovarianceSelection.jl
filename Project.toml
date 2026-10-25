@@ -19,13 +19,7 @@ ProximalSolvers = {path = "../ProximalOPT.jl"}
 [weakdeps]
 MathOptInterface = "b8f27783-ece8-5eb3-8dc8-9495eed66fee"
 
-[sources.ProximalBase]
-rev = "master"
-url = "https://github.com/mlakolar/ProximalBase.jl"
 
-[sources.ProximalSolvers]
-rev = "master"
-url = "https://github.com/mlakolar/ProximalSolvers.jl"
 
 [extensions]
 CovarianceSelectionMathOptInterfaceExt = "MathOptInterface"
