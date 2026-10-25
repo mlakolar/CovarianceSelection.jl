@@ -4,7 +4,7 @@ using Test, Random, LinearAlgebra, SparseArrays, Statistics
 import CovarianceSelection, ProximalBase, ProximalSolvers
 using CovarianceSelection: diffLoss
 using ProximalBase: SymmetricSparseIterate, NormL1, coordinates, ncoordinates, tril_cartesian, tril_index
-using ProximalSolvers: CDSolver
+using ProximalSolvers: CDSolver, ProximalGradientDescent, AccProxGradDescent
 
 include("reference.jl")
 
@@ -202,6 +202,53 @@ denseLoss(Sx, Sy, D) = tr(Sx*D*Sy*D) / 2 - tr(D*(Sy - Sx))
     Δ2, fvals2 = CovarianceSelection.differencePrecisionIHT(Symmetric(Mx, :U), Symmetric(My, :L), η, 4; maxIter=50)
     @test Matrix(Δ2) ≈ Matrix(Δ1)
     @test fvals2 ≈ fvals1
+  end
+
+  @testset "IHT by solve!, with a line search" begin
+    p = 6
+    Σx = [0.5^abs(i-j) for i=1:p, j=1:p]
+    Ωy = inv(Σx)
+    Ωy[1, 2] = Ωy[2, 1] = Ωy[1, 2] + 0.5
+    Σy = inv(Ωy)
+    D = inv(Σx) - inv(Σy)
+
+    for solver in (ProximalGradientDescent(), AccProxGradDescent())
+      Δ, fvals = CovarianceSelection.differencePrecisionIHT(Symmetric(Σx), Symmetric(Σy), 1; solver, tol=1e-14, maxiter=10000)
+      @test Matrix(Δ) ≈ D atol=1e-6
+      @test nnz(Δ) == 1
+      @test fvals[1] == 0
+      @test fvals[end] ≈ denseLoss(Σx, Σy, D)
+      # the line search keeps the objective from increasing
+      @test all(diff(fvals) .<= 1e-12)
+    end
+
+    # without the sparsity constraint, inv(Σx) - inv(Σy)
+    Σy2 = [0.3^abs(i-j) for i=1:p, j=1:p]
+    Δ, _ = CovarianceSelection.differencePrecisionIHT(Symmetric(Σx), Symmetric(Σy2), div(p * (p + 1), 2); tol=1e-14, maxiter=20000)
+    @test Matrix(Δ) ≈ inv(Σx) - inv(Σy2) atol=1e-6
+    @test_throws DimensionMismatch CovarianceSelection.differencePrecisionIHT(Symmetric(Σx), Symmetric(Σy2[1:2, 1:2]), 1)
+
+    # only the triangle that each Symmetric refers to is read
+    Mx, My = copy(Σx), copy(Σy2)
+    Mx[2, 1] = My[1, 3] = 1e3
+    Δ1, fvals1 = CovarianceSelection.differencePrecisionIHT(Symmetric(Σx), Symmetric(Σy2), 4; maxiter=50)
+    Δ2, fvals2 = CovarianceSelection.differencePrecisionIHT(Symmetric(Mx, :U), Symmetric(My, :L), 4; maxiter=50)
+    @test Matrix(Δ2) ≈ Matrix(Δ1)
+    @test fvals2 ≈ fvals1
+
+    # on sample covariances: at most s entries in the lower triangle, and a fixed
+    # point of iterative hard thresholding, whose gradient vanishes on the support
+    Random.seed!(11)
+    q = 15
+    hSx, hSy = genData(q)
+    Δs, fs = CovarianceSelection.differencePrecisionIHT(Symmetric(hSx), Symmetric(hSy), 8; tol=1e-12, maxiter=20000)
+    D = Matrix(Δs)
+    @test issymmetric(D)
+    @test count(!iszero, D[i, j] for j in 1:q for i in j:q) <= 8
+    G = hSx * D * hSy
+    G = (G + G') / 2 + hSx - hSy
+    @test all(abs(G[i, j]) < 1e-6 for j in 1:q for i in j:q if D[i, j] != 0)
+    @test fs[end] ≈ denseLoss(hSx, hSy, D)
   end
 
 end

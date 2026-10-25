@@ -29,7 +29,7 @@ CovSel.
 module CovarianceSelection
 
 using ProximalBase
-using ProximalSolvers: ProximalSolvers, ADMMSolver, CDSolver, ProximalOptions, refit!, solve!
+using ProximalSolvers: ProximalSolvers, ADMMSolver, CDSolver, ProximalGradientDescent, ProximalOptions, refit!, solve!
 using SparseArrays, LinearAlgebra
 using Random: AbstractRNG, default_rng, randperm
 using SpecialFunctions: erfcinv

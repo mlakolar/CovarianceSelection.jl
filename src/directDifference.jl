@@ -202,18 +202,41 @@ end
 
 
 """
+    differencePrecisionIHT(Σx, Σy, s; solver=ProximalGradientDescent(), maxiter=1000, tol=1e-8)
     differencePrecisionIHT(Σx, Σy, η, s; epsTol=1e-5, maxIter=1000)
 
 Direct estimation of the difference of precision matrices `Δ = Ωx - Ωy` with
-at most `s` nonzero entries in its lower triangle, by projected gradient
-descent on `tr(Σx⋅Δ⋅Σy⋅Δ)/2 - tr(Δ⋅(Σy - Σx))` with step size `η` and hard
-thresholding. Stops when the objective changes by at most `epsTol`.
+at most `s` nonzero entries in its lower triangle, by iterative hard
+thresholding: projected gradient descent on
+`tr(Σx⋅Δ⋅Σy⋅Δ)/2 - tr(Δ⋅(Σy - Σx))`, keeping the `s` largest entries.
 Returns `(Δ, fvals)` with `Δ` a `SymmetricSparseIterate` and `fvals` the
-objective values.
+objective values, starting from `Δ = 0`.
+
+Without a step size, ProximalSolvers' `solve!` runs `solver` on
+`KronQuadratic(Σx, Σy, Σx - Σy)` with `IndBallL0(s)`: the step comes from a
+backtracking line search, so the objective never increases. `solver` may be
+any gradient solver of ProximalSolvers. It stops when the relative change of
+the objective or of `Δ`, or the optimality residual, is below `tol`, or after
+`maxiter` iterations. An entry and its transpose are kept or dropped
+together, and of tied entries exactly `s` are kept.
+
+With a step size `η`, the step is fixed (`1/(‖Σx‖‖Σy‖)` is safe), ties at the
+threshold are all kept, and it stops when the objective changes by at most
+`epsTol`.
 """
+function differencePrecisionIHT(Σx::Symmetric{T}, Σy::Symmetric{T}, s::Integer;
+                                solver = ProximalGradientDescent(), maxiter::Integer = 1000,
+                                tol::Real = 1e-8) where {T<:AbstractFloat}
+  size(Σx) == size(Σy) || throw(DimensionMismatch())
+  Δ = SymmetricSparseIterate(T, size(Σx, 1))
+  options = ProximalOptions(; maxiter, ftol = tol, xtol = tol, gradtol = tol, store_trace = true)
+  r = solve!(Δ, KronQuadratic(Σx, Σy, Σx - Σy), IndBallL0(s), solver, options)
+  (Δ, [zero(T); T[st.fg_x for st in r.trace]])
+end
+
 function differencePrecisionIHT(
   Σx::Symmetric{T}, Σy::Symmetric{T},
-  η::Real, s::Int;
+  η::Real, s::Integer;
   epsTol=1e-5, maxIter=1000) where {T<:AbstractFloat}
 
   size(Σx) == size(Σy) || throw(DimensionMismatch())
