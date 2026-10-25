@@ -1,0 +1,3 @@
+scenario,replicate,method,selected_size,loss,status,scope
+8,179,holdout_min,2,0.504097777604485,converged,diagnostic_only_primary_failures_retained
+8,179,holdout_1se,2,0.504097777604485,converged,diagnostic_only_primary_failures_retained

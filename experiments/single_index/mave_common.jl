@@ -33,6 +33,17 @@ function mv_predict(Y,Z,b,Znew;bandwidth_factor=1.)
     (;prediction,center=mu,scale)
 end
 
+# A nonfinite prediction invalidates that candidate, not every other support.
+function mv_support_choice(scores,standard_errors)
+    eligible=isfinite.(scores).&isfinite.(standard_errors).&(standard_errors.>=0)
+    adjusted=ifelse.(eligible,scores,Inf)
+    best=argmin(adjusted)
+    isfinite(adjusted[best]) || throw(DomainError(scores,"no finite validation candidate"))
+    sparse=findfirst(eligible .& (scores .<=scores[best]+standard_errors[best]))
+    sparse===nothing && error("finite validation minimum has no one-SE candidate")
+    best,sparse,eligible
+end
+
 # Honest support selection. Split fixed independently of responses. Selection sees
 # only 75% training data. Refit the chosen support on all observations afterwards.
 function mv_holdout(Y,Z;seed,bandwidth_factor=1.,updates=40)
@@ -43,7 +54,7 @@ function mv_holdout(Y,Z;seed,bandwidth_factor=1.,updates=40)
     dense=refine_probe_index(Yt,Zt,initial;updates,bandwidth_factor,smoother=mv_smoother)
     ranking=sortperm(abs.(dense.direction);rev=true)
     sizes=[2,4,6,10,d]
-    fits=NamedTuple[];scores=Float64[];standard_errors=Float64[]
+    fits=NamedTuple[];scores=Float64[];standard_errors=Float64[];nonfinite_losses=Int[]
     for k in sizes
         S=sort(ranking[1:k]);start=zeros(d);start[S]=dense.direction[S]
         fit=k==d ? dense : refine_probe_index(Yt,Zt,start;updates,bandwidth_factor,
@@ -51,10 +62,10 @@ function mv_holdout(Y,Z;seed,bandwidth_factor=1.,updates=40)
         pred=mv_predict(Yt,Zt,fit.direction,Z[val,:];bandwidth_factor)
         losses=vec(mean(abs2.((Y[val,:].-pred.center)./pred.scale.-pred.prediction);dims=2))
         push!(fits,fit);push!(scores,mean(losses));push!(standard_errors,std(losses)/sqrt(length(val)))
+        push!(nonfinite_losses,count(!isfinite,losses))
     end
-    best=argmin(scores)
-    # Minimum validation error is primary. One-SE is recorded as a separate sparse rule.
-    sparse=findfirst(scores .<=scores[best]+standard_errors[best])
+    # Minimum validation error is primary. One-SE is a separate sparse rule.
+    best,sparse,eligible=mv_support_choice(scores,standard_errors)
     results=Dict{String,Any}()
     for (name,j) in (("holdout_min",best),("holdout_1se",sparse))
         fit=fits[j]
@@ -62,5 +73,5 @@ function mv_holdout(Y,Z;seed,bandwidth_factor=1.,updates=40)
                                 support=fit.selected,smoother=mv_smoother)
         results[name]=(fit=full,k=sizes[j],validation=scores[j],training_status=String(fit.status))
     end
-    (;results,scores,sizes,training_status=String(dense.status))
+    (;results,scores,sizes,standard_errors,nonfinite_losses,eligible,training_status=String(dense.status))
 end

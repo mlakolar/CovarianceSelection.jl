@@ -1,0 +1,6 @@
+{
+  "paired_checks": 19200,
+  "primary_cases": 9600,
+  "hybrid_summary_rows": 256,
+  "checks": "Baseline losses agree; successful MAVE-selected support counts and selection-stage status/iteration counts agree across coefficient-refit arms; all planned pairs retained."
+}

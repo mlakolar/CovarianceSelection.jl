@@ -6,6 +6,13 @@ multivariate MAVE adaptation for quadratic response probes. Its empirical
 performance and numerical convergence are separate questions. No new statistical
 or support-recovery theorem is asserted.
 
+The Discovery comparison is complete. Adaptive MAVE is useful for covariate
+selection, followed by a first-order Stein/RRR coefficient refit. One dense
+update changes little, while dense iteration usually increases direction error.
+A simpler fixed-threshold Stein refit remains competitive in two designs.
+See the [comparison figure](../../experiments/single_index/results/mave/interpretation/index-comparison.png)
+and [complete paired tables](../../experiments/single_index/results/mave/interpretation/comparisons.md).
+
 ## Model, observations, and probe banks
 
 Write `Z` for the n-by-20 Gaussian covariate matrix and `X` for the n-by-p
@@ -121,6 +128,8 @@ unpenalized restricted MAVE, with the same bandwidth and stopping rule.
   confirmation uses the prespecified f=0.1.
 
 These levels are exploratory, not Belloni--Chernozhukov calibrated penalties.
+Their coordinate scales assume comparable covariate units; here Z is standard
+Gaussian. The bounded adaptive weights do not establish an oracle property.
 They do not use cross-validation or the true support. Coordinate descent checks
 the penalized quadratic's KKT residual. An empty model is a recorded failure;
 there is no oracle fallback. Restricted refitting removes shrinkage but can
@@ -146,6 +155,56 @@ an oracle comparison. The usual one-standard-error rule may be too aggressive
 because irrelevant probes dilute validation differences. Retain this possibility
 as an adverse outcome.
 
+## Refitting index coefficients after selecting variables
+
+The default sparse procedure refits the nonparametric MAVE criterion without a
+penalty. Development suggested separating support selection from coefficient
+estimation. Accordingly, a follow-up uses MAVE to select covariates, then
+estimates their index coefficients using the first-order Stein relation.
+
+For fixed probes, write `g(t) = E[Y | T=t]`. With standard Gaussian covariates,
+
+$$E[ZY^T]=\beta E[g'(T)]^T.$$
+
+Thus a multivariate OLS slope matrix has population rank one when the vector
+of average derivatives is nonzero. The same identity holds after fixed probe
+rescaling. Sample centering and scaling are plug-in steps; no exact finite-sample
+unbiasedness claim is made for sample-standardized responses.
+
+On a data-selected covariate support, use the following calculations. `Zs` is
+the centered selected design, and `V` is the sample-standardized probe matrix.
+
+```julia
+G = Zs' * Zs / (n-1)
+M = Zs' * V / (n-1)
+L = cholesky(Symmetric(G)).L
+N = L \ M
+# OLS: the leading eigenvector of (L' \ N) * (L' \ N)'.
+# RRR: the leading eigenvector u of N*N', then normalize(L' \ u).
+```
+
+Embed the resulting direction into the full 20 coordinates. Both refits are
+unpenalized. OLS and RRR use all fixed probes; neither chooses an informative
+probe from the generating covariance graph. Align to the initializer when
+possible. An orthogonal new support uses the largest-component sign convention
+instead of producing an orientation error.
+
+The follow-up has 300 replications in all 32 confirmation settings, using the
+same observations as the primary comparison. The feasible methods are:
+
+* adaptive MAVE selection for 60 updates at fraction 0.1, followed by OLS or RRR;
+* one adaptive penalized MAVE update at fraction 0.1, followed by RRR;
+* thresholding the Stein initializer at C=0.5, 1, or 1.5 times
+  `sqrt(log(20)/n)`, followed by RRR.
+
+All choices were frozen from development before their confirmation summaries.
+Selection and refitting reuse the n index-training observations. A separately
+labeled true-support RRR fit is an infeasible diagnostic. It never supplies
+support to a feasible method or an eligibility gate. The simpler thresholding
+arm tests whether iterative MAVE adds value beyond inexpensive Stein selection.
+The final paired report checks that the two coefficient-refit arms have the
+same MAVE selection outcomes on matched replications.
+
 ## Comparisons, failures, and reproducibility
 
 Primary loss is squared sine direction error `1 - (beta'bhat)^2`. Report mean
@@ -156,6 +215,8 @@ containment, average omissions and extras, update count, final change, and time.
 A numerical failure receives loss one in aggregate direction comparisons.
 Finite `maxiter` fits retain their measured loss and are counted as nonconverged.
 There is no support gate and no selective removal of difficult replicates.
+Timing fields include some per-worker compilation and omit data/probe generation.
+They are computational diagnostics, not controlled solver benchmarks.
 
 The bounded canary checks the normal matrix and right-hand side against a
 separately accumulated stacked regression, Lasso KKT conditions, noiseless
@@ -183,20 +244,132 @@ for this implementation or its tuning rules.
 
 ## Execution and results
 
-The core and KernelSmoothing canary passed 51 checks on Discovery, job 13447709.
-The initial 32-dataset smoke run (job 13447770) produced all 288 expected
-fits, with no numerical failures. It retained 95 finite fits at the 60-update
-cap. The dense cap was therefore extended to 200 for the main comparison.
-The updated canary (job 13447860) passed 105 numerical and regression checks
-and all 44 expected worker records. Its four datasets are validation, not
-substantive simulation evidence.
+All scientific computation ran under Discovery Slurm, with Julia 1.13.2.
+The updated canary (job 13447860) passed 105 core, smoothing, and regression
+checks and all 44 expected worker fits. Public hybrid options passed 64 checks,
+including agreement with the frozen experiment. The hybrid worker passed nine
+helper checks and matched the primary first-two-replication canary.
 
-The development plan has 40 paired replications in each of 32 settings and
-three bandwidth factors. The independent confirmation plan has 300 paired
-replications per setting and uses the prespecified factor one. Both compare
-Stein, one update, dense MAVE, and the feasible variable-selection procedures.
-The fixed confirmation levels were not selected from its true index errors.
-Jobs 13447940 and 13447950 are running on Discovery, with 128 single-core
-workers each. Full-node requests were cancelled while pending and replaced
-with smaller per-node footprints; no numerical outputs were discarded.
-No inference is authorized in this campaign.
+Development job 13447940 validated 1280 datasets and 49920 fits, with zero
+numerical failures. It retained 15729 finite capped fits. Confirmation uses
+9600 fresh datasets: 300 replications in each of 32 settings. Its 105600 fits
+include two failed holdout-selector arms, both retained with loss one, and
+30233 finite capped fits. The hybrid study reuses those same 9600 datasets;
+it has 76800 reported fits and no numerical failures. It is not another 9600
+independent datasets.
+
+Confirmation job 13447950 was checkpointed after 1576 finalized shards. Only
+missing shards resumed in disjoint allocations 13448632 and 13448636, which
+completed in 35m57s and 34m47s. The hybrid job 13448768 completed in 26m12s.
+Its Slurm transport warnings did not prevent any worker or parent-job
+completion. Expected identities, row counts, and unique replicate/method keys
+passed. All failed-arm records remain available. No support gate was used.
+
+Reporting jobs 13448654 and 13449137 passed 19200 paired consistency checks.
+The frozen MAVE selection outcomes agree across the MAVE-coefficient and
+Stein-coefficient refit arms. Every stored dense trajectory matches its final
+fit: 491831 development and 1292151 confirmation trajectory records. The
+comparison figure was visually inspected after rendering.
+
+At p=40, d=20, n=800, the confirmation mean squared-sine losses are:
+
+| Design | Stein10 | One dense update | Dense MAVE, cap 200 | Adaptive selection + MAVE refit | Adaptive selection + RRR refit | Stein threshold C=1.5 + RRR |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Correlation | 0.01517 | 0.01537 | 0.09834 | 0.01809 | 0.00479 | 0.00680 |
+| Fixed precision diagonal | 0.01735 | 0.01741 | 0.07830 | 0.01488 | 0.00532 | 0.00743 |
+| Noncommuting | 0.00807 | 0.00816 | 0.03604 | 0.00542 | 0.00249 | 0.00261 |
+| Opposed scale | 0.00810 | 0.00803 | 0.01825 | 0.00426 | 0.00344 | 0.00254 |
+
+Thus coefficient refitting matters even after the same support is selected.
+RRR is preferable to the nonparametric MAVE coefficient refit in these cases.
+It also improves on OLS coefficient refitting in correlation, fixed diagonal,
+and noncommuting; OLS and RRR are essentially tied in opposed scale. The
+first-order derivative condition is essential to the Stein/RRR hybrid.
+
+At these same settings, the adaptive MAVE selector retained every true variable
+in all 300 replications for each design:
+
+| Design | Exact support | Average extra variables | Penalized stage at its 60-update cap |
+| --- | ---: | ---: | ---: |
+| Correlation | 98.7% | 0.013 | 280/300 |
+| Fixed precision diagonal | 99.0% | 0.010 | 234/300 |
+| Noncommuting | 100.0% | 0.000 | 55/300 |
+| Opposed scale | 78.7% | 0.240 | 0/300 |
+
+These are empirical strong-design results for a fixed 60-update selector.
+They are not convergence or support-recovery guarantees. Finite penalized
+iterates often have a useful support before their coefficient changes meet
+the numerical tolerance. The final RRR refit is a closed-form calculation.
+
+The fixed C=1.5 threshold baseline is important. At n=800, its RRR refit is
+better than the MAVE hybrid in opposed scale and close in noncommuting.
+The MAVE hybrid improves on it in correlation and fixed diagonal by paired
+loss differences -0.00200 (MCSE 0.000275) and -0.00211 (MCSE 0.000264).
+All C values, including 0.5 and 1, remain in the tables. These constants are
+experimental choices, not universally calibrated penalties.
+
+One dense update produces little improvement over Stein. In development,
+increasing the bandwidth factor from one to 1.5 reduces dense MAVE error and
+improves convergence, but it still exceeds the Stein10 mean loss in all four
+p=40,n=800 cases. A predetermined longer check used the first two development
+replications per design at p=40,n=400/800. All 16 fits converged within 411
+updates; 14 ended with larger direction error than their Stein initializers.
+This separates statistical deterioration from merely hitting the primary cap.
+It does not establish a general failure of other MAVE implementations or weights.
+
+The particular holdout probe-prediction selector is poor here. At p=40,n=800,
+minimum-validation-loss mean direction errors range from 0.077 to 0.194.
+The usual one-standard-error rule often drops two true variables and has mean
+losses about 0.43--0.46. Prediction-risk tuning of the whole noisy probe bank
+should not be presumed to select an accurate index.
+
+The two numerical failures came from one correlation draw at p=40,n=1600,
+replication 179. A single nonfinite prediction invalidated the four-variable
+validation model. The old selector propagated its NaN score into an invalid
+index operation. A finite-candidate guard now excludes unavailable candidates
+and gives an explicit error if none are available. Three guard checks passed.
+Replaying the exact draw chose a two-variable model with loss 0.5041 for both
+selection rules. The guard repairs availability, not its poor variable choice.
+The primary tables retain the original two failed-arm records; the repaired
+case is a separately labeled diagnostic in `results/mave/holdout_guard/`.
+The historical pre-guard helper is in commit `bd26779` and the frozen run
+snapshot. Other primary index procedures are unchanged by this guard.
+
+Small-sample limitations remain. At p=40,n=200, the RRR hybrid's mean loss is
+0.514 in correlation and 0.349 in fixed diagonal. At n=400 it is 0.055 and
+0.039. Reliable support at n=800 does not establish that n=200 is adequate,
+or that this procedure works for weak indices, other covariance paths, or
+high-dimensional covariates. Only d=20 is studied here. No precision estimation
+or inference was run in this follow-up.
+
+Compact results, paired Monte Carlo errors, failures, upper tails, provenance,
+and the figure are retained under
+[`experiments/single_index/results/mave/`](../../experiments/single_index/results/mave/).
+Raw shards and trajectories remain on Discovery. The plotting environment is
+the existing project `.report-env`, with one numerical-library thread; its
+version is recorded alongside the figure. The run registry records submission,
+checkpoint, and source-snapshot details. Publication sources also provide the
+new public hybrid options; the frozen primary simulation source predates them.
+
+## Public API
+
+```julia
+using CovarianceSelection.SingleIndexGraph
+
+# Y is a fixed matrix of quadratic probes; Z has one covariate vector per row.
+# This public example uses the OLS screening initializer. The study uses RRR.
+b0 = estimate_probe_index(Y, Z; method=:screen, support_size=10).direction
+one = refine_probe_index(Y, Z, b0; updates=1)
+full = refine_probe_index(Y, Z, b0; updates=200)
+sparse = select_mave_variables(Y, Z, b0; method=:adaptive_lasso,
+                               level=0.1, iterative=true, refit_updates=60,
+                               refit_method=:rrr)
+# sparse.selection_status describes penalized iteration.
+# sparse.status describes the final unpenalized support refit.
+```
+
+A new independent dataset would be projected as `Znew * sparse.direction`.
+Use `refit_method=:rrr` or `:ols` in `select_mave_variables` for the coefficient
+refits described above. The default `:mave` retains the nonparametric refit.
+The output direction is normalized but is identified only up to sign. This API
+does not choose an orientation for precision inference.

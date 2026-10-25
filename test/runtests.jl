@@ -16,7 +16,8 @@ tests = [
   "single_index",
   "index_orientation",
   "probe_index",
-  "mave"
+  "mave",
+  "mave_hybrid"
 ]
 
 @testset "CovarianceSelection" begin

@@ -1,0 +1,9 @@
+{
+  "datasets": 9600,
+  "fit_records": 76800,
+  "shards": 4800,
+  "summary_rows": 256,
+  "failed": 0,
+  "oracle": "oracle_support_rrr is a labeled diagnostic; no feasible fit receives true support.",
+  "validation": "Full scenario/replicate/method counts, unique keys, finite bounded losses; pairs share primary seeds; failed fits retain loss one."
+}

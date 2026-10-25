@@ -81,7 +81,7 @@ threshold, sparsity, discarded observations, and index sensitivity.
 | `probe_index_moments` | First- or second-order Gaussian Stein moments for fixed scalar probes |
 | `estimate_probe_index` | Multiple-probe OLS, screening/refit, and spectral direction estimators |
 | `refine_probe_index` | One or repeated projected multivariate MAVE index updates |
-| `select_mave_variables` | Threshold or ordinary/adaptive Lasso selection with unpenalized MAVE refitting |
+| `select_mave_variables` | Threshold or ordinary/adaptive Lasso selection with MAVE, Stein/RRR, or OLS refitting |
 | `local_covariance` | Nonnegative local second moments, weights, realized effective sample size |
 | `local_design` | Polynomial coefficient map, intercept weights, conditioning and local size |
 | `precision_pilot` | Local scaled-lasso/ACLIME inverse and inverse-equation residual |

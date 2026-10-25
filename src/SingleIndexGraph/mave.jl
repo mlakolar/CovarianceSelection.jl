@@ -143,11 +143,31 @@ function refine_probe_index(Y::AbstractMatrix,Z::AbstractMatrix,initial::Abstrac
       center=vec(mu),scale=vec(scale),bandwidth_factor,trim)
 end
 
+
+# First-order Stein refit on a support chosen without truth. Gaussian covariates
+# and a nonzero vector of average probe derivatives identify the index here.
+function _mave_stein_refit(Y,Z,selected,reference,method)
+    n,d=size(Z);mu,scale=_probe_scale(Y);V=Matrix((Y.-mu)./scale)
+    A=Z[:,selected].-sum(Z[:,selected];dims=1)/n
+    root=cholesky(Symmetric(A'A/(n-1))).L
+    M=root\(A'V/(n-1))
+    B=method==:rrr ? M : root'\M
+    v=_probe_leading(B*B')
+    method==:rrr && (v=root'\v)
+    out=zeros(d);out[selected]=v
+    out=_orient_index_direction(out)
+    # A disjoint new support can be orthogonal to the old direction. Retain the
+    # largest-component convention in that case rather than rejecting the fit.
+    dot(out,reference)<0 && (out=-out)
+    (;direction=out,selected=findall(!iszero,out),status=:stein_refit,iterations=0,
+      history=NamedTuple[],center=vec(mu),scale=vec(scale))
+end
+
 """
     select_mave_variables(Y, Z, dense; method=:lasso, level=0.1, refit_updates=50, ...)
 
-Select variables from a dense MAVE fit and refit the same local-linear model
-without a penalty on that support. `:lasso` uses penalty `level * lambda_max`;
+Select variables from an input index direction and refit without a penalty
+on that support. `:lasso` uses penalty `level * lambda_max`;
 `:adaptive_lasso` additionally weights coordinate j by
 `1 / max(abs(dense[j]), 0.05)`. Here `lambda_max=max(abs(r[j])/weight[j])`
 for the frozen quadratic index criterion at `dense`. `:threshold` retains
@@ -158,13 +178,21 @@ An empty selection is reported as an error, with no truth-based fallback.
 (which can instead be the Stein initializer), then refits its final support.
 `selection_status` and `selection_iterations` describe the penalized stage;
 `status` and `iterations` describe the final unpenalized refit.
+
+`refit_method=:rrr` or `:ols` replaces the final MAVE refit by first-order
+Stein reduced-rank regression or multivariate OLS on the selected support.
+These hybrid options require Gaussian covariates and a nonzero vector of
+average probe derivatives. `refit_updates` still controls the penalized stage
+when `iterative=true`. The refit has status `:stein_refit` and zero iterations.
+A coordinate or support orthogonal to the initializer is not rejected.
 """
 function select_mave_variables(Y::AbstractMatrix,Z::AbstractMatrix,dense::AbstractVector;
         method::Symbol=:lasso,level::Real=0.1,refit_updates::Integer=50,
         bandwidth_factor::Real=1.0,trim::Real=0.05,tolerance::Real=1e-4,
-        smoother=nothing,iterative::Bool=false)
+        smoother=nothing,iterative::Bool=false,refit_method::Symbol=:mave)
     n,d=size(Z)
     length(dense)==d && norm(dense)>0 && level>0 || throw(ArgumentError("invalid sparse MAVE controls"))
+    refit_method in (:mave,:rrr,:ols) || throw(ArgumentError("unknown selected-support refit"))
     b=normalize(dense);kkt=0.0;lambda=0.0
     selection_status=:one_update;selection_iterations=1
     if iterative
@@ -188,7 +216,12 @@ function select_mave_variables(Y::AbstractMatrix,Z::AbstractMatrix,dense::Abstra
     end
     selected=findall(!iszero,start)
     isempty(selected) && error("empty MAVE selection")
-    fit=refine_probe_index(Y,Z,start;updates=refit_updates,bandwidth_factor,trim,
+    fit=if refit_method==:mave
+        refine_probe_index(Y,Z,start;updates=refit_updates,bandwidth_factor,trim,
                            support=selected,tolerance,smoother)
-    (;fit...,selection_method=method,level,lambda,kkt,iterative,selection_status,selection_iterations)
+    else
+        _mave_stein_refit(Y,Z,selected,b,refit_method)
+    end
+    (;fit...,selection_method=method,level,lambda,kkt,iterative,selection_status,
+      selection_iterations,refit_method)
 end

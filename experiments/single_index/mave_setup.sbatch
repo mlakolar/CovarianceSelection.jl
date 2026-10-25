@@ -17,7 +17,11 @@ mkdir -p env dependencies/KernelSmoothing
 # Committed dependency snapshot, rather than the owner's migration in progress.
 tar -xf kernel-357e261.tar -C dependencies/KernelSmoothing
 if [[ ! -f env/Project.toml ]]; then
- cp /project2/mkolar_1314/SingleIndexGraph/20261026-sig-promising-coverage/Manifest.toml env/Manifest.toml
+ if [[ -f experiments/single_index/results/mave/environment/Manifest.toml ]]; then
+  cp experiments/single_index/results/mave/environment/Manifest.toml env/Manifest.toml
+ else
+  cp /project2/mkolar_1314/SingleIndexGraph/20261026-sig-promising-coverage/Manifest.toml env/Manifest.toml
+ fi
  cat > env/Project.toml <<'TOML'
 [deps]
 CovarianceSelection = "fb9f034c-9bf8-4e47-a0a4-723273363029"

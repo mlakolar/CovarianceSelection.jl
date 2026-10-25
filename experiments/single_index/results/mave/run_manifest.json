@@ -1,0 +1,290 @@
+{
+  "run_id": "20261026-sig-mave-refinement",
+  "status": "validated",
+  "purpose": "Paired Stein, one-update, iterated multivariate MAVE and MAVE variable-selection comparison; index estimation only.",
+  "authorization": "User explicitly authorized this campaign and previously authorized as much Discovery compute as needed. Inference and precision estimation excluded.",
+  "source_base": "c0da32ee4ba8c8f4313df6170a7a2e948fd9e936",
+  "working_directory": "/project2/mkolar_1314/SingleIndexGraph/20261026-sig-mave-refinement",
+  "kernel_smoothing_commit": "357e26152026a3e1fb427acd221f5981c968722e",
+  "jobs": [
+    {
+      "job_id": "13447709",
+      "stage": "setup_canary",
+      "state": "COMPLETED"
+    },
+    {
+      "job_id": "13447744",
+      "stage": "smoke",
+      "state": "FAILED",
+      "reason": "Julia worker entrypoint macro parsed the following && expression. Failed before any numerical record. Replaced with explicit if; smoke now tests one worker before parallelizing."
+    },
+    {
+      "job_id": "13447770",
+      "stage": "smoke_fixed",
+      "state": "COMPLETED",
+      "datasets": 32,
+      "fit_records": 288,
+      "failures": 0,
+      "maxiter": 95
+    },
+    {
+      "job_id": "13447817",
+      "stage": "regression_v1",
+      "state": "COMPLETED",
+      "checks": 71
+    },
+    {
+      "job_id": "13447860",
+      "stage": "updated_canary",
+      "state": "COMPLETED",
+      "checks": 105,
+      "datasets": 4,
+      "fit_records": 44,
+      "failures": 0,
+      "maxiter": 18
+    },
+    {
+      "job_id": "13447880",
+      "stage": "development",
+      "state": "CANCELLED",
+      "reason": "Still pending; replaced with fragmented allocations, no numerical outputs."
+    },
+    {
+      "job_id": "13447884",
+      "stage": "confirmation",
+      "state": "CANCELLED",
+      "reason": "Still pending; replaced with fragmented allocations, no numerical outputs."
+    },
+    {
+      "job_id": "13447940",
+      "stage": "development_fragmented",
+      "state": "COMPLETED",
+      "datasets": 1280,
+      "fit_records": 49920,
+      "failures": 0,
+      "maxiter": 15729
+    },
+    {
+      "job_id": "13447950",
+      "stage": "confirmation_fragmented",
+      "state": "CANCELLED",
+      "reason": "Planned checkpoint to increase confirmation concurrency.",
+      "finalized_shards_at_cancel": 1574,
+      "elapsed": "00:34:17",
+      "finalized_shards_preserved": 1576,
+      "partial_files_preserved": 244,
+      "checkpoint_directory": "checkpoint-13447950"
+    },
+    {
+      "job_id": "13448001",
+      "stage": "interpretation",
+      "state": "CANCELLED",
+      "dependency": "afterok:13447940:13447950",
+      "reason": "Replace dependency after planned confirmation checkpoint/resume."
+    },
+    {
+      "job_id": "13448014",
+      "stage": "bounded_progress_diagnostic",
+      "state": "COMPLETED",
+      "purpose": "Early diagnostic only; not a primary summary."
+    },
+    {
+      "job_id": "13448201",
+      "stage": "extended_convergence",
+      "state": "COMPLETED",
+      "elapsed": "00:01:03",
+      "cases": 16,
+      "converged": 16
+    },
+    {
+      "job_id": "13448632",
+      "stage": "confirmation_even_resume",
+      "state": "COMPLETED",
+      "parity": 0,
+      "time_limit": "01:00:00",
+      "elapsed": "00:35:57"
+    },
+    {
+      "job_id": "13448636",
+      "stage": "confirmation_odd_resume",
+      "state": "COMPLETED",
+      "parity": 1,
+      "time_limit": "01:00:00",
+      "elapsed": "00:34:47"
+    },
+    {
+      "job_id": "13448654",
+      "stage": "final_union_reporting",
+      "state": "COMPLETED",
+      "dependency": "afterok:13448632:13448636:13448768",
+      "elapsed": "00:00:34"
+    },
+    {
+      "job_id": "13448768",
+      "stage": "hybrid_confirmation",
+      "state": "COMPLETED",
+      "helper_checks": 9,
+      "worker_canary": "16 records, zero failures; paired Stein losses and MAVE-selected support counts match primary first two replicates.",
+      "elapsed": "00:26:12",
+      "datasets": 9600,
+      "fit_records": 76800,
+      "failures": 0,
+      "transport_warnings": "srun Insane message length warnings; all steps/cohort and parent job completed successfully. Logs retained."
+    },
+    {
+      "job_id": "13448844",
+      "stage": "public_hybrid_api_validation",
+      "state": "COMPLETED",
+      "checks": 64,
+      "purpose": "29 existing MAVE,29 hybrid API,6 frozen-experiment agreement checks; isolated process, active sources unchanged."
+    },
+    {
+      "job_id": "13449083",
+      "stage": "finite_validation_guard",
+      "state": "COMPLETED",
+      "elapsed": "00:02:06",
+      "guard_checks": 3,
+      "diagnostic": "Four-variable validation model had1 nonfinite loss; finite-candidate guard chooses size2 with loss0.5040977776. Primary failures unchanged."
+    },
+    {
+      "job_id": "13449137",
+      "stage": "balanced_final_reporting",
+      "state": "COMPLETED",
+      "elapsed": "00:00:22"
+    }
+  ],
+  "submission_intent": null,
+  "scientific_plan": {
+    "families": [
+      "correlation",
+      "opposed_scale",
+      "fixed_diagonal",
+      "noncommuting"
+    ],
+    "d": 20,
+    "p": [
+      20,
+      40
+    ],
+    "n": [
+      200,
+      400,
+      800,
+      1600
+    ],
+    "support_true": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "methods": [
+      "Stein/RRR screened10 and dense20",
+      "one MAVE update",
+      "iterated dense MAVE",
+      "threshold then refit",
+      "ordinary/adaptive Lasso then refit",
+      "honest holdout nested support selection then all-data refit"
+    ],
+    "scope": "index only; no support gate; truth used only for metrics",
+    "development_replicates": 40,
+    "confirmation_replicates": 300,
+    "dense_max_updates": 200,
+    "other_max_updates": 60,
+    "bandwidth_factors_development": [
+      0.7,
+      1.0,
+      1.5
+    ],
+    "bandwidth_factor_confirmation": 1.0
+  },
+  "updated_utc": "2026-10-25T23:40:00.211577+00:00",
+  "source_snapshots": [
+    {
+      "file": "source-v1.tar.gz",
+      "sha256": "4d541d01fc4f9111de11362ec092f55ee9f74eabc2a6549238da406f83cf61a0"
+    },
+    {
+      "file": "workers-v1.tar.gz",
+      "sha256": "290a4a1cc7ba2fc83bf2a1ef9d18227c6e891d68c800690291b6b34fdc9e1fbe"
+    },
+    {
+      "file": "worker-fix-v2.tar.gz",
+      "sha256": "9f4199854dcd64a7cfcb1319183994cdbc2188bb334984b70f02df3db654d79e"
+    },
+    {
+      "file": "source-v3.tar.gz",
+      "sha256": "65573e3fc3ad02ae9807dec516021b7566cda9f251a2cdb614d6c86ee4dbf784"
+    },
+    {
+      "file": "postreport-source.tar.gz",
+      "sha256": "102154323d8eba5c3d3b52b956685333e05add7dff2f40977d56b3b03b4165d6"
+    }
+  ],
+  "validation": {
+    "core_checks": 23,
+    "kernel_and_gaussian_checks": 28,
+    "canary": "passed",
+    "regression_checks_v1": 71,
+    "smoke": "32 datasets, 288 fits, zero numerical failures, 95 finite maxiter fits retained. Extended dense cap from60 to200 for substantive comparison.",
+    "updated_canary": "105 core/kernel/regression checks and44 paired worker fits passed",
+    "confirmation": {
+      "datasets": 9600,
+      "fit_records": 105600,
+      "failures": 2,
+      "maxiter": 30233
+    },
+    "hybrid": {
+      "datasets": 9600,
+      "fit_records": 76800,
+      "failures": 0,
+      "same_datasets_as_confirmation": true
+    },
+    "paired_checks": 19200,
+    "dense_trajectory_records": {
+      "development": 491831,
+      "confirmation": 1292151
+    },
+    "figure_visual_review": "Passed final8-series figure, including both C1 and C1.5 threshold baselines, true-support diagnostic, axes, legend, and MCSE bars."
+  },
+  "resources": {
+    "per_main_job": {
+      "nodes": 8,
+      "cpus": 128,
+      "memory_gb_per_node": 32,
+      "wall_hours": 4
+    },
+    "combined_max_cpus": 384,
+    "combined_max_memory_gb": 768,
+    "authorization": "User previously authorized as much compute as needed to run these simulations quickly; current request explicitly authorizes execution."
+  },
+  "queue_adjustment": "256-CPU jobs required four full64-core nodes; scheduler estimated overnight starts. Replace only the exact owned pending jobs with eight16-core-node128-CPU allocations. Scientific plan unchanged.",
+  "kernel_source_sha256": "9518fcb5b8fcd3f5a272cebab8ebcdd42f5b828a3354b5a34221c248d4ba12bb",
+  "interpretation_source_sha256": "ab2de2a05b095edb723becef5848d2fc0da2b4b5a4c203c465caea66840d5c28",
+  "progress_source_sha256": "2ca69162b22d30642d53bb493396be9211503e19eca9070b2a32dfe4c9290b8c",
+  "convergence_source_sha256": "c9fcf0b88449bda817d0ef7b8254cc2355af514fc86a7bfd0f71689b21d42baa",
+  "interpretation_v2_sha256": "54f7fc27b356cb1ba16547d4634f2f4e789881c5705c394bae6f057e8bcc2860",
+  "resume_source_sha256": "3cf8bc38ebe1a66fd657d63de9de618189a3ab0b51d79952f790172ecb825ac5",
+  "resume_scheduling": "Reduced pending resume jobs from2h to1h to permit earlier backfill; finalized shards resume if needed. Statistical settings unchanged.",
+  "checkpoint_old_orphan_trajectories": 0,
+  "hybrid_source_sha256": "caf6d0de3cc53c71052729e961e943402d6b1dae37e02cae1c208a3da616da91",
+  "hybrid_plan": "MAVE adaptive support selection at60updates/fraction0.1 followed byRRR/OLS, one sparse MAVE update followed byRRR, and Stein coefficient threshold C=.5/1/1.5 followed byRRR. Same300 confirmation replicates. Oracle-supportRRR separately labeled diagnostic. Feasible choices frozen from development before confirmation summaries.",
+  "hybrid_api_validation_sha256": "a6e867a61befefc96e2b6396c19aba3f5b9bbd14922db97c92feda6677c5e993",
+  "compact_results_sha256": "c364dc3813ded6c51900ec0af467d906387b9d552ae41ab3b73a8dd7e048b20a",
+  "final_report_artifact_sha256": "a70bf2215dcc570c1d837bac6ea086f81cb1b6f66b1e9a2d634ba2d294b50cc7",
+  "scientific_sources": {
+    "primary_v3": "65573e3fc3ad02ae9807dec516021b7566cda9f251a2cdb614d6c86ee4dbf784",
+    "hybrid": "caf6d0de3cc53c71052729e961e943402d6b1dae37e02cae1c208a3da616da91",
+    "finite_validation_guard": "9d7e3992278f509e65b8d82f4522a3b1138b70caf587785d99ff0bda0ff47003",
+    "balanced_final_report": "102154323d8eba5c3d3b52b956685333e05add7dff2f40977d56b3b03b4165d6",
+    "public_hybrid_api_validation": "a6e867a61befefc96e2b6396c19aba3f5b9bbd14922db97c92feda6677c5e993"
+  },
+  "recreation": "mave_setup.sbatch; mave.sbatch development; mave.sbatch confirmation; mave_hybrid.sbatch; mave_interpret.sbatch. Historical primary helper frombd26779/source-v3 snapshot predates finite validation guard. Source/input hashes and versioned plans are retained.",
+  "unresolved": [
+    "No support or inference guarantee is proved for MAVE or fixed penalty rules.",
+    "Primary dense MAVE is capped at200 updates; longer convergence is checked only on16 predetermined cases.",
+    "Gaussian d20 strong-design evidence does not establish weak-index, non-Gaussian, or high-dimensional-covariate performance.",
+    "Small-n correlation/fixed-diagonal direction errors remain large."
+  ],
+  "run_registry": "SingleIndexGraph/.slurm/runs/20261026-sig-mave-refinement.json"
+}

@@ -12,4 +12,4 @@ cd "$SLURM_SUBMIT_DIR"
 module load ver/2506 gcc/14.3.0
 export JULIA_DEPOT_PATH="$PWD/depot:/project2/mkolar_1314/SingleIndexGraph/20261025-sig-index-confirmation/depot:/home1/mkolar/juliaPkg/depot:"
 export JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
-/home1/mkolar/juliaPkg/julia-1.13.2/bin/julia --project=env -e 'using CovarianceSelection; include("test/index_orientation.jl"); include("test/probe_index.jl"); include("test/mave.jl")'
+/home1/mkolar/juliaPkg/julia-1.13.2/bin/julia --project=env -e 'using CovarianceSelection; include("test/index_orientation.jl"); include("test/probe_index.jl"); include("test/mave.jl"); include("test/mave_hybrid.jl"); include("experiments/single_index/mave_api_check.jl")'

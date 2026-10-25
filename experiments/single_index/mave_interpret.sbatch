@@ -10,4 +10,6 @@
 set -euo pipefail
 cd "$SLURM_SUBMIT_DIR"
 module load ver/2506 gcc/14.3.0
+python3 experiments/single_index/mave_report.py experiments/single_index/mave_development.toml development
+python3 experiments/single_index/mave_report.py experiments/single_index/mave_confirmation.toml confirmation
 python3 experiments/single_index/mave_interpret.py .

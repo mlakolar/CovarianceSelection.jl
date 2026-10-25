@@ -1,0 +1,11 @@
+{
+  "datasets": 1280,
+  "fit_records": 49920,
+  "timing_records": 1280,
+  "summary_rows": 1248,
+  "shards": 640,
+  "failed_fits": 0,
+  "maxiter_fits": 15729,
+  "validation": "Expected shard, dataset, method and replicate counts; unique keys; finite bounded loss; paired baseline matching. Maxiter iterates retained and labeled separately from convergence.",
+  "plan": "experiments/single_index/mave_development.toml"
+}

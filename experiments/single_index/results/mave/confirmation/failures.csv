@@ -1,0 +1,3 @@
+scenario,replicate,design,amplitude,p,d,n,bank,method,bandwidth_factor,level,loss,prediction,delta,missing,extra,exact_support,all_true,iterations,status,seconds,change,validation,selection_status,selection_iterations,reason
+8,179,correlation,0.55,40,20,1600,complete,holdout_min,1.0,0.0,1.0,2.0,1.4142135623730951,-1,-1,0,0,0,failed,0.053649582,NaN,NaN,na,0,ArgumentError: invalid index: nothing of type Nothing
+8,179,correlation,0.55,40,20,1600,complete,holdout_1se,1.0,0.0,1.0,2.0,1.4142135623730951,-1,-1,0,0,0,failed,7.3007e-5,NaN,NaN,na,0,ArgumentError: invalid index: nothing of type Nothing

@@ -1,0 +1,12 @@
+{
+  "development": {
+    "successful_dense_fits": 3840,
+    "trajectory_records": 491831,
+    "checks": "Contiguous iteration numbering, unique fit/iteration keys, finite bounded losses, exact final-iteration count and agreement with primary final direction loss."
+  },
+  "confirmation": {
+    "successful_dense_fits": 9600,
+    "trajectory_records": 1292151,
+    "checks": "Contiguous iteration numbering, unique fit/iteration keys, finite bounded losses, exact final-iteration count and agreement with primary final direction loss."
+  }
+}
