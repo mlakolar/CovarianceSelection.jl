@@ -25,6 +25,8 @@ The stronger Gaussian covariance families and their index-only comparison are
 specified in [FOUR_GAUSSIAN_DESIGNS.md](FOUR_GAUSSIAN_DESIGNS.md).
 The paired known-versus-estimated-index pointwise coverage experiment is specified
 in [PROMISING_POINTWISE_COVERAGE.md](PROMISING_POINTWISE_COVERAGE.md).
+The population random-probe comparison and proposed iterative index refinement
+are in [RANDOM_PROBES_AND_REFINEMENT.md](RANDOM_PROBES_AND_REFINEMENT.md).
 
 ```julia
 using CovarianceSelection
