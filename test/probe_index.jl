@@ -11,6 +11,10 @@ using CovarianceSelection.SingleIndexGraph
         @test abs(dot(fit.direction,beta))>1-1e-10
         @test norm(fit.direction)≈1
         @test fit.direction[1]≈0 atol=1e-12
+        if method==:screen
+            @test all(iszero,fit.direction[setdiff(1:20,fit.selected)])
+            @test count(!iszero,fit.direction)<=6
+        end
     end
     u=estimate_probe_index(Y,Z).direction
     @test abs(dot(u,estimate_probe_index(Y .+ [4.0 7.0 -1.0],Z).direction))≈1

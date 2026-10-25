@@ -107,11 +107,11 @@ end
 
 mp_fit(Y,Z,c)=estimate_probe_index(Y,Z;method=Symbol(c.method),support_size=c.k)
 
-function mp_metrics(u,beta)
+function mp_metrics(u,beta;selected=eachindex(beta))
     cosine=clamp(abs(dot(u,beta)),0.0,1.0)
     (;loss=1-cosine^2,prediction=2-2cosine,angle=acos(cosine)*180/pi,
-      missing=count(j->beta[j]!=0&&u[j]==0,eachindex(beta)),
-      extra=count(j->beta[j]==0&&u[j]!=0,eachindex(beta)))
+      missing=count(j->beta[j]!=0&&!(j in selected),eachindex(beta)),
+      extra=count(j->beta[j]==0&&j in selected,eachindex(beta)))
 end
 
 function mp_validate(X,Z,configs,seed;folds=3)

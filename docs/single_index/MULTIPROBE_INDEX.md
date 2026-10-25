@@ -9,7 +9,8 @@ their empirical tuning rules are not established inference guarantees.
 
 Let Z have independent standard Gaussian coordinates and let
 E[XX' | Z] = Sigma(Z'beta), with ||beta|| = 1. For a fixed response probe
-Y_l = (q_l'X)(r_l'X), write m_l(t) = E[Y_l | Z'beta=t]. Then
+Y_l = (q_l'X)(r_l'X), write m_l(t) = E[Y_l | Z'beta=t]. Under the
+required Stein regularity and moment conditions,
 
 ```
 M = E[Z Y'] = beta c',       c_l = E[m_l'(T)],
@@ -42,6 +43,31 @@ identity still requires the correct standard Gaussian covariate distribution.
 The default support size is d. No coefficient is required to be nonzero.
 Directions use the largest-magnitude-coordinate sign convention, or a supplied
 reference. Evaluation aligns signs with the truth only after estimation.
+
+The OLS conditional mean need not be linear: the population slope is its best
+linear projection, which equals beta c' under the Gaussian Stein identity.
+This statement does not justify ordinary homoskedastic OLS standard errors.
+No index confidence interval is constructed by these functions.
+
+For example, construct probes without supplying any covariance structure:
+
+```julia
+using Random, CovarianceSelection.SingleIndexGraph
+rng = MersenneTwister(20261025) # fix independently of the observations
+p = size(X, 2)
+A = zeros(p, 30)
+for l in axes(A, 2)
+    A[randperm(rng, p)[1:4], l] = ifelse.(rand(rng, Bool, 4), 0.5, -0.5)
+end
+Y = hcat(X.^2, (X*A).^2)
+idx = estimate_probe_index(Y, Z; method=:screen, support_size=6)
+estimated_index = Z * idx.direction
+```
+
+This example requires p>=4 and n>d+2. The support size is illustrative; it is
+not universally recommended. `method=:ols` retains all covariates. Probe
+correlations affect efficiency: a larger moment norm can reflect redundant
+probes and does not by itself imply more information.
 
 Probe responses are standardized to empirical unit variance. For direct
 estimators all observations supply the scales. Standardized split estimators
@@ -98,6 +124,18 @@ still increase estimation noise and computation. It is evaluated with OLS,
 first-order moments, and the two screening/refit choices, rather than expensive
 second-order aggregation. Screening sizes are fixed at 6 and 10. All other
 methods retain all 20 covariates. There are 75 fixed configurations.
+
+Projection squares lie in the linear span of the complete quadratic dictionary:
+
+```
+(a'X)^2 = sum_j a_j^2 X_j^2 + 2 sum_{j<k} a_j a_k X_j X_k.
+```
+
+Thus a random projection dictionary cannot contain information absent from the
+complete dictionary. Differences in performance reflect dimension reduction,
+weighting, and estimation noise. These estimators standardize individual probe
+columns but do not whiten their joint noise covariance. Poor performance of
+complete-dictionary SVD does not establish a fundamental sample-size barrier.
 
 ## Stages and feasible tuning
 

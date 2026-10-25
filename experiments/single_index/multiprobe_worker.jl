@@ -37,7 +37,7 @@ function mp_worker(planpath,task,outdir)
                     # Compare fitting time on cached probes for every method.
                     started=time_ns()
                     fit=mp_fit(Y,data.Z,c)
-                    metrics=mp_metrics(fit.direction,data.beta)
+                    metrics=mp_metrics(fit.direction,data.beta;selected=fit.selected)
                     losses[i]=metrics.loss
                 catch err
                     err isa InterruptException && rethrow()

@@ -23,6 +23,51 @@ def label(k):
 
 def main(root):
     root=Path(root); conf=root/'confirmation_final'; dev=root/'development'
+    def fitting_hashes(path):
+        hashes={}
+        for line in path.read_text().splitlines():
+            digest,name=line.split(maxsplit=1)
+            if (name.startswith('src/SingleIndexGraph/') or name in
+                ('Project.toml','Manifest.toml','experiments/single_index/multiprobe_common.jl',
+                 'experiments/single_index/multiprobe_worker.jl',
+                 'experiments/single_index/multiprobe_confirmation_final.toml')):
+                hashes[name]=digest
+        return hashes
+    snapshots=sorted(conf.glob('inputs-*.sha256'))
+    assert snapshots,'No saved fitting-input hashes'
+    first=fitting_hashes(snapshots[0])
+    assert len(first)>=10 and all(first==fitting_hashes(p) for p in snapshots[1:]),\
+        'Fitting inputs changed across resource-only resume'
+    (conf/'resume_identity.json').write_text(json.dumps(dict(
+        input_snapshots=[p.name for p in snapshots],matching_fitting_inputs=first,
+        all_fitting_input_hashes_equal=True),indent=2)+'\n')
+    recovery=root/'tail_recovery'
+    if (recovery/'preparation.json').exists():
+        state=json.loads((recovery/'preparation.json').read_text());matched=0
+        for item in state['unfinished_shards']:
+            missing=dict(item['missing']);generated={}
+            partial=conf/f"part-{item['task']:04}.csv.tmp"
+            if not partial.exists():continue
+            for old in read(partial):
+                if None in old or any(v is None for v in old.values()):continue
+                rep=int(old['replicate'])
+                if rep not in missing:continue
+                if rep not in generated:
+                    generated[rep]={
+                        (r['selector'],r['selected_id'] if r['selector']=='fixed' else r['selector']):r
+                        for r in read(recovery/'generated'/f'part-{missing[rep]:04}.csv')}
+                k=(old['selector'],old['selected_id'] if old['selector']=='fixed' else old['selector'])
+                new=generated[rep][k]
+                assert old['status']==new['status']
+                if old['status']=='ok':
+                    for column in ('loss','prediction','angle','missing','extra'):
+                        assert math.isclose(float(old[column]),float(new[column]),rel_tol=1e-8,abs_tol=1e-8)
+                matched+=1
+        identity=dict(matched_partial_rows=matched,scientific_plan_identical=state['scientific_plan_identical'],
+                      regenerated_prefixes_match=True,recomputed_datasets=state['missing_datasets'])
+        (conf/'recovery_identity.json').write_text(json.dumps(identity,indent=2)+'\n')
+        for name in ('preparation.json','receipt.json'):
+            (conf/f'tail_recovery_{name}').write_text((recovery/name).read_text())
     shortlist=json.loads((root/'experiments/single_index/multiprobe_confirmation_final.shortlist.json').read_text())
     default=shortlist['fixed_default']; ids=[c['id'] for c in shortlist['candidates']]
     rr=read(conf/'summary.csv')
@@ -50,6 +95,7 @@ def main(root):
             ax.set_xscale('log',base=2);ax.set_xticks([100,200,400,800,1600,3200])
             ax.set_xticklabels(['100','200','400','800','1600','3200'],rotation=30)
             ax.set_xlabel('Sample size');ax.set_ylim(-.02,1.02);ax.grid(alpha=.2)
+            if metric=='mean_loss':ax.axhline(19/20,color='gray',linestyle=':',linewidth=1)
         axes[0].set_ylabel(ylabel)
         handles,labels=axes[0].get_legend_handles_labels()
         fig.legend(handles,labels,loc='lower center',ncol=3,fontsize=8)
@@ -66,6 +112,7 @@ def main(root):
             ax.errorbar([int(r['n']) for r in rows],[float(r['mean_loss']) for r in rows],
                         yerr=[1.96*float(r['se_loss']) for r in rows],label=label(k),marker='o',capsize=2)
         ax.set_title(design);ax.set_xlabel('Sample size');ax.set_ylim(0,1);ax.grid(alpha=.2)
+        ax.axhline(19/20,color='gray',linestyle=':',linewidth=1)
     axes[0].set_ylabel('Mean projective error')
     h,l=axes[0].get_legend_handles_labels();fig.legend(h,l,loc='lower center',fontsize=8,ncol=1)
     fig.subplots_adjust(bottom=.3,wspace=.08)
@@ -90,6 +137,22 @@ def main(root):
                            se_difference=statistics.stdev(v)/math.sqrt(len(v)),
                            probability_better=sum(x<0 for x in v)/len(v)))
     write(conf/'paired_differences.csv',paired)
+    controls=defaultdict(list)
+    for (sid,rep),values in data.items():
+        for bank in ('projections-60','complete-0'):
+            reference=f'{bank}-ols-20'
+            for k in (6,10):
+                candidate=f'{bank}-screen-{k}'
+                if candidate in values and reference in values:
+                    controls[(sid,candidate,reference)].append(values[candidate]-values[reference])
+        for candidate in ids:
+            controls[(sid,'validation',candidate)].append(values['validation']-values[candidate])
+    control_rows=[]
+    for (sid,candidate,reference),v in sorted(controls.items()):
+        control_rows.append(dict(scenario=sid,id=candidate,reference=reference,replicates=len(v),
+            mean_difference=statistics.mean(v),se_difference=statistics.stdev(v)/math.sqrt(len(v)),
+            probability_better=sum(x<0 for x in v)/len(v)))
+    write(conf/'paired_controls.csv',control_rows)
     # Exact identification diagnostic for RANDOM PRODUCT probes in the paired
     # design. This uses the generator only to explain results, never for fitting.
     diagnostic=[]

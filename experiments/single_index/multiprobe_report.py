@@ -12,10 +12,14 @@ def write_csv(path,rows):
 def config_id(r):
     return f"{r['bank']}-{r['L']}-{r['method']}-{r['k']}"
 
-def report(planfile,out):
+def report(planfile,out,support_root=None):
     out=Path(out)
     with open(planfile,'rb') as f: plan=tomllib.load(f)
     scenarios={str(s['id']):s for s in plan['scenario']}
+    support={}
+    if support_root:
+        with (Path(support_root)/'evaluation.csv').open() as f:
+            support={(r['scenario'],r['replicate'],r['id']):(r['missing'],r['extra']) for r in csv.DictReader(f)}
     groups=defaultdict(list); identities=set();counts=Counter(); choices=Counter()
     for path in sorted(out.glob('part-*.csv')):
         with path.open() as f:
@@ -23,6 +27,10 @@ def report(planfile,out):
                 s=scenarios[r['scenario']]
                 assert 1<=int(r['replicate'])<=s['replicates']
                 assert int(r['n'])==s['n'] and int(r['p'])==s['p'] and r['design']==s['design']
+                if support_root and r['status']=='ok':
+                    if r['method']=='screen':
+                        r['missing'],r['extra']=support[(r['scenario'],r['replicate'],r['selected_id'])]
+                    else:r['missing'],r['extra']='0','16'
                 label=r['selected_id'] if r['selector']=='fixed' else r['selector']
                 ident=(r['scenario'],r['replicate'],r['selector'],label)
                 if ident in identities: raise ValueError(f'duplicate {ident}')
@@ -58,6 +66,7 @@ def report(planfile,out):
     receipt=dict(rows=len(identities),expected_rows=expected,duplicate_identities=0,
                  scenarios=len(scenarios),configs=nc,failures=sum(r['failures'] for r in summary),
                  all_outcomes_retained=True,plan=str(planfile))
+    if support_root:receipt.update(support_diagnostics='selected rows, corrected',support_replay=str(support_root))
     (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     if not plan.get('candidate'):
         # Equal weight across the twelve main scenarios. Even-link diagnostic
@@ -84,4 +93,4 @@ def report(planfile,out):
         print('Development shortlist:',chosen)
     print(json.dumps(receipt))
 
-if __name__=='__main__': report(sys.argv[1],sys.argv[2])
+if __name__=='__main__': report(*sys.argv[1:])

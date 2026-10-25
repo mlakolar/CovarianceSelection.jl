@@ -117,5 +117,12 @@ function estimate_probe_index(Y::AbstractMatrix,Z::AbstractMatrix;
         throw(ArgumentError("unknown probe index method"))
     end
     direction=_probe_leading(G;reference)
+    if method==:screen
+        # Dense symmetric eigensolvers can leave roundoff outside a zero block.
+        # Preserve the selected model exactly, including for support diagnostics.
+        projected=zeros(d)
+        projected[selected]=direction[selected]
+        direction=_orient_index_direction(projected;reference)
+    end
     (;direction,selected,method,support_size,center=vec(mu),scale=vec(scale))
 end

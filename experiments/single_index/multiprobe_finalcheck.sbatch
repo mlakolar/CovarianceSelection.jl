@@ -28,9 +28,8 @@ for folder in ('development','confirmation_final','canary','specialist_canary','
         if path.is_file() and not path.name.startswith('part-'):
             shutil.copy2(path,destination/path.name)
 shutil.copytree('figures',out/'figures',dirs_exist_ok=True)
-for job in ('13423525','13423550','13423553','13423559','13423572','13423599'):
-    path=Path(f'slurm-{job}.out')
-    if path.exists():shutil.copy2(path,out/path.name)
+for path in Path('.').glob('slurm-*.out'):
+    shutil.copy2(path,out/path.name)
 for path in Path('.').glob('*sha256'):shutil.copy2(path,out/path.name)
 receipt=dict(initial_confirmation_partial_shards=len(list(Path('confirmation').glob('part-*.csv'))),
              initial_confirmation_location='confirmation',
