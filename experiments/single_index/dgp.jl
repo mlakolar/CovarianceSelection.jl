@@ -21,9 +21,27 @@ function fixed_precision_truth(t,p)
     O
 end
 
+# Fixed-support degree-six hub sensitivity at a fixed response dimension.
+function fixed_hub_precision(t,p;degree=6)
+    1 <= degree <= 6 || throw(ArgumentError("hub degree must lie in 1:6"))
+    p >= degree+3 || throw(ArgumentError("too few responses for hub and probe"))
+    d,e = 1.5+0.10tanh(t),-(0.38+0.06tanh(2t))
+    O = Matrix{Float64}(I,p,p)*d
+    for start in 1:degree+1:p-2
+        for j in start+1:min(start+degree,p-2)
+            O[start,j]=O[j,start]=e
+        end
+    end
+    rho=0.55+0.40tanh(2t)
+    O[p-1:p,p-1:p]=[1.0 -rho;-rho 1.0]/(1-rho^2)
+    O
+end
+
 function covariance_truth(t,p;graph="block",varying=false,curvature=1.0,signal=0.7,degree=4)
     if graph == "fixed_chain"
         return inv(Symmetric(fixed_precision_truth(t,p)))
+    elseif graph == "fixed_hub"
+        return inv(Symmetric(fixed_hub_precision(t,p;degree)))
     elseif graph == "chain"
         rho = 0.25+0.12tanh(curvature*t)
         S = [rho^abs(a-b) for a in 1:p,b in 1:p]
@@ -105,6 +123,20 @@ function generate_data(seed,c)
         end
         rho = 0.55 .+ 0.40tanh.(2t)
         X[:,p] = rho.*X[:,p-1] .+ sqrt.(1 .- rho.^2).*X[:,p]
+    elseif graph == "fixed_hub"
+        d = 1.5 .+ 0.10tanh.(t)
+        e = -(0.38 .+ 0.06tanh.(2t))
+        for start in 1:degree+1:p-2
+            ids=start:min(start+degree,p-2)
+            m=length(ids);adjacency=zeros(m,m)
+            for j in 2:m
+                adjacency[1,j]=adjacency[j,1]=1.0
+            end
+            F=eigen(Symmetric(adjacency))
+            X[:,ids]=(X[:,ids]./sqrt.(d .+ e.*F.values'))*F.vectors'
+        end
+        rho=0.55 .+ 0.40tanh.(2t)
+        X[:,p]=rho.*X[:,p-1].+sqrt.(1 .-rho.^2).*X[:,p]
     elseif graph == "block"
         r = min(degree-2,p-4)
         q = 1-0.35^2

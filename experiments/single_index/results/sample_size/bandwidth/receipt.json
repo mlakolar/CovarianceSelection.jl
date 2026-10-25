@@ -1,0 +1,10 @@
+{
+  "stage": "pointwise",
+  "rows": 540000,
+  "expected_rows": 540000,
+  "shards": 400,
+  "duplicate_identities": 0,
+  "failures_retained": true,
+  "groups": 1080,
+  "plan": "experiments/single_index/sample_size_bandwidth.toml"
+}

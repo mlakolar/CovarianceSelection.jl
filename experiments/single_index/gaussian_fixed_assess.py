@@ -57,7 +57,9 @@ def assess(planpath, root):
                 index_extra=finite_mean(r['index_extra'] for r in rr),nuisance_missed=finite_mean(r['nuisance_missed'] for r in rr),
                 nuisance_contains=finite_mean(float(r['nuisance_missed'])==0 for r in rr if math.isfinite(float(r['nuisance_missed']))),
                 nuisance_extra=finite_mean(r['nuisance_extra'] for r in rr),nuisance_size=finite_mean(r['nuisance_size'] for r in rr),
-                effective_n=finite_mean(r['effective_n'] for r in rr),lambda_mean=finite_mean(r['lambda'] for r in rr))
+                effective_n=finite_mean(r['effective_n'] for r in rr),lambda_mean=finite_mean(r['lambda'] for r in rr),
+                final_effective_n=finite_mean(r.get('final_effective_n','nan') for r in rr),
+                final_local_n=finite_mean(r.get('final_local_n','nan') for r in rr))
         results.append(out)
     # Every setting must retain all requested replications, even failures.
     byname={c['name']:c for c in plan['scenario']}

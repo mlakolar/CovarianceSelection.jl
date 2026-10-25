@@ -57,7 +57,7 @@ include("../experiments/single_index/gaussian_fixed_worker.jl")
     pointrows=readlines(joinpath(root,"pointwise","shard-00001.csv"))
     @test length(pointrows)==65
     fields=[split(line,',') for line in pointrows[2:end]]
-    @test all(r->length(r)==29,fields)
+    @test all(r->length(r)==31,fields)
     @test all(r->r[18]=="\"\"",fields)
     unionrows=filter(r->r[8]=="\"union_refit\"" && r[9]=="\"pointwise\"",fields)
     @test length(unionrows)==9

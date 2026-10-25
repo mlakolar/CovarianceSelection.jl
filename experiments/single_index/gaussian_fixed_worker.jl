@@ -44,7 +44,7 @@ function gfshard(planpath,taskid,outdir)
         if indexstage
             gfrow(io,["scenario","rep","method","index_multiplier","error2","missed","extra","exact","contains","seconds","failure","seed"])
         else
-            gfrow(io,["scenario","rep","index_method","index_multiplier","C","h_factor","pilot_factor","variant","kind","entry_a","entry_b","point","estimate","se","truth","covered","width","failure","index_error2","index_missed","index_extra","index_exact","nuisance_missed","nuisance_extra","nuisance_size","effective_n","lambda","seconds","seed"])
+            gfrow(io,["scenario","rep","index_method","index_multiplier","C","h_factor","pilot_factor","variant","kind","entry_a","entry_b","point","estimate","se","truth","covered","width","failure","index_error2","index_missed","index_extra","index_exact","nuisance_missed","nuisance_extra","nuisance_size","effective_n","lambda","seconds","seed","final_effective_n","final_local_n"])
         end
         for rep in reps
             seed = Int(plan["seed_base"])+Int(c["id"])*100000+rep
@@ -71,8 +71,10 @@ function gfshard(planpath,taskid,outdir)
                 end
                 ti = gamma === nothing ? D.t : D.Z*gamma
                 grid = collect(range(Float64(c["grid_min"]),Float64(c["grid_max"]);length=Int(c["grid_n"])))
-                entries = [(1,1),(1,2),(1,4)]
-                truth = [inv(Symmetric(D.truth(t)))[a,b] for t in grid,(a,b) in entries]
+                entries = [Tuple(Int.(pair)) for pair in get(c,"entries",[[1,1],[1,2],[1,4]])]
+                covariances = Dict(point=>D.truth(point) for point in grid)
+                precisions = Dict(point=>inv(Symmetric(covariances[point])) for point in grid)
+                truth = [precisions[t][a,b] for t in grid,(a,b) in entries]
                 for C in c["constants"],hf in c["h_factors"],pf in c["pilot_factors"],variant in c["variants"]
                     h,hb = Float64(hf)*2.5Int(c["n"])^(-0.2),Float64(pf)*2.5Int(c["n"])^(-0.2)
                     fit,fitfailure = nothing,failure
@@ -81,7 +83,7 @@ function gfshard(planpath,taskid,outdir)
                     try
                         isempty(failure) || error(failure)
                         oracle = if variant == "oracle_nuisance"
-                            (point,J,A)->D.truth(point)[A,A]\D.truth(point)[A,J]
+                            (point,J,A)->covariances[point][A,A]\covariances[point][A,J]
                         elseif variant == "union_refit"
                             (point,J,A)->begin
                                 initial = GFSIG._regression(D.X,ti,point,hb,J,A,Float64(C),biweight;
@@ -119,7 +121,7 @@ function gfshard(planpath,taskid,outdir)
                         if !isempty(diag)
                             q = only(diag)
                             J = q.targets; A = setdiff(1:Int(c["p"]),J)
-                            B = D.truth(point)[A,A]\D.truth(point)[A,J]
+                            B = covariances[point][A,A]\covariances[point][A,J]
                             # Report union support: the corrected variant refits
                             # this union; the plain variant refits columns separately.
                             tr = Set(A[findall(vec(any(abs.(B).>1e-10;dims=2)))])
@@ -131,7 +133,9 @@ function gfshard(planpath,taskid,outdir)
                         gfrow(io,[c["name"],rep,method,im,C,hf,pf,variant,"pointwise",a,b,point,
                             valid ? fit.estimate[g,e] : NaN,valid ? fit.se[g,e] : NaN,truth[g,e],Int(cover),
                             valid ? ci.upper[g,e]-ci.lower[g,e] : NaN,fail,error2,missed,extra,Int(isempty(failure)&&sel==tru),
-                            nm,ne,ns,en,lambda,seconds,seed])
+                            nm,ne,ns,en,lambda,seconds,seed,
+                            fit===nothing ? NaN : fit.diagnostics[g].equivalent_n,
+                            fit===nothing ? 0 : fit.diagnostics[g].local_n])
                     end
                     if Int(c["draws"])>=100
                         for joint in (false,true)
@@ -148,14 +152,14 @@ function gfshard(planpath,taskid,outdir)
                                 width=band===nothing ? NaN : sum(band.upper[:,e]-band.lower[:,e])/length(grid)
                                 gfrow(io,[c["name"],rep,method,im,C,hf,pf,variant,joint ? "family_component" : "curve",a,b,NaN,
                                     NaN,NaN,NaN,Int(covered),width,fail,error2,missed,extra,Int(isempty(failure)&&sel==tru),
-                                    NaN,NaN,NaN,NaN,NaN,seconds,seed])
+                                    NaN,NaN,NaN,NaN,NaN,seconds,seed,NaN,NaN])
                             end
                             if joint
                                 covered=band!==nothing && all(band.lower.<=truth.<=band.upper)
                                 width=band===nothing ? NaN : sum(band.upper-band.lower)/length(truth)
                                 gfrow(io,[c["name"],rep,method,im,C,hf,pf,variant,"family",0,0,NaN,NaN,NaN,NaN,
                                     Int(covered),width,fail,error2,missed,extra,Int(isempty(failure)&&sel==tru),
-                                    NaN,NaN,NaN,NaN,NaN,seconds,seed])
+                                    NaN,NaN,NaN,NaN,NaN,seconds,seed,NaN,NaN])
                             end
                         end
                     end

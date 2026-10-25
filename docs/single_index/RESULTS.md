@@ -333,3 +333,19 @@ were 95.2% and 95.1%. The paired 41-point check and every adverse result remain
 in the protocol/results document. These finite-grid results do not establish
 continuum coverage or a universal bandwidth rule. Validation passed 92 existing
 inference checks and 107 focused design/penalty/worker checks on Discovery.
+
+## Sample size with known and estimated indices
+
+The [sample-size follow-up](SAMPLE_SIZE.md) removes the index-support gate and
+retains every replication. With a known direction, the favorable chain design
+has coverage close to nominal at n=400, including p=400; denser hub diagonals
+need more observations. Equal pilot/final bandwidths worsen diagonal coverage.
+The frozen index selector often returns no direction at smaller samples, while
+the true-support OLS diagnostic performs much better. Its failure is not a lower
+bound on the sample size needed for precision inference.
+
+The full two-stage pairs bootstrap is not validated: repeated index selection
+causes interval unavailability, and it undercovers even in the true-support OLS
+diagnostic. The follow-up preserves these negative findings and does not change
+the software defaults. Full reporting inputs and figures are in
+`experiments/single_index/results/sample_size/`.
