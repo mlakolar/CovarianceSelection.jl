@@ -33,7 +33,7 @@ function runshard(planpath,taskid,outdir)
                 if mode in ("estimated","estimated_cv")
                     try
                         if mode == "estimated_cv"
-                            itune = select_index_tuning(D.X,D.score;blocks=Int(get(c,"mom_blocks",5)),
+                            itune = select_index_tuning(D.X,D.score;anchor=1,blocks=Int(get(c,"mom_blocks",5)),
                                 multipliers=get(c,"index_multipliers",[0.25,0.5,0.75,1.0,1.25]),
                                 unshrink_options=get(c,"index_unshrink_options",[false,true]),
                                 block_options=get(c,"index_blocks",[Int(get(c,"mom_blocks",5))]),
@@ -41,7 +41,7 @@ function runshard(planpath,taskid,outdir)
                             idx,index_penalty_use,index_unshrink = itune.estimate,itune.multiplier,itune.unshrink
                         else
                             index_penalty_use = Float64(get(c,"index_penalty",0.5))
-                            idx = estimate_index(D.X,D.score;blocks=Int(get(c,"mom_blocks",5)),
+                            idx = estimate_index(D.X,D.score;anchor=1,blocks=Int(get(c,"mom_blocks",5)),
                                                  multiplier=index_penalty_use)
                         end
                         index_support,index_blocks = count(!iszero,idx.direction),idx.blocks

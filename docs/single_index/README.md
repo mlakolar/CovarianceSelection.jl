@@ -46,6 +46,14 @@ idx = estimate_index(X, score; probe=(p-1,p), blocks=5, multiplier=0.5)
 index = Z * idx.direction
 ```
 
+The default sign convention makes the largest retained component positive.
+It permits a zero first coefficient. Use `anchor=j` only when that fixed
+coordinate is an appropriate nonzero anchor. Bootstrap directions can be aligned
+with the original estimate using `reference=idx.direction`. This orientation
+choice does not recover a direction when thresholding removes every coordinate.
+See [INDEX_ORIENTATION.md](INDEX_ORIENTATION.md) for the correction and its
+zero-first-coordinate validation.
+
 `score` is the negative log-density gradient of the covariates. It equals `Z`
 only for independent standard Gaussian coordinates. Supply the correct known
 score for other distributions. A selected probe can have zero derivative signal;

@@ -344,8 +344,12 @@ The frozen index selector often returns no direction at smaller samples, while
 the true-support OLS diagnostic performs much better. Its failure is not a lower
 bound on the sample size needed for precision inference.
 
-The full two-stage pairs bootstrap is not validated: repeated index selection
+Under the legacy fixed-first-coordinate protocol, the full two-stage pairs
+bootstrap is not validated: repeated index selection
 causes interval unavailability, and it undercovers even in the true-support OLS
 diagnostic. The follow-up preserves these negative findings and does not change
-the software defaults. Full reporting inputs and figures are in
+the precision-inference defaults. The subsequent
+[orientation correction](INDEX_ORIENTATION.md) removes unnecessary fixed-anchor
+failures; coverage with that correction has not yet been evaluated.
+Full reporting inputs and figures are in
 `experiments/single_index/results/sample_size/`.

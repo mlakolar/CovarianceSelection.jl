@@ -11,24 +11,23 @@ end
 
 function gfindex(D,method,multiplier)
     method == "known" && return D.gamma
-    method == "oracle_support_ols" && return gfols(D,findall(!iszero,D.gamma))
+    method == "oracle_support_ols" && return gfols(D,findall(!iszero,D.gamma);anchor=1)
     blocks = startswith(method,"mom") ? 5 : 1
-    idx = estimate_index(D.X,D.score;blocks,multiplier,
+    idx = estimate_index(D.X,D.score;blocks,multiplier,anchor=1,
                          unshrink=!endswith(method,"soft"))
-    endswith(method,"ols") ? gfols(D,findall(!iszero,idx.direction)) : idx.direction
+    endswith(method,"ols") ? gfols(D,findall(!iszero,idx.direction);anchor=1) : idx.direction
 end
 
 # Gaussian-Z support refit: the population best linear coefficient for the
 # fixed probe response product is parallel to the index. No intercept penalty;
 # include an intercept to avoid finite-sample mean contamination.
-function gfols(D,support)
+function gfols(D,support;anchor=nothing,reference=nothing)
     isempty(support) && error("empty index support")
     U = hcat(ones(size(D.Z,1)),D.Z[:,support])
     b = cholesky(Symmetric(U'U)) \ (U'*(D.X[:,end-1].*D.X[:,end]))
     g = zeros(size(D.Z,2))
     g[support] = b[2:end]
-    norm(g)>0 && g[1]!=0 || error("unidentified OLS refit")
-    g*sign(g[1])/norm(g)
+    GFSIG._orient_index_direction(g;anchor,reference)
 end
 
 function gfshard(planpath,taskid,outdir)

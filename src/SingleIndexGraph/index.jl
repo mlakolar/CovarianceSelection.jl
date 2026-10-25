@@ -9,16 +9,42 @@ end
 
 _median(x) = (v = sort(collect(x)); n = length(v); (v[(n+1)÷2] + v[(n+2)÷2])/2)
 
+# Orientation is separate from support recovery. A supplied reference is useful
+# for aligning bootstrap directions with the original fit, including when the
+# largest coordinates are tied or have opposite signs.
+function _orient_index_direction(g;anchor=nothing,reference=nothing)
+    all(isfinite,g) && norm(g)>0 || throw(DomainError(g,"zero or nonfinite index direction"))
+    if reference!==nothing
+        anchor===nothing || throw(ArgumentError("supply an anchor or a reference, not both"))
+        length(reference)==length(g) && all(isfinite,reference) && norm(reference)>0 ||
+            throw(ArgumentError("invalid orientation reference"))
+        overlap=dot(g,reference)
+        overlap!=0 || throw(DomainError(overlap,"index orthogonal to orientation reference"))
+        return g*(sign(overlap)/norm(g))
+    end
+    j=anchor===nothing ? argmax(abs.(g)) : anchor
+    j isa Integer && 1<=j<=length(g) || throw(ArgumentError("invalid orientation anchor"))
+    g[j]!=0 || throw(DomainError(g,"zero fixed orientation anchor"))
+    g*(sign(g[j])/norm(g))
+end
+
 """
     estimate_index(X, score; probe=(p-1,p), blocks=9, threshold=nothing,
-                   multiplier=1, anchor=1, unshrink=false)
+                   multiplier=1, anchor=nothing, reference=nothing, unshrink=false)
 
 Coordinatewise median-of-means of `X[:,a] .* X[:,b] .* score`, followed by soft
-thresholding and unit normalization with positive anchor. Rows are observations.
+thresholding and unit normalization. Rows are observations. By default the
+largest absolute retained component is positive; ties use the first maximizer.
 `score` is the *known negative log-density gradient* of the covariates, supplied
 by the caller; for standard Gaussian covariates it is the covariate matrix.
 The probe must be fixed before observing the data and have nonzero derivative
-signal. A zero vector or zero anchor throws, rather than inventing a direction.
+signal. A zero vector throws. An explicit integer `anchor` requests that fixed
+component be positive and throws if it is zero. A `reference` vector instead
+orients the estimate to have positive inner product with that vector; it must
+not be orthogonal. A sign reversal of the index reverses the covariance curve.
+For a stable population automatic convention, the largest-magnitude component
+should be unique, or all tied maximizers should have the same sign. Align
+bootstrap estimates with the original fitted direction using `reference`.
 With `threshold=nothing`, use `multiplier * sqrt(2log(2d)/n)` times the empirical
 coordinate standard deviation. This practical scale estimate is not a robust
 finite-sample calibration theorem. Supply a scalar/vector threshold for exact
@@ -27,12 +53,13 @@ control of this choice. Blocks are deterministic equal consecutive blocks.
 """
 function estimate_index(X::AbstractMatrix, score::AbstractMatrix;
                         probe=(size(X,2)-1,size(X,2)), blocks::Integer=9,
-                        threshold=nothing, multiplier::Real=1, anchor::Integer=1,
+                        threshold=nothing, multiplier::Real=1, anchor::Union{Nothing,Integer}=nothing,
+                        reference=nothing,
                         unshrink::Bool=false)
     n, p = size(X)
     size(score,1) == n || throw(DimensionMismatch("score rows must match X"))
     d = size(score,2)
-    1 <= anchor <= d || throw(ArgumentError("invalid orientation anchor"))
+    anchor===nothing || 1 <= anchor <= d || throw(ArgumentError("invalid orientation anchor"))
     all(j -> 1 <= j <= p, probe) || throw(ArgumentError("invalid probe"))
     length(probe) == 2 || throw(ArgumentError("probe must contain two coordinates"))
     1 <= blocks <= n || throw(ArgumentError("blocks must lie in 1:n"))
@@ -53,20 +80,21 @@ function estimate_index(X::AbstractMatrix, score::AbstractMatrix;
         throw(ArgumentError("invalid threshold"))
     g = sign.(moment) .* max.(abs.(moment) .- tau,0)
     unshrink && (g = moment .* (abs.(moment) .> tau))
-    norm(g) > 0 && g[anchor] != 0 || throw(DomainError(g,"unidentified or thresholded-away index"))
-    g .*= sign(g[anchor])/norm(g)
+    g = _orient_index_direction(g;anchor,reference)
     IndexEstimate(g,moment,tau,blocks,n-m*blocks)
 end
 
 """
     select_index_tuning(X, score; multipliers=(0.25,0.5,0.75,1,1.25),
                         unshrink_options=(false,true), blocks=5, block_options=(blocks,), folds=3,
-                        probe=(p-1,p), anchor=1, rng=default_rng())
+                        probe=(p-1,p), anchor=nothing, reference=nothing, rng=default_rng())
 
-Select the Stein threshold by held-out oriented moment alignment. A training
-direction is unit-normalized; its validation objective has population value
-proportional to its cosine with the true direction when the identifying Stein
-constant is nonzero and the training anchor orientation is correct. Its sign is oriented using the training anchor moment.
+Select the Stein threshold by held-out oriented moment alignment. For a fixed
+training fit, the population score is
+`c*sign(dot(moment,direction))*dot(gamma,direction)`, where `c*gamma` is the
+population Stein moment. Under correct raw-moment alignment this targets
+`abs(c)` times the absolute cosine with the true direction. Candidate scores
+do not depend on the reported direction's sign convention.
 No true direction or precision coverage enters selection. Optional unshrinking
 retains raw moments on the threshold-selected support. Return the full-data
 index estimate, selected settings, candidate scores, and fold assignment.
@@ -77,13 +105,13 @@ This is an empirical selection rule, not an index or coverage guarantee.
 function select_index_tuning(X::AbstractMatrix,score::AbstractMatrix;
         multipliers=(0.25,0.5,0.75,1.0,1.25),unshrink_options=(false,true),
         blocks::Integer=5,block_options=(blocks,),folds::Integer=3,probe=(size(X,2)-1,size(X,2)),
-        anchor::Integer=1,rng::AbstractRNG=default_rng())
+        anchor::Union{Nothing,Integer}=nothing,reference=nothing,rng::AbstractRNG=default_rng())
     n,p = size(X)
     size(score,1)==n && size(score,2)>0 || throw(DimensionMismatch("invalid score matrix"))
     2<=folds<=n÷10 || throw(ArgumentError("invalid index fold count"))
     1<=blocks<=n-cld(n,folds) || throw(ArgumentError("invalid index block count"))
     length(probe)==2 && all(j -> j isa Integer && 1<=j<=p,probe) || throw(ArgumentError("invalid probe"))
-    1<=anchor<=size(score,2) || throw(ArgumentError("invalid anchor"))
+    anchor===nothing || 1<=anchor<=size(score,2) || throw(ArgumentError("invalid anchor"))
     ms,us,bs = collect(multipliers),collect(unshrink_options),collect(block_options)
     !isempty(bs) && all(b -> b isa Integer && 1<=b<=n-cld(n,folds),bs) ||
         throw(ArgumentError("invalid block candidates"))
@@ -100,9 +128,9 @@ function select_index_tuning(X::AbstractMatrix,score::AbstractMatrix;
         try
             for f in 1:folds
                 tr,va = findall(!=(f),foldid),findall(==(f),foldid)
-                idx = estimate_index(X[tr,:],score[tr,:];probe,blocks=b,multiplier=m,anchor,unshrink=u)
+                idx = estimate_index(X[tr,:],score[tr,:];probe,blocks=b,multiplier=m,anchor,reference,unshrink=u)
                 v = X[va,probe[1]].*X[va,probe[2]].*(score[va,:]*idx.direction)
-                total += sign(idx.moment[anchor])*sum(v)
+                total += sign(dot(idx.moment,idx.direction))*sum(v)
                 complexity += count(!iszero,idx.direction)/folds
             end
         catch err
@@ -115,6 +143,6 @@ function select_index_tuning(X::AbstractMatrix,score::AbstractMatrix;
     end
     best = sort(scores;by=x -> (-x.alignment,x.complexity,-x.multiplier,!x.unshrink,x.blocks))[1]
     isfinite(best.alignment) || throw(DomainError(scores,"all index tuning candidates failed"))
-    estimate = estimate_index(X,score;probe,blocks=best.blocks,multiplier=best.multiplier,anchor,unshrink=best.unshrink)
+    estimate = estimate_index(X,score;probe,blocks=best.blocks,multiplier=best.multiplier,anchor,reference,unshrink=best.unshrink)
     (;estimate,multiplier=best.multiplier,unshrink=best.unshrink,blocks=best.blocks,scores,foldid)
 end

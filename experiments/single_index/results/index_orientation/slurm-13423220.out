@@ -1,0 +1,178 @@
+Test Summary:                    | Pass  Total   Time
+Single-index precision inference |   92     92  22.0s
+stage=index scenario=check rep=1
+stage=pointwise scenario=check rep=1
+{
+  "receipt": {
+    "stage": "index",
+    "rows": 5,
+    "expected_rows": 5,
+    "shards": 1,
+    "duplicate_identities": 0,
+    "failures_retained": true,
+    "groups": 5,
+    "plan": "/tmp/SLURM_13423220/jl_TSVKGW/index.toml"
+  },
+  "best": [
+    {
+      "method": "mean_hard",
+      "index_multiplier": 1.0,
+      "mean_error2": NaN,
+      "minimum_exact": 0.0,
+      "minimum_contains": 0.0,
+      "maximum_failures": 1,
+      "gate_pass": false
+    },
+    {
+      "method": "mean_ols",
+      "index_multiplier": 1.0,
+      "mean_error2": NaN,
+      "minimum_exact": 0.0,
+      "minimum_contains": 0.0,
+      "maximum_failures": 1,
+      "gate_pass": false
+    },
+    {
+      "method": "mean_soft",
+      "index_multiplier": 1.0,
+      "mean_error2": NaN,
+      "minimum_exact": 0.0,
+      "minimum_contains": 0.0,
+      "maximum_failures": 1,
+      "gate_pass": false
+    },
+    {
+      "method": "mom_ols",
+      "index_multiplier": 1.0,
+      "mean_error2": 0.6453372728803732,
+      "minimum_exact": 0.0,
+      "minimum_contains": 0.0,
+      "maximum_failures": 0,
+      "gate_pass": false
+    }
+  ]
+}
+{
+  "stage": "pointwise",
+  "rows": 64,
+  "expected_rows": 64,
+  "shards": 1,
+  "duplicate_identities": 0,
+  "failures_retained": true,
+  "groups": 64,
+  "plan": "/tmp/SLURM_13423220/jl_TSVKGW/pointwise.toml"
+}
+Test Summary:                                    | Pass  Total  Time
+Fixed-support Gaussian design and normal penalty |  107    107  7.7s
+Test Summary:                                        | Pass  Total  Time
+Index orientation without a nonzero first coordinate |   20     20  4.4s
+Test Summary:                           | Pass  Total  Time
+OLS orientation after support selection |    2      2  0.5s
+{
+  "receipt": {
+    "rows": 4000,
+    "expected_rows": 4000,
+    "groups": 8,
+    "replicates_per_group": 500,
+    "duplicate_identities": 0,
+    "failures_retained": true
+  },
+  "summary": [
+    {
+      "n": "3200",
+      "zero_first": "0",
+      "policy": "automatic",
+      "replicates": 500,
+      "available": 500,
+      "empty_support": 0,
+      "missing_anchor": 0,
+      "other_failures": 0,
+      "error2": 0.018004913218377744,
+      "projective_error2": 0.018004913218377744
+    },
+    {
+      "n": "3200",
+      "zero_first": "0",
+      "policy": "fixed_first",
+      "replicates": 500,
+      "available": 499,
+      "empty_support": 0,
+      "missing_anchor": 1,
+      "other_failures": 0,
+      "error2": 0.017467823958341438,
+      "projective_error2": 0.017467823958341438
+    },
+    {
+      "n": "3200",
+      "zero_first": "1",
+      "policy": "automatic",
+      "replicates": 500,
+      "available": 500,
+      "empty_support": 0,
+      "missing_anchor": 0,
+      "other_failures": 0,
+      "error2": 0.018004913218377744,
+      "projective_error2": 0.018004913218377744
+    },
+    {
+      "n": "3200",
+      "zero_first": "1",
+      "policy": "fixed_first",
+      "replicates": 500,
+      "available": 1,
+      "empty_support": 0,
+      "missing_anchor": 499,
+      "other_failures": 0,
+      "error2": 0.06272715198642062,
+      "projective_error2": 0.06272715198642062
+    },
+    {
+      "n": "800",
+      "zero_first": "0",
+      "policy": "automatic",
+      "replicates": 500,
+      "available": 422,
+      "empty_support": 78,
+      "missing_anchor": 0,
+      "other_failures": 0,
+      "error2": 0.7112654667599814,
+      "projective_error2": 0.7112654667599814
+    },
+    {
+      "n": "800",
+      "zero_first": "0",
+      "policy": "fixed_first",
+      "replicates": 500,
+      "available": 177,
+      "empty_support": 78,
+      "missing_anchor": 245,
+      "other_failures": 0,
+      "error2": 0.5859718633098249,
+      "projective_error2": 0.5859718633098249
+    },
+    {
+      "n": "800",
+      "zero_first": "1",
+      "policy": "automatic",
+      "replicates": 500,
+      "available": 422,
+      "empty_support": 78,
+      "missing_anchor": 0,
+      "other_failures": 0,
+      "error2": 0.7112654667599814,
+      "projective_error2": 0.7112654667599814
+    },
+    {
+      "n": "800",
+      "zero_first": "1",
+      "policy": "fixed_first",
+      "replicates": 500,
+      "available": 0,
+      "empty_support": 78,
+      "missing_anchor": 422,
+      "other_failures": 0,
+      "error2": NaN,
+      "projective_error2": NaN
+    }
+  ]
+}

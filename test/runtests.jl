@@ -13,7 +13,8 @@ tests = [
   "generate",
   "clime",
   "slassoinv",
-  "single_index"
+  "single_index",
+  "index_orientation"
 ]
 
 @testset "CovarianceSelection" begin

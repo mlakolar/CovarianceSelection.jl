@@ -2,7 +2,7 @@
 
 ## Statistical target and first stage
 
-Write `t = z' gamma`, with a unit direction and a positive first coordinate.
+Write `t = z' gamma`, with a unit direction and a specified sign convention.
 The target is the inverse of the actual conditional covariance, not a latent
 copula correlation. Nonzero precision entries describe conditional partial
 correlations. Conditional independence requires stronger distributional
@@ -13,8 +13,26 @@ For a fixed probe pair, the score moment is the expectation of the product of
 the two responses times the known covariate score. Stein's identity makes it a
 scalar multiple of the index direction. The implementation takes equal
 consecutive blocks, uses their coordinatewise median, soft-thresholds, and
-normalizes. It rejects a zero direction or zero orientation anchor. Threshold
-calibration and probe identification remain explicit user choices.
+normalizes. Automatic orientation makes the largest absolute retained component
+positive; no particular coordinate must be nonzero. An explicitly supplied
+integer `anchor` retains the fixed-coordinate convention and rejects a zero
+anchor. A `reference` vector instead aligns the direction by a positive inner
+product, which is useful for bootstrap replicates. A zero direction remains a
+failure. Threshold calibration and probe identification remain explicit choices.
+
+The pairs `(gamma,Omega(t))` and `(-gamma,Omega(-t))` describe the same model.
+Changing the sign convention therefore changes the index axis. Automatic
+orientation is locally stable when the largest-magnitude population coordinate
+is unique, or when all tied maximizers have the same sign. Mixed-sign ties
+require a nonorthogonal fixed reference or another stated convention. A
+bootstrap replicate should use the original fitted direction as its reference;
+choosing a new sign independently can compare different points on the curve.
+
+The earlier implementation required coordinate 1 to survive thresholding by
+default. This was an unnecessary restriction, especially when its true
+coefficient is zero. The historical simulation workers now request `anchor=1`
+explicitly to preserve their old protocols. Their failures and bootstrap
+availability are not evidence about the corrected automatic convention.
 
 The current practical threshold uses an empirical coordinate variance. The
 median-of-means moment is robust under finite second moments, but this scale

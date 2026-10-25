@@ -9,11 +9,19 @@ original median-of-means default or establish generated-index coverage.
 
 The identifying Stein moment has the form `E(V)=c*gamma`, where `V` is the
 known covariate score times the prespecified probe response product. The index
-direction is unit-normalized and has a positive anchor coordinate. For each
+direction is unit-normalized with an explicit sign convention. For each
 candidate and fold, estimate a direction on the training observations. Score
-its inner product with the held-out moment, oriented by the sign of the
-training anchor moment. If that orientation is correct, its conditional
-population objective is `abs(c)` times its cosine with the true direction.
+its inner product with the held-out moment, multiplied by the sign of the inner
+product between the training raw moment and training direction. This aligns
+validation with the raw training direction, independently of the reported sign
+convention. For a fixed positive anchor it reproduces the original score based
+on the training anchor moment. For a fixed training fit, the conditional
+population objective is
+`c*sign(dot(training_moment,direction))*dot(gamma,direction)`.
+Under correct raw-moment alignment this is `abs(c)` times the absolute cosine
+with the true direction. A weak empirical moment need not align correctly.
+The criterion measures direction accuracy up to sign; a separate convention
+defines the sign of the reported index axis.
 
 Thus held-out alignment targets direction accuracy without using the true
 index, covariance, or empirical confidence coverage. All candidates use the

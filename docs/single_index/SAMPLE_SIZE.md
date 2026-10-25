@@ -1,5 +1,13 @@
 # Sample size and generated-index uncertainty
 
+**Orientation correction.** These completed coverage experiments used the legacy
+fixed-first-coordinate convention. Their workers retain explicit `anchor=1` for
+reproduction. The module now defaults to automatic orientation and permits a
+truly zero first coefficient. Thus the original feasible-index failure rates and
+bootstrap availability cannot be attributed entirely to index estimation or to
+bootstrap calibration. Coverage with the corrected convention has not yet been
+measured by this study. See [METHODS.md](METHODS.md).
+
 This follow-up separates precision inference with a known index from the cost
 of estimating that index. It applies no index-support advancement gate. The
 earlier requirement of 99% exact index-support recovery was a simulation-design
