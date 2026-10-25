@@ -1,0 +1,7 @@
+[deps]
+CovarianceSelection = "fb9f034c-9bf8-4e47-a0a4-723273363029"
+KernelSmoothing = "724a8e84-0a16-41a9-ba90-78f60180b487"
+
+[sources]
+CovarianceSelection = {path = "/project2/mkolar_1314/SingleIndexGraph/20261026-sig-mave-refinement"}
+KernelSmoothing = {path = "/project2/mkolar_1314/SingleIndexGraph/20261026-sig-mave-refinement/dependencies/KernelSmoothing"}

@@ -82,7 +82,7 @@ Recreate under Discovery Slurm with `random_probe_population.sbatch`, using
 the existing coverage-run Manifest and shared Julia 1.13.2 depot. The random
 seed is 65193717. No simulation arrays require retention.
 
-## Proposed iterative estimator: not yet run
+## Iterative estimator: original proposal
 
 Treat several quadratic probes as a vector response Y. Its conditional mean
 is a vector of one-dimensional curves g(beta'Z). For a coordinate product,
@@ -138,4 +138,7 @@ The first proposed comparison is Stein alone versus one refinement versus
 iterated multivariate MAVE, using identical observations and probe banks.
 Evaluate direction error before revisiting precision inference. Keep the
 precision-estimation sample independent, as in the completed coverage study.
-This paragraph is a plan; no iterative index fits have been run.
+The implementation and newly authorized Discovery comparison are documented in
+[MAVE_REFINEMENT.md](MAVE_REFINEMENT.md). This section records the original
+proposal; the implementation uses an unconstrained update followed by
+normalization and explicitly rescales the local slopes.

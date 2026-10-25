@@ -1,0 +1,299 @@
+seed = 2937511
+shard_size = 2
+iterative_selection = true
+max_updates = 60
+dense_updates = 200
+tolerance = 0.0001
+bandwidth_factors = [1.0]
+threshold_levels = [1.0]
+lasso_levels = [0.1]
+holdout = true
+holdout_bandwidth = 1.0
+
+[[scenario]]
+id = 1
+design = "correlation"
+amplitude = 0.55
+p = 20
+n = 200
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 2
+design = "correlation"
+amplitude = 0.55
+p = 20
+n = 400
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 3
+design = "correlation"
+amplitude = 0.55
+p = 20
+n = 800
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 4
+design = "correlation"
+amplitude = 0.55
+p = 20
+n = 1600
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 5
+design = "correlation"
+amplitude = 0.55
+p = 40
+n = 200
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 6
+design = "correlation"
+amplitude = 0.55
+p = 40
+n = 400
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 7
+design = "correlation"
+amplitude = 0.55
+p = 40
+n = 800
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 8
+design = "correlation"
+amplitude = 0.55
+p = 40
+n = 1600
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 9
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+n = 200
+bank = "mixed"
+replicates = 300
+
+[[scenario]]
+id = 10
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+n = 400
+bank = "mixed"
+replicates = 300
+
+[[scenario]]
+id = 11
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+n = 800
+bank = "mixed"
+replicates = 300
+
+[[scenario]]
+id = 12
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+n = 1600
+bank = "mixed"
+replicates = 300
+
+[[scenario]]
+id = 13
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+n = 200
+bank = "mixed"
+replicates = 300
+
+[[scenario]]
+id = 14
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+n = 400
+bank = "mixed"
+replicates = 300
+
+[[scenario]]
+id = 15
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+n = 800
+bank = "mixed"
+replicates = 300
+
+[[scenario]]
+id = 16
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+n = 1600
+bank = "mixed"
+replicates = 300
+
+[[scenario]]
+id = 17
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+n = 200
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 18
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+n = 400
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 19
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+n = 800
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 20
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+n = 1600
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 21
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+n = 200
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 22
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+n = 400
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 23
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+n = 800
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 24
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+n = 1600
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 25
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+n = 200
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 26
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+n = 400
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 27
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+n = 800
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 28
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+n = 1600
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 29
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+n = 200
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 30
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+n = 400
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 31
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+n = 800
+bank = "complete"
+replicates = 300
+
+[[scenario]]
+id = 32
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+n = 1600
+bank = "complete"
+replicates = 300

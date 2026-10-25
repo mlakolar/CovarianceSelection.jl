@@ -27,6 +27,8 @@ The paired known-versus-estimated-index pointwise coverage experiment is specifi
 in [PROMISING_POINTWISE_COVERAGE.md](PROMISING_POINTWISE_COVERAGE.md).
 The population random-probe comparison and proposed iterative index refinement
 are in [RANDOM_PROBES_AND_REFINEMENT.md](RANDOM_PROBES_AND_REFINEMENT.md).
+The iterative MAVE and variable-selection comparison is documented in
+[MAVE_REFINEMENT.md](MAVE_REFINEMENT.md).
 
 ```julia
 using CovarianceSelection
@@ -78,6 +80,8 @@ threshold, sparsity, discarded observations, and index sensitivity.
 | `select_index_tuning` | Held-out Stein alignment, threshold/support and block-count selection |
 | `probe_index_moments` | First- or second-order Gaussian Stein moments for fixed scalar probes |
 | `estimate_probe_index` | Multiple-probe OLS, screening/refit, and spectral direction estimators |
+| `refine_probe_index` | One or repeated projected multivariate MAVE index updates |
+| `select_mave_variables` | Threshold or ordinary/adaptive Lasso selection with unpenalized MAVE refitting |
 | `local_covariance` | Nonnegative local second moments, weights, realized effective sample size |
 | `local_design` | Polynomial coefficient map, intercept weights, conditioning and local size |
 | `precision_pilot` | Local scaled-lasso/ACLIME inverse and inverse-equation residual |

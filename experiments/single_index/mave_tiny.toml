@@ -1,0 +1,48 @@
+seed = 713081
+shard_size = 2
+iterative_selection = true
+max_updates = 60
+dense_updates = 200
+tolerance = 0.0001
+bandwidth_factors = [1.0]
+threshold_levels = [1.0]
+lasso_levels = [0.1]
+holdout = true
+holdout_bandwidth = 1.0
+
+
+[[scenario]]
+id = 1
+design = "correlation"
+amplitude = 0.55
+p = 20
+n = 200
+bank = "complete"
+replicates = 1
+
+[[scenario]]
+id = 2
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+n = 200
+bank = "mixed"
+replicates = 1
+
+[[scenario]]
+id = 3
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+n = 200
+bank = "complete"
+replicates = 1
+
+[[scenario]]
+id = 4
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+n = 200
+bank = "complete"
+replicates = 1
