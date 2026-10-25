@@ -1,0 +1,132 @@
+{
+  "authorization": "User approved four designs and Discovery index comparisons; prior authorization permits as much compute as needed.",
+  "created_utc": "2026-10-25T19:19:50.434988Z",
+  "jobs": [
+    {
+      "job_id": "13445321",
+      "reason": "Julia dotted-operator numeric literal parse error; no estimator fitting occurred.",
+      "stage": "population",
+      "state": "FAILED"
+    },
+    {
+      "job_id": "13445346",
+      "reason": "Top-level Julia closure counter scope; wrap driver in a function. No fitting occurred.",
+      "stage": "population_retry",
+      "state": "FAILED"
+    },
+    {
+      "checks": 162,
+      "job_id": "13445376",
+      "rows": 24,
+      "stage": "population_fixed",
+      "state": "COMPLETED",
+      "validated": true
+    },
+    {
+      "checks": 98,
+      "failures": 0,
+      "job_id": "13445394",
+      "rows": 444,
+      "stage": "canary",
+      "state": "COMPLETED",
+      "validated": true
+    },
+    {
+      "job_id": "13445513",
+      "stage": "comparison",
+      "state": "COMPLETED"
+    },
+    {
+      "dependency": "afterok:13445513",
+      "job_id": "13445520",
+      "stage": "reporting",
+      "state": "COMPLETED"
+    },
+    {
+      "job_id": "13445799",
+      "stage": "failure_review",
+      "state": "COMPLETED"
+    },
+    {
+      "job_id": "13445820",
+      "note": "Adds matching screened RRR baseline; no fit changes.",
+      "stage": "final_reporting",
+      "state": "COMPLETED"
+    }
+  ],
+  "outputs": [
+    "population/population.csv",
+    "comparison/summary.csv",
+    "comparison/paired.csv",
+    "comparison/failures.csv",
+    "reporting/review_receipt.json",
+    "reporting/"
+  ],
+  "publication": {
+    "pull_request": "https://github.com/mlakolar/CovarianceSelection.jl/pull/29",
+    "note": "Execution snapshot; publication commit is recorded in the project registry."
+  },
+  "purpose": "Population diagnostics first, then index-only comparison on four approved Gaussian covariance families. No precision estimation or inference.",
+  "recreation": {
+    "command": "sbatch experiments/single_index/four_design_population.sbatch; after validation: sbatch experiments/single_index/four_design.sbatch STAGE",
+    "environment": "Julia1.13.2, Manifest/depot from 20261025-sig-index-confirmation",
+    "source_snapshot": "population-source.tar.gz + comparison-source.tar.gz",
+    "working_directory": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-four-designs"
+  },
+  "reporting_source_commit": "4a56cc2",
+  "resources": {
+    "comparison_cpus": 64,
+    "comparison_memory_gb": 128,
+    "comparison_wall_hours": 2,
+    "population_cpus": 1,
+    "population_memory_gb": 2
+  },
+  "retention": "Raw bounded CSV shards on Discovery (estimated 1-3 GB); version compact summaries, plans, receipts and figures.",
+  "revision": 16,
+  "run_id": "20261025-sig-four-designs",
+  "schema_version": 1,
+  "scientific_plan": {
+    "datasets": 72000,
+    "exact_support_gate": false,
+    "index_dimensions": [
+      4,
+      20
+    ],
+    "precision_inference": false,
+    "replicates": 300,
+    "response_dimensions": [
+      20,
+      40
+    ],
+    "sample_sizes": [
+      100,
+      200,
+      400,
+      800,
+      1600
+    ],
+    "scenarios": 240
+  },
+  "source_commit": "008d7ea",
+  "status": "validated_results_snapshot",
+  "submission_intent": null,
+  "updated_utc": "2026-10-25T19:56:46.692080Z",
+  "validation": {
+    "all_failures_retained_with_maximum_loss": true,
+    "all_failures_split_nonpositive_signal": true,
+    "canary_checks": 98,
+    "canary_comparison_inputs_identical": true,
+    "canary_failures": 0,
+    "canary_rows": 444,
+    "comparison_rows": 3996000,
+    "datasets": 72000,
+    "duplicate_identities": 0,
+    "failed_fits": 56,
+    "figures": 10,
+    "figures_visually_reviewed": true,
+    "identical_d4_oracle_controls": 120,
+    "population_checks": 162,
+    "population_rows": 24,
+    "support_cardinality_identities": true
+  }
+}

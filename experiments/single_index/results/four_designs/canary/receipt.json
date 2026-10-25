@@ -1,0 +1,14 @@
+{
+  "stage": "canary",
+  "scenarios": 8,
+  "datasets": 8,
+  "rows": 444,
+  "expected_rows": 444,
+  "duplicate_identities": 0,
+  "failures": 0,
+  "groups": 420,
+  "setup_seconds": 2.4064406050000002,
+  "failed_loss_convention": 1,
+  "precision_estimation": false,
+  "inference": false
+}

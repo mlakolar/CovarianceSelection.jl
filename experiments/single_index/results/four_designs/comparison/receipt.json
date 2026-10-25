@@ -1,0 +1,14 @@
+{
+  "stage": "comparison",
+  "scenarios": 240,
+  "datasets": 72000,
+  "rows": 3996000,
+  "expected_rows": 3996000,
+  "duplicate_identities": 0,
+  "failures": 56,
+  "groups": 12600,
+  "setup_seconds": 7550.2729835548325,
+  "failed_loss_convention": 1,
+  "precision_estimation": false,
+  "inference": false
+}

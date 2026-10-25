@@ -6,18 +6,19 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 root=Path(sys.argv[1]);dest=root/'reporting';dest.mkdir(exist_ok=True)
 rows=list(csv.DictReader((root/'comparison/summary.csv').open()))
-styles=[('complete','ols',1.,'full','Complete OLS'),('complete','rrr',1.,'full','Complete RRR'),('complete','weighted_rrr',.2,'full','Complete weighted RRR (.2)'),('complete','weighted_rrr',.2,'screen','Complete weighted RRR (.2), select 10'),('mixed','rrr',1.,'screen','Mixed RRR, select 10'),('complete','learned_crossfit',.2,'full','Complete learned probe'),('oracle_probe','ols',0.,'full','Known informative probe'),('oracle_probe','true_support_ols',0.,'true','Known probe + true support')]
+styles=[('complete','ols',1.,'full','Complete OLS'),('complete','rrr',1.,'full','Complete RRR'),('complete','weighted_rrr',.2,'full','Complete weighted RRR (.2)'),('complete','weighted_rrr',.2,'screen','Complete weighted RRR (.2), select 10'),('mixed','rrr',1.,'screen','Mixed RRR, at most 10'),('complete','learned_crossfit',.2,'full','Complete learned probe'),('oracle_probe','ols',0.,'full','Known informative probe'),('oracle_probe','true_support_ols',0.,'true','Known probe + true support')]
+styles.append(('complete','rrr',1.,'screen','Complete RRR, select 10'))
 for family in ('correlation','opposed_scale','fixed_diagonal','noncommuting'):
     amps=sorted({float(r['amplitude']) for r in rows if r['design']==family})
     fig,axes=plt.subplots(2,3,figsize=(13,7),sharex=True,sharey=True)
     for i,d in enumerate((4,20)):
         for j,a in enumerate(amps):
             ax=axes[i,j]
-            for bank,method,rho,kind,label in styles:
-                if d==4 and kind=='screen':continue
+            for style_index,(bank,method,rho,kind,label) in enumerate(styles):
+                if d==4 and kind=='screen' and bank=='complete':continue
                 k=4 if kind=='true' else (10 if kind=='screen' and d==20 else d)
                 subset=sorted([r for r in rows if r['design']==family and int(r['p'])==40 and int(r['d'])==d and float(r['amplitude'])==a and r['bank']==bank and r['method']==method and int(r['k'])==k and float(r['rho'])==rho],key=lambda r:int(r['n']))
-                color='black' if kind=='true' else 'gray' if bank=='oracle_probe' else None
+                color='black' if kind=='true' else 'gray' if bank=='oracle_probe' else f'C{style_index}'
                 ax.errorbar([int(r['n']) for r in subset],[float(r['mean_loss']) for r in subset],yerr=[1.96*float(r['mcse_loss']) for r in subset],label=label,marker='o',ms=3,capsize=2,ls='--' if bank=='oracle_probe' else '-',color=color)
             ax.set_title(f'd={d}, amplitude={a:g}');ax.set_xscale('log',base=2);ax.set_ylim(0,1);ax.grid(alpha=.2)
             if j==0:ax.set_ylabel('Mean squared-sine direction error')
@@ -53,7 +54,7 @@ text=['# Four-design index comparison','', 'All methods and amplitudes were pres
 for r in rows:
     if int(r['p'])!=40 or int(r['n']) not in (400,800):continue
     if float(r['amplitude'])!=max(float(x['amplitude']) for x in rows if x['design']==r['design']):continue
-    if not (r['bank']=='oracle_probe' or (r['method']=='weighted_rrr' and r['bank']=='complete' and float(r['rho'])==.2 and int(r['k'])==int(r['d'])) or (r['bank'] in ('global_trace','global_products') and int(r['k'])==int(r['d']))):continue
+    if not (r['bank']=='oracle_probe' or (r['bank']=='complete' and r['method']=='rrr') or (r['method']=='weighted_rrr' and r['bank']=='complete' and float(r['rho'])==.2 and int(r['k'])==int(r['d'])) or (r['bank'] in ('global_trace','global_products') and int(r['k'])==int(r['d']))):continue
     text.append('| '+' | '.join([r['design'],r['amplitude'],r['d'],r['n'],r['bank'],r['method'],r['k'],r['rho'],f"{float(r['mean_loss']):.4f}",f"{float(r['mcse_loss']):.4f}"])+' |')
 (dest/'RESULTS.md').write_text('\n'.join(text)+'\n')
 print(json.dumps({'figures':10,'reporting':str(dest)}))

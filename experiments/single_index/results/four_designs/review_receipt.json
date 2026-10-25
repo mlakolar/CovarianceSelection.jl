@@ -1,0 +1,8 @@
+{
+  "failed_fits": 56,
+  "all_failures_split_moment_nonpositive_signal": true,
+  "all_failures_retained_with_maximum_loss": true,
+  "support_cardinality_identities": true,
+  "identical_d4_oracle_controls": 120,
+  "canary_comparison_input_hashes_identical": true
+}

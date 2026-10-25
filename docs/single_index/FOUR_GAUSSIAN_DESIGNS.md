@@ -126,3 +126,92 @@ CPUs on four nodes, 128 GB total RAM, and a two-hour limit. GNU Parallel launche
 exclusive srun workers. Atomic 25-dataset shards allow resuming missing work
 without dropping numerical failures. Expected raw output is approximately 1--3 GB.
 Keep raw shards on Discovery and version compact reporting inputs and receipts.
+
+## Population results and validation status
+
+The population stage passed 162 checks across all 24 configurations. At p=40,
+the strongest levels give:
+
+| Family | Amplitude | Scaled average first derivative | Mean Gaussian information | Maximum covariance condition |
+|---|---:|---:|---:|---:|
+| Correlation | 0.55 | 2.180 | 3.679 | 5.667 |
+| Opposed scale | 0.60 | 2.235 | 3.344 | 5.534 |
+| Fixed precision diagonal | 0.60 | 1.799 | 1.954 | 5.621 |
+| Noncommuting | 0.60 | 2.716 | 4.362 | 7.483 |
+
+The scaled derivative is the Frobenius norm of E[Sigma(T)]^{-1/2}
+E[Sigma'(T)] E[Sigma(T)]^{-1/2}. Both first-order signal and information increase
+with amplitude within every family. Trace-probe first signals vanish in the
+correlation and opposed-scale families. All index estimators still advance; the
+population checks are about identification and numerical implementation, not an
+accuracy gate on fitted indices.
+
+The initial population harness needed a numeric-literal parsing repair and a
+local-counter scope repair (jobs 13445321 and 13445346). Neither failure involved
+estimator fitting or a failed scientific check. Corrected job 13445376 completed.
+Canary job 13445394 passed 98 tests and all 444 expected records over eight
+datasets with zero failed fits. The full comparison, job 13445513, completed in 14 minutes. Reporting job
+13445520 and targeted review 13445799 completed. Final figures were regenerated
+as 13445820 to show the matching screened RRR baseline; no fits were repeated.
+
+## Index comparison results
+
+All 72,000 datasets and 3,996,000 expected records are present, with no duplicate
+identities. Record counts include shared-setup timings. Fifty-six fits were
+unavailable under the split-moment estimator's positive-leading-eigenvalue rule.
+Every failure was retained with maximum direction loss one; all other estimator
+families returned fits. The targeted review confirmed these classifications,
+selected-support cardinality identities, and identical fitting-input hashes
+between canary and production. The two oracle controls at d=4 agree in all 120
+settings, as they should.
+
+The table shows a single fixed feasible procedure: complete-quadratic RRR,
+OLS row screening to 10 variables, and refitting. Index dimension is 20 and
+response dimension is 40. Each entry averages 300 paired repetitions at the
+strongest amplitude specified for that family. Lower squared-sine error is better.
+No knowledge of the true support or precision function enters this procedure.
+
+| Family | Mean loss, n=400 | Mean loss, n=800 | 90th percentile, n=800 |
+|---|---:|---:|---:|
+| Correlation, a=0.55 | 0.0988 | 0.0148 | 0.0247 |
+| Opposed scale, a=0.60 | 0.0507 | 0.0133 | 0.0220 |
+| Fixed precision diagonal, a=0.60 | 0.0765 | 0.0181 | 0.0293 |
+| Noncommuting, a=0.60 | 0.0238 | 0.0081 | 0.0133 |
+
+At n=800, all four true index coordinates were retained in all 300 repetitions
+of each of these four settings, alongside six extra coordinates. This is observed
+support containment, not exact support recovery or a promotion gate. At n=400,
+screening sometimes omits active variables. In the correlation design its mean
+loss is 0.0988 but its 90th percentile is 0.3029; unselected RRR has mean 0.1025
+and 90th percentile 0.1502. Refitting therefore has a tail-risk tradeoff at smaller n.
+
+At n=800, retaining all 20 coordinates instead gives RRR losses 0.0295, 0.0253,
+0.0353 and 0.0160 in the displayed family order. Covariance weighting at rho=0.2
+usually worsens those values; it is similar in the noncommuting case. The tested
+cross-fitted learned-probe method with the complete dictionary is less accurate
+than direct RRR in these strong p=40 cases.
+All fixed weighting levels and other dictionaries remain in the CSV comparisons.
+
+Probe choice remains important. In the strongest opposed-scale setting with
+p=40 and d=20, mixed-bank RRR screening to 10 variables has losses 0.0419, 0.0186
+and 0.0086 at n=200,400,800, respectively; the corresponding 90th percentiles are
+0.0701, 0.0296 and 0.0143. Its selected set contains all four active coordinates
+in all 300 repetitions at each of these three sample sizes. At n=400, keeping
+all 20 coordinates with that bank instead gives loss 0.0334. Access to all
+coordinate squares helps in this family; adding the complete product dictionary
+introduces many additional noisy responses. This interpretation is consistent
+with the population variance-change structure, not a validated adaptive
+probe-selection rule. The oracle labels denote known-probe/support controls,
+not an optimal estimator or an information lower bound.
+
+These outcomes support stronger covariance variation as a useful direction. The
+opposed-scale family succeeds while retaining constant precision support, so zero
+crossings are not necessary for improvement. The noncommuting family also succeeds,
+showing that the results do not require a shared covariance eigenbasis. Weak and
+moderate amplitudes remain in the results and can be substantially more difficult.
+The comparison does not establish a universally reliable index rule or precision
+coverage. No precision estimation or inference was run.
+
+Compact results, paired contrasts, receipts, retained failures and standalone
+figures are in [the results directory](../../experiments/single_index/results/four_designs).
+The project run registry is `.slurm/runs/20261025-sig-four-designs.json`.
