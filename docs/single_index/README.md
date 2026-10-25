@@ -17,6 +17,8 @@ study and fixed normal-quantile penalties are specified in
 [GAUSSIAN_FIXED_SUPPORT.md](GAUSSIAN_FIXED_SUPPORT.md).
 The known-index sample-size ladder and two-stage uncertainty study are described
 in [SAMPLE_SIZE.md](SAMPLE_SIZE.md).
+The index-only multiple-probe study, including first- and second-order Stein
+estimators and OLS refitting, is specified in [MULTIPROBE_INDEX.md](MULTIPROBE_INDEX.md).
 
 ```julia
 using CovarianceSelection
@@ -66,6 +68,8 @@ threshold, sparsity, discarded observations, and index sensitivity.
 |---|---|
 | `estimate_index` | Median-of-means Stein moment, soft threshold, oriented unit direction |
 | `select_index_tuning` | Held-out Stein alignment, threshold/support and block-count selection |
+| `probe_index_moments` | First- or second-order Gaussian Stein moments for fixed scalar probes |
+| `estimate_probe_index` | Multiple-probe OLS, screening/refit, and spectral direction estimators |
 | `local_covariance` | Nonnegative local second moments, weights, realized effective sample size |
 | `local_design` | Polynomial coefficient map, intercept weights, conditioning and local size |
 | `precision_pilot` | Local scaled-lasso/ACLIME inverse and inverse-equation residual |

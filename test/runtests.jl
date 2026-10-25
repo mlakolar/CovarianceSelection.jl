@@ -14,7 +14,8 @@ tests = [
   "clime",
   "slassoinv",
   "single_index",
-  "index_orientation"
+  "index_orientation",
+  "probe_index"
 ]
 
 @testset "CovarianceSelection" begin

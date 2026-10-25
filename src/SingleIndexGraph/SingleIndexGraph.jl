@@ -14,9 +14,11 @@ using ..CovarianceSelection: slassoinv, aclime, _SLWorkspace, _sl_column!, _Colu
 
 export IndexEstimate, PrecisionCurve, estimate_index, local_design,
        local_covariance, precision_pilot, fit_precision, confint, confband,
-       precision_errors, select_tuning, select_index_tuning, biweight
+       precision_errors, select_tuning, select_index_tuning, biweight,
+       estimate_probe_index, probe_index_moments
 
 include("index.jl")
+include("probe_index.jl")
 include("smoothing.jl")
 include("inference.jl")
 include("tuning.jl")

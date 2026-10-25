@@ -1,0 +1,135 @@
+seed = 27012511
+shard_size = 100
+validate = false
+
+[[scenario]]
+id = 1
+n = 100
+p = 40
+design = "chain"
+replicates = 300
+
+[[scenario]]
+id = 2
+n = 200
+p = 40
+design = "chain"
+replicates = 300
+
+[[scenario]]
+id = 3
+n = 400
+p = 40
+design = "chain"
+replicates = 300
+
+[[scenario]]
+id = 4
+n = 800
+p = 40
+design = "chain"
+replicates = 300
+
+[[scenario]]
+id = 5
+n = 1600
+p = 40
+design = "chain"
+replicates = 300
+
+[[scenario]]
+id = 6
+n = 3200
+p = 40
+design = "chain"
+replicates = 300
+
+[[scenario]]
+id = 7
+n = 100
+p = 40
+design = "pairs"
+replicates = 300
+
+[[scenario]]
+id = 8
+n = 200
+p = 40
+design = "pairs"
+replicates = 300
+
+[[scenario]]
+id = 9
+n = 400
+p = 40
+design = "pairs"
+replicates = 300
+
+[[scenario]]
+id = 10
+n = 800
+p = 40
+design = "pairs"
+replicates = 300
+
+[[scenario]]
+id = 11
+n = 1600
+p = 40
+design = "pairs"
+replicates = 300
+
+[[scenario]]
+id = 12
+n = 3200
+p = 40
+design = "pairs"
+replicates = 300
+
+[[scenario]]
+id = 13
+n = 400
+p = 40
+design = "chain"
+replicates = 200
+even = true
+
+[[scenario]]
+id = 14
+n = 800
+p = 40
+design = "chain"
+replicates = 200
+even = true
+
+[[scenario]]
+id = 15
+n = 1600
+p = 40
+design = "chain"
+replicates = 200
+even = true
+
+[[scenario]]
+id = 16
+n = 400
+p = 40
+design = "pairs"
+replicates = 200
+even = true
+
+[[scenario]]
+id = 17
+n = 800
+p = 40
+design = "pairs"
+replicates = 200
+even = true
+
+[[scenario]]
+id = 18
+n = 1600
+p = 40
+design = "pairs"
+replicates = 200
+even = true

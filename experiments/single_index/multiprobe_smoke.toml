@@ -1,0 +1,59 @@
+seed = 19012791
+shard_size = 100
+validate = true
+
+[[candidate]]
+id = "diagonal-0-ols-20"
+bank = "diagonal"
+L = 0
+method = "ols"
+k = 20
+
+[[candidate]]
+id = "complete-0-ols-20"
+bank = "complete"
+L = 0
+method = "ols"
+k = 20
+
+[[candidate]]
+id = "mixed-30-screen-6"
+bank = "mixed"
+L = 30
+method = "screen"
+k = 6
+
+[[candidate]]
+id = "mixed-30-split-20"
+bank = "mixed"
+L = 30
+method = "split"
+k = 20
+
+[[candidate]]
+id = "mixed-30-second-20"
+bank = "mixed"
+L = 30
+method = "second"
+k = 20
+
+[[candidate]]
+id = "mixed-30-second_split-20"
+bank = "mixed"
+L = 30
+method = "second_split"
+k = 20
+
+[[scenario]]
+id = 1
+n = 100
+p = 40
+design = "chain"
+replicates = 2
+
+[[scenario]]
+id = 2
+n = 200
+p = 40
+design = "pairs"
+replicates = 2
