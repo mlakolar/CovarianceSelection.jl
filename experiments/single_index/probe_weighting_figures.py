@@ -8,10 +8,12 @@ root=Path(sys.argv[1]);out=root/'reporting';out.mkdir(exist_ok=True)
 rows=list(csv.DictReader((root/'confirmation/summary.csv').open()))
 main=[r for r in rows if float(r['signal'])==1 and r['beta_kind']=='equal']
 styles=[('ols',20,1.,'Current OLS, all 20'),('rrr',20,1.,'RRR, all 20'),('weighted_rrr',20,.2,'Weighted RRR, all 20'),('weighted_rrr',10,.2,'Weighted RRR, select 10'),('learned_crossfit',20,.2,'Learned probe, cross-fit')]
+styles.append(('rrr',10,1.,'RRR, select 10'))
 for bank in ('projections','mixed','complete'):
-    fig,axes=plt.subplots(2,3,figsize=(13,7),sharex=True,sharey=True)
+    dimensions=(20,40) if bank=='complete' else (20,40,160)
+    fig,axes=plt.subplots(2,len(dimensions),figsize=(4.4*len(dimensions),7),sharex=True,sharey=True)
     for i,design in enumerate(('chain','pairs')):
-        for j,p in enumerate((20,40,160)):
+        for j,p in enumerate(dimensions):
             ax=axes[i,j]
             if bank=='complete' and p==160:ax.axis('off');continue
             for method,k,rho,label in styles:

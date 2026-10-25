@@ -65,7 +65,8 @@ Write G=LL'. All directions below are normalized to unit length.
    at the end. No true direction is used for construction or orientation.
 
 Methods 1--4 use either all 20 index variables or joint OLS row-norm screening
-that retains 10 variables, followed by refitting on those variables. The selected
+that retains 10 variables. OLS and RRR are refit on those variables; direct
+moment aggregation restricts the moment vector to those variables. The selected
 row set and standardized response dictionary are held constant across weighting
 rules. Learned-probe aggregation uses all 20 variables, avoiding confounding by
 an additional selection rule. All procedures are non-iterative and do not fit a
@@ -111,10 +112,65 @@ and version compact summaries, paired results, receipts, and the execution recip
 Do not advance to precision coverage automatically. Evaluate aggregation gains and
 the informative-probe controls first.
 
-## Execution status
+## Results and execution status
 
-Canary job `13432568` completed with 16 algebra checks and 332 expected records
-across six datasets, no duplicates, and no failed fits. Development job `13433102`
-and dependent confirmation job `13433104` were submitted. Production results are
-pending. The authoritative current run registry is
+All stages completed on Discovery. Canary `13432568` passed 16 algebra checks
+and 332 expected records. Development `13433102` validated 2,800 datasets and
+161,600 records. Independent confirmation `13433104` validated 14,000 datasets
+and 808,000 records. There were no duplicate identities or failed fits. Record
+counts include shared-setup timing rows. Development and confirmation fitting-input
+hash files are identical. First reporting job: `13433770`; figure-layout revision:
+`13434797`. No fits were repeated for figure changes.
+
+Representative fresh-confirmation results at n=3,200 and response dimension 40
+are below. Entries are mean squared-sine error over 500 paired repetitions.
+The weighting level rho=0.2 is one prespecified comparison, not a fitted optimum.
+
+| Design and probes | OLS, all 20 | RRR, all 20 | Weighted RRR, all 20 | Learned combined probe |
+|---|---:|---:|---:|---:|
+| Chain, mixed | 0.2550 | 0.2520 | 0.3247 | 0.4414 |
+| Pairs, complete | 0.1883 | 0.1563 | 0.0801 | 0.2927 |
+
+Relative to unweighted RRR, the paired weighted-RRR difference is +0.07266
+(Monte Carlo SE 0.00457) for chain/mixed and -0.07627 (SE 0.00220) for
+pairs/complete. Thus accounting for correlation helps in one case and hurts
+in the other. For pairs/complete, all-coordinate weighted-RRR loss at fixed
+rho=0.05, 0.2, 0.5 is respectively 0.0736, 0.0801, 0.0990. For chain/mixed
+it is 0.3461, 0.3247, 0.2896. There is no universally preferred weighting level.
+
+Screening/refitting remains useful. At rho=0.2, pairs/complete RRR retaining
+10 variables improves from 0.1224 unweighted to 0.0783 weighted. Chain/mixed
+unweighted RRR retaining 10 has loss 0.1997; weighting worsens it to 0.2432.
+This particular learned-probe construction does not establish an advantage
+over the better direct aggregations. It is not evidence against all learned
+or cross-fitted probe constructions.
+
+### Diagnostic controls and downstream neighborhoods
+
+At n=3,200 and response dimension 40, informative-probe OLS on all 20 index
+variables has loss 0.0819 for chain and 0.0239 for pairs. Restricting that OLS
+fit to the true four variables gives 0.0134 and 0.0037. These probes use the
+known simulation precision derivative and are explicitly infeasible controls.
+They show that the data permit substantially more accurate index estimation
+than the feasible methods considered here. They do not establish a minimax
+benchmark or a general guarantee at smaller sample sizes.
+
+At response dimension 160 and n=3,200, informative-probe OLS gives losses
+0.0225 (chain) and 0.0067 (pairs). Mixed-probe unweighted RRR retaining 10
+variables gives 0.0447 for chain, whereas compact-probe methods still perform
+poorly for pairs. The complete dictionary with full covariance weighting was
+not tested at response dimension 160. That omission limits conclusions about
+high-dimensional response designs.
+
+At response dimension 40, the mean displacement/bandwidth ratio for rho=0.2,
+all-coordinate weighted RRR is 2.963 for chain/mixed and 1.417 for pairs/complete,
+using h=n^{-1/5}. Their mean kernel-weight L1 distances are 1.183 and 0.765.
+The informative-probe, true-support controls have ratios 0.538 and 0.283,
+with L1 distances 0.324 and 0.175. These quantify neighborhood changes, not
+precision bias or confidence-interval coverage.
+
+Compact tables, all fixed shrinkage levels, paired comparisons, receipts, and
+standalone figures are in
+[`experiments/single_index/results/aggregation`](../../experiments/single_index/results/aggregation).
+The authoritative execution record is
 `SingleIndexGraph/.slurm/runs/20261025-sig-aggregation.json`.

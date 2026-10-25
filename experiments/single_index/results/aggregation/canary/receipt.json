@@ -1,0 +1,12 @@
+{
+  "stage": "canary",
+  "datasets": 6,
+  "rows": 332,
+  "expected_rows": 332,
+  "duplicates": 0,
+  "failures": 0,
+  "groups": 316,
+  "setup_seconds": 6.187342142,
+  "source": "inputs-*.sha256",
+  "failed_loss_convention": 1
+}

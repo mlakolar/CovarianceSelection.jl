@@ -1,0 +1,103 @@
+{
+  "authorization": "User requested plan and execution with as much compute as needed on 2026-10-25.",
+  "created_utc": "2026-10-25T17:54:02.065503Z",
+  "jobs": [
+    {
+      "checks": 16,
+      "datasets": 6,
+      "failures": 0,
+      "job_id": "13432568",
+      "rows": 332,
+      "stage": "canary",
+      "state": "COMPLETED",
+      "validated": true
+    },
+    {
+      "datasets": 2800,
+      "failures": 0,
+      "job_id": "13433102",
+      "rows": 161600,
+      "stage": "development",
+      "state": "COMPLETED",
+      "validated": true
+    },
+    {
+      "dependency": "afterok:13433102",
+      "job_id": "13433104",
+      "stage": "confirmation",
+      "state": "COMPLETED"
+    },
+    {
+      "dependency": "afterok:13433104",
+      "job_id": "13433770",
+      "stage": "reporting",
+      "state": "COMPLETED"
+    },
+    {
+      "job_id": "13434797",
+      "stage": "reporting_layout",
+      "state": "COMPLETED"
+    }
+  ],
+  "outputs": [
+    "canary/receipt.json",
+    "development/summary.csv",
+    "confirmation/summary.csv",
+    "confirmation/paired.csv",
+    "reporting/"
+  ],
+  "publication": {
+    "pull_request": "https://github.com/mlakolar/CovarianceSelection.jl/pull/29",
+    "note": "Execution snapshot; final publication commit is recorded in the project run registry."
+  },
+  "purpose": "Compare fixed-rule joint, covariance-weighted and independently learned Stein probe aggregation; no precision inference.",
+  "recreation": {
+    "command": "sbatch experiments/single_index/aggregation.sbatch STAGE",
+    "environment": "Julia 1.13.2, Manifest/depot from 20261025-sig-index-confirmation",
+    "source_snapshot": "source.tar.gz",
+    "working_directory": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-aggregation"
+  },
+  "resources": {
+    "canary_cpus": 2,
+    "canary_memory_gb": 4,
+    "production_cpus": 64,
+    "production_memory_gb": 128,
+    "stage_wall_hours": 2,
+    "stages_sequential": true
+  },
+  "revision": 9,
+  "run_id": "20261025-sig-aggregation",
+  "schema_version": 1,
+  "scientific_plan": {
+    "confirmation_datasets": 14000,
+    "development_datasets": 2800,
+    "dimension_z": 20,
+    "exact_support_gate": false,
+    "scenarios": 28,
+    "shrinkage": [
+      0.05,
+      0.2,
+      0.5
+    ],
+    "truth_based_tuning": false
+  },
+  "source_commit": "0f0c750",
+  "status": "validated_results_snapshot",
+  "submission_intent": null,
+  "updated_utc": "2026-10-25T18:08:13.675243Z",
+  "validation": {
+    "canary_checks": 16,
+    "canary_rows": 332,
+    "confirmation_datasets": 14000,
+    "confirmation_duplicate_identities": 0,
+    "confirmation_failures": 0,
+    "confirmation_rows": 808000,
+    "development_confirmation_input_hashes_identical": true,
+    "development_datasets": 2800,
+    "development_duplicate_identities": 0,
+    "development_failures": 0,
+    "development_rows": 161600,
+    "figures": 8,
+    "figures_visually_reviewed": true
+  }
+}

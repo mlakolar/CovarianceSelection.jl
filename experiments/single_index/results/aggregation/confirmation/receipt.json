@@ -1,0 +1,12 @@
+{
+  "stage": "confirmation",
+  "datasets": 14000,
+  "rows": 808000,
+  "expected_rows": 808000,
+  "duplicates": 0,
+  "failures": 0,
+  "groups": 1538,
+  "setup_seconds": 3153.6531339180056,
+  "source": "inputs-*.sha256",
+  "failed_loss_convention": 1
+}

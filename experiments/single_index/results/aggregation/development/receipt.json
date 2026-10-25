@@ -1,0 +1,12 @@
+{
+  "stage": "development",
+  "datasets": 2800,
+  "rows": 161600,
+  "expected_rows": 161600,
+  "duplicates": 0,
+  "failures": 0,
+  "groups": 1538,
+  "setup_seconds": 627.8663798410025,
+  "source": "inputs-*.sha256",
+  "failed_loss_convention": 1
+}
