@@ -1,0 +1,50 @@
+[
+  {
+    "kind": "curve",
+    "entry_a": 1,
+    "entry_b": 1,
+    "n": 200,
+    "coverage21": 0.95,
+    "coverage41": 0.95,
+    "difference": 0,
+    "paired_mcse": 0.0,
+    "width21": 0.42908453185617695,
+    "width41": 0.4313678630230055
+  },
+  {
+    "kind": "curve",
+    "entry_a": 1,
+    "entry_b": 2,
+    "n": 200,
+    "coverage21": 0.955,
+    "coverage41": 0.955,
+    "difference": 0,
+    "paired_mcse": 0.0,
+    "width21": 0.3170701657049083,
+    "width41": 0.31883355688925674
+  },
+  {
+    "kind": "curve",
+    "entry_a": 1,
+    "entry_b": 4,
+    "n": 200,
+    "coverage21": 0.94,
+    "coverage41": 0.93,
+    "difference": -0.01,
+    "paired_mcse": 0.007053278933842965,
+    "width21": 0.3040681250388287,
+    "width41": 0.30558664344857295
+  },
+  {
+    "kind": "family",
+    "entry_a": 0,
+    "entry_b": 0,
+    "n": 200,
+    "coverage21": 0.925,
+    "coverage41": 0.93,
+    "difference": 0.005,
+    "paired_mcse": 0.005,
+    "width21": 0.392665216595571,
+    "width41": 0.3945966649298541
+  }
+]

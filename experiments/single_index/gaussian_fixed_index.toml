@@ -1,0 +1,109 @@
+stage = "index"
+seed_base = 811000000
+shard_size = 20
+penalty_probability = 0.1
+
+[[scenario]]
+id = 1
+name = "n1200_p40_d20"
+n = 1200
+p = 40
+d = 20
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_soft", "mean_hard", "mean_ols", "mom_soft", "mom_hard", "mom_ols", "oracle_support_ols"]
+index_multipliers = [0.75, 1.0, 1.25, 1.5, 2.0]
+replicates = 1000
+
+[[scenario]]
+id = 2
+name = "n2400_p40_d20"
+n = 2400
+p = 40
+d = 20
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_soft", "mean_hard", "mean_ols", "mom_soft", "mom_hard", "mom_ols", "oracle_support_ols"]
+index_multipliers = [0.75, 1.0, 1.25, 1.5, 2.0]
+replicates = 1000
+
+[[scenario]]
+id = 3
+name = "n2400_p80_d50"
+n = 2400
+p = 80
+d = 50
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_soft", "mean_hard", "mean_ols", "mom_soft", "mom_hard", "mom_ols", "oracle_support_ols"]
+index_multipliers = [0.75, 1.0, 1.25, 1.5, 2.0]
+replicates = 1000
+
+[[scenario]]
+id = 4
+name = "n2400_p40_d20_unequal"
+n = 2400
+p = 40
+d = 20
+index_sparsity = 4
+index_equal = false
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_soft", "mean_hard", "mean_ols", "mom_soft", "mom_hard", "mom_ols", "oracle_support_ols"]
+index_multipliers = [0.75, 1.0, 1.25, 1.5, 2.0]
+replicates = 1000
+
+[[scenario]]
+id = 5
+name = "n4800_p40_d20"
+n = 4800
+p = 40
+d = 20
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_soft", "mean_hard", "mean_ols", "mom_soft", "mom_hard", "mom_ols", "oracle_support_ols"]
+index_multipliers = [0.75, 1.0, 1.25, 1.5, 2.0]
+replicates = 1000
+
+[[scenario]]
+id = 6
+name = "n4800_p80_d50"
+n = 4800
+p = 80
+d = 50
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_soft", "mean_hard", "mean_ols", "mom_soft", "mom_hard", "mom_ols", "oracle_support_ols"]
+index_multipliers = [0.75, 1.0, 1.25, 1.5, 2.0]
+replicates = 1000
+
+[[scenario]]
+id = 7
+name = "n9600_p80_d50"
+n = 9600
+p = 80
+d = 50
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_soft", "mean_hard", "mean_ols", "mom_soft", "mom_hard", "mom_ols", "oracle_support_ols"]
+index_multipliers = [0.75, 1.0, 1.25, 1.5, 2.0]
+replicates = 1000

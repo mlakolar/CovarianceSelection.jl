@@ -1,0 +1,316 @@
+# Multiple-probe Gaussian index study
+
+This study estimates only the index. It does not fit a covariance curve or
+alternate between a nonparametric fit and an index fit. Precision-matrix
+coverage is outside its scope. The methods below are research extensions;
+their empirical tuning rules are not established inference guarantees.
+
+Primary simulations and direction-error comparisons are complete. A correction
+to secondary selected-support diagnostics is queued on Discovery as job
+`13424115`, currently subject to the per-user job limit. Those columns are
+withheld from the versioned reporting tables until replay is validated.
+
+## Identification and estimators
+
+Let Z have independent standard Gaussian coordinates and let
+E[XX' | Z] = Sigma(Z'beta), with ||beta|| = 1. For a fixed response probe
+Y_l = (q_l'X)(r_l'X), write m_l(t) = E[Y_l | Z'beta=t]. Under the
+required Stein regularity and moment conditions,
+
+```
+M = E[Z Y'] = beta c',       c_l = E[m_l'(T)],
+H_l = E[(ZZ' - I)Y_l] = b_l beta beta',
+b_l = E[m_l''(T)].
+```
+
+The first-order matrix has rank one when c is nonzero. Individual probes may
+be uninformative or have coefficients of opposite signs. Leading singular
+directions pool squared signal rather than averaging signed columns. When
+all first-order coefficients vanish, more first-order probes cannot repair
+identification. Second-order identification separately requires b nonzero.
+
+`probe_index_moments(Y, Z; order=1)` uses unbiased sample covariances between
+probe responses and Stein features. Order two uses raw covariate products;
+subtracting I disappears after sample response centering. The population
+identity still requires the correct standard Gaussian covariate distribution.
+
+`estimate_probe_index(Y, Z; method=..., support_size=...)` implements:
+
+| Method | Construction |
+|---|---|
+| `:ols` | Multivariate OLS with intercept; leading left singular direction of slopes |
+| `:moment` | Leading singular direction of first-order Stein moments |
+| `:screen` | Rank full OLS slope rows by norm; retain k rows; refit all probe responses by OLS; take a singular direction |
+| `:split` | Symmetric cross-product of independent first-order moment estimates |
+| `:second` | Leading eigenvector of the sum of squared second-order moment matrices |
+| `:second_split` | Leading eigenvector of symmetric independent-half second-order cross-products |
+
+The default support size is d. No coefficient is required to be nonzero.
+Directions use the largest-magnitude-coordinate sign convention, or a supplied
+reference. Evaluation aligns signs with the truth only after estimation.
+
+The OLS conditional mean need not be linear: the population slope is its best
+linear projection, which equals beta c' under the Gaussian Stein identity.
+This statement does not justify ordinary homoskedastic OLS standard errors.
+No index confidence interval is constructed by these functions.
+
+For example, construct probes without supplying any covariance structure:
+
+```julia
+using Random, CovarianceSelection.SingleIndexGraph
+rng = MersenneTwister(20261025) # fix independently of the observations
+p = size(X, 2)
+A = zeros(p, 30)
+for l in axes(A, 2)
+    A[randperm(rng, p)[1:4], l] = ifelse.(rand(rng, Bool, 4), 0.5, -0.5)
+end
+Y = hcat(X.^2, (X*A).^2)
+idx = estimate_probe_index(Y, Z; method=:screen, support_size=6)
+estimated_index = Z * idx.direction
+```
+
+This example requires p>=4 and n>d+2. The support size is illustrative; it is
+not universally recommended. `method=:ols` retains all covariates. Probe
+correlations affect efficiency: a larger moment norm can reflect redundant
+probes and does not by itself imply more information.
+
+Probe responses are standardized to empirical unit variance. For direct
+estimators all observations supply the scales. Standardized split estimators
+reserve the first fifth of observations for calibration and split the remaining
+rows in half. Conditional on independent calibration, cross-products have the
+rank-one signal expectation. Reusing a moment half to learn a common scale
+would destroy this exact conditional identity. Splitting therefore has a real
+sample-size cost. With fixed external scales, use `standardize=false`; an
+explicit two-way split must partition all supplied rows.
+
+For second order the direct matrix is sum_l H_l H_l. For split estimates it is
+sum_l (H_1l H_2l + H_2l H_1l)/2. Under independent halves and fixed scales,
+its expectation is beta beta' sum_l b_l^2. Split estimates may be indefinite.
+The estimator uses the largest positive eigenvalue, not the eigenvalue of
+largest absolute magnitude. Invalid inputs, constant probes, and absent positive
+signal eigenvalues produce explicit failures.
+
+## Designs
+
+Both designs use d=20 and Gaussian conditional responses. The primary beta has
+four equal nonzero coefficients at coordinates 2:5. Thus its first coordinate
+is truly zero. The mixed-sign sensitivity uses coefficients proportional to
+(0.7, -0.5, 0.4, -0.3) at the same locations.
+
+Write g(t) = tanh(t) + 0.5 tanh(t)^2. A signal multiplier a scales g.
+
+* **Chain:** Omega_jj(t) = 1.5 + 0.15 a g(t), and adjacent edges are
+  -(0.30 + 0.08 a g(t)). Other off-diagonal elements are zero.
+  Diagonal dominance gives uniformly positive eigenvalues for all a tested.
+* **Pairs:** Independent covariance blocks have unit diagonal and correlation
+  rho(t) = 0.35 + 0.15 a g(t). All marginal variances are constant. Their inverse
+  has fixed, nonzero pair edges. Square probes have no population signal.
+
+There is no added privileged probe block. Probe construction never receives the
+graph, the covariance curve, or beta. Pair locations are in the generator only.
+The even-link diagnostic replaces g by tanh(t)^2. Gaussian quadrature checks
+the first- and second-order identifying moment norms and positive definiteness.
+These oracle calculations diagnose designs; they never tune an estimator.
+
+## Probe dictionaries
+
+* One randomly chosen coordinate product, as a baseline.
+* All p coordinate squares.
+* L random distinct coordinate products, L in {10,30,60}.
+* L random projection squares with four random signed coefficients of magnitude
+  1/2, for L in {10,30,60}.
+* Mixed dictionaries: all p squares, L/2 products, L/2 projection squares.
+* The complete quadratic dictionary: all p squares and all p(p-1)/2 products.
+
+Probe seeds vary across repetitions and are independent of the data. Random
+dictionaries are nested across L within a family. The complete dictionary is
+an additional feasible benchmark for d=20. Its large response dimension can
+still increase estimation noise and computation. It is evaluated with OLS,
+first-order moments, and the two screening/refit choices, rather than expensive
+second-order aggregation. Screening sizes are fixed at 6 and 10. All other
+methods retain all 20 covariates. There are 75 fixed configurations.
+
+Projection squares lie in the linear span of the complete quadratic dictionary:
+
+```
+(a'X)^2 = sum_j a_j^2 X_j^2 + 2 sum_{j<k} a_j a_k X_j X_k.
+```
+
+Thus a random projection dictionary cannot contain information absent from the
+complete dictionary. Differences in performance reflect dimension reduction,
+weighting, and estimation noise. These estimators standardize individual probe
+columns but do not whiten their joint noise covariance. Poor performance of
+complete-dictionary SVD does not establish a fundamental sample-size barrier.
+
+## Stages and feasible tuning
+
+1. A bounded Discovery canary checks moment identities, input failures,
+   orientation, scale/shift invariance, representative runtime, and finite fits.
+2. Development uses 300 paired repetitions for each combination of design and
+   n in {100,200,400,800,1600,3200}, with p=40. Even-link diagnostics use 200
+   repetitions per design at n in {400,800,1600}. Total: 4,800 datasets.
+3. The initial development rule freezes six candidates: the two smallest average
+   projective losses within each of the OLS, screening/refit, and spectral
+   families. The twelve main scenarios receive equal weight. The spectral
+   family contains moment, split, second, and second_split. Even-link cases
+   cannot influence the shortlist. The overall smallest development average
+   defines the fixed default.
+   Development revealed a design-specific specialist that this global average
+   omitted: complete quadratic OLS substantially outperformed random dictionaries
+   for constant-variance pairs. Before inspecting any confirmation estimates,
+   the initial confirmation was cancelled, its partial output retained, and the
+   candidate pool expanded with complete OLS and its k=6 and k=10 refits.
+   Final confirmation restarts every scenario with a fresh seed namespace.
+   The nine-candidate pool and amended plan are frozen before this restart.
+4. Confirmation uses fresh seeds and 1,000 repetitions per setting. It includes
+   the twelve main settings, six p=160 settings (n=400,800,1600), eight signal
+   sensitivities (a=0.5,1.5; n=400,1600; both designs), and four mixed-sign
+   sensitivities (n=400,1600; both designs). Total: 30,000 datasets.
+
+Confirmation compares every fixed shortlisted candidate, feasible validation
+selection, and an explicitly labeled oracle choice among the same full-data
+fits. The oracle is an evaluation benchmark and cannot be deployed.
+
+Feasible tuning uses three folds. Fit candidates on two folds. Divide the
+held-out fold into two subsets and score a candidate direction u by
+
+```
+u' M_validation1 M_validation2' u.
+```
+
+Every candidate is scored with the SAME complete quadratic reference dictionary,
+whose scales are learned only on training observations. This prevents candidates
+from improving their score merely by changing the validation dictionary or its
+dimension. Conditional on training, the score expectation is
+||c_reference||^2 (u'beta)^2. Scores may be negative; they are not clipped.
+Average the three scores, choose the largest, and refit on all observations.
+Failed validation candidates receive -Inf. If all fail, record a selector failure.
+Truth never enters feasible selection. This rule is proposed and must earn its
+place through independent confirmation, especially at n=100 or weak signal.
+
+## Evaluation and execution
+
+Primary loss: 1 - (beta_hat'beta)^2. Index prediction loss under a fresh standard
+Gaussian covariate equals 2 - 2|beta_hat'beta|. Also retain angle, missing and
+extra variables, runtime, and reasons for failures. Summaries include medians,
+90th percentiles, and Monte Carlo standard errors. Failures remain in denominators
+with maximal projective loss one. There is no exact-support gate.
+
+Support diagnostics must use the selected row set, not numerical nonzeros of a
+dense eigenvector. A symmetric eigensolver can leave tiny entries outside a
+zero block. The public estimator now projects its direction back onto the selected
+rows and normalizes again. The experiment worker counts missing and extra
+variables from `fit.selected`. A separate selected-row replay corrects these
+secondary diagnostics in the original campaign. It uses normal equations with
+direct-QR checks across settings and a QR fallback for near ties. It does not
+re-estimate primary directions or change their reported errors. The replay also
+checks that every primary summary quantity remains exactly unchanged.
+
+Fixed-candidate runtimes measure fitting on cached probe responses; validation
+runtime includes its own probe construction and fits. These two timings serve
+different purposes and must not be compared as identical costs. Worker timings
+can include initial JIT compilation and are descriptive, not controlled benchmarks.
+
+All numerical fitting, integration, aggregation, and figures run on Discovery.
+The launcher uses GNU Parallel within one Slurm allocation, with eight single-CPU
+workers and 16 GB total RAM initially. The remaining final confirmation work
+can resume with 32 single-CPU workers and 64 GB, under the user's existing larger
+allocation authorization. Atomic finalized shards are reused without refitting;
+only unfinished shards run. Scientific settings and seeds do not change.
+BLAS and Julia threads are one per worker. A canary
+uses one CPU and 4 GB. Plans, source hashes, task outcomes, per-repetition results,
+and the lightweight run registry supply the recreation recipe. No routine data
+archive or unrelated filesystem audit is required.
+
+Entry points:
+
+```
+python3 experiments/single_index/multiprobe_plans.py development development.toml
+sbatch experiments/single_index/multiprobe.sbatch canary development.toml canary
+sbatch experiments/single_index/multiprobe.sbatch development development.toml development
+python3 experiments/single_index/multiprobe_plans.py confirmation_specialists experiments/single_index/multiprobe_confirmation_final.toml development/shortlist.json
+sbatch experiments/single_index/multiprobe.sbatch confirmation experiments/single_index/multiprobe_confirmation_final.toml confirmation_final
+```
+
+The source snapshot, installed Julia environment, and manifest used by a run
+must be preserved for recreation. Results and job identities are added after
+validation; scheduler completion alone is not scientific validation.
+
+The final campaign retained completed records across a resource-only resume.
+After the 45-minute allocation limit, 54 unfinished datasets were regenerated
+with the original fitter and seeds. The recovery changed only I/O batching.
+Sixteen already-written rows from those partial datasets matched their regenerated
+values. All 330,000 confirmation identities were checked after merging.
+
+## Completed primary results
+
+Development contains 4,800 datasets and 360,000 records. Fresh confirmation
+contains 30,000 datasets and 330,000 records. Both have expected counts, unique
+identities, and zero failed fits. There is no privileged response block and
+the first true index coefficient is zero. The main findings concern index
+estimation only; no new precision-interval or band coverage is measured here.
+
+At p=40 and n=3200, mean projective errors are:
+
+| Procedure | Chain | Constant-variance pairs |
+|---|---:|---:|
+| 60 projection squares, full OLS | 0.278 | 0.801 |
+| Same probes, select 10 rows and refit OLS | 0.217 | 0.794 |
+| Complete quadratics, full OLS | 0.832 | 0.189 |
+| Complete quadratics, select 10 rows and refit OLS | 0.834 | 0.140 |
+| Feasible held-out selection among nine candidates | 0.416 | 0.251 |
+| Oracle choice among the nine full-data fits | 0.153 | 0.093 |
+
+Every row uses the same 1,000 datasets within a design. Oracle choice uses the
+true direction only for evaluation; it is not OLS on the true support.
+The direction-error table and paired comparisons are in the
+[compact reporting inputs](../../experiments/single_index/results/multiprobe/).
+
+Screening plus refitting helps when paired with useful probes. Its paired mean
+error reduction relative to full OLS is 0.0606 (Monte Carlo SE 0.0022) for
+projection probes in the chain design, and 0.0491 (SE 0.0035) for complete
+quadratics in the paired design. These comparisons combine selection and
+refitting; both baseline and refitted regressions are unpenalized.
+
+More aggressive selection is not uniformly better. For complete quadratics in
+the paired design, retaining six variables gives mean error 0.197 and median
+0.088. Retaining ten gives mean 0.140 and median 0.095. The six-variable rule
+has worse upper-tail behavior despite its better median. No support gate
+removes its bad realizations.
+
+The held-out criterion has the right conditional population objective, but
+its finite-sample variability is too large. At n=3200 its paired excess mean
+error over the corresponding ten-variable refit is 0.1990 (SE 0.0097) for
+the chain and 0.1111 (SE 0.0079) for pairs. It is not recommended as a default.
+
+The p=160 sensitivity is harder. At n=1600, mixed-probe OLS has mean error
+0.216 for the chain. For constant-variance pairs, complete-quadratic OLS and its
+ten-variable refit have errors 0.877 and 0.875. Even oracle selection among the
+nine candidates gives 0.764 for pairs. Tuning within this candidate family
+cannot recover an accurate index there.
+
+Increasing the signal multiplier to 1.5 helps, but does not make small samples
+easy. At p=40,n=1600, the projection ten-variable refit gives error 0.209 for
+the chain and the complete ten-variable refit gives 0.156 for pairs. At n=400
+the corresponding errors remain 0.755 and 0.904.
+
+Second-order aggregation did not improve the development comparison. In the
+even-link diagnostic at n=1600, mixed-probe second-order errors are 0.968
+for the chain and 0.950 for pairs. Split aggregation gives 0.944 and 0.950.
+The identifying second-order population moments are nonzero, but these
+unregularized finite-sample estimators remain close to an unrelated random
+direction, whose expected projective error is 19/20. This does not rule out
+better regularized or bias-corrected second-order estimators.
+
+Random product probes can entirely miss identification. For paired responses,
+only p/2 of p(p-1)/2 coordinate products carry signal. A uniform dictionary of
+L distinct products misses all informative pairs with probability
+`binomial(p(p-1)/2-p/2,L) / binomial(p(p-1)/2,L)`. At L=60 this probability is
+0.198 for p=40 and 0.684 for p=160. These exact generator diagnostics never
+enter feasible fitting or tuning.
+
+The present study does not identify a universally reliable index estimator.
+Probe weighting and aggregation need improvement before these rules advance
+to precision-inference experiments. Sample whitening, noise-bias correction,
+and probes learned on independent training data are proposed next steps, not
+methods validated by these results.

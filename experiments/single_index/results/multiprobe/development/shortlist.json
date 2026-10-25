@@ -1,0 +1,48 @@
+{
+  "rule": "Two lowest mean losses in each of OLS, screening/refit, and spectral families; equal main-scenario weight; even-link cases excluded; no confirmation data used.",
+  "candidates": [
+    {
+      "id": "projections-60-moment-20",
+      "bank": "projections",
+      "L": 60,
+      "method": "moment",
+      "k": 20
+    },
+    {
+      "id": "projections-60-screen-10",
+      "bank": "projections",
+      "L": 60,
+      "method": "screen",
+      "k": 10
+    },
+    {
+      "id": "projections-60-ols-20",
+      "bank": "projections",
+      "L": 60,
+      "method": "ols",
+      "k": 20
+    },
+    {
+      "id": "projections-60-screen-6",
+      "bank": "projections",
+      "L": 60,
+      "method": "screen",
+      "k": 6
+    },
+    {
+      "id": "mixed-60-moment-20",
+      "bank": "mixed",
+      "L": 60,
+      "method": "moment",
+      "k": 20
+    },
+    {
+      "id": "mixed-60-ols-20",
+      "bank": "mixed",
+      "L": 60,
+      "method": "ols",
+      "k": 20
+    }
+  ],
+  "fixed_default": "projections-60-moment-20"
+}

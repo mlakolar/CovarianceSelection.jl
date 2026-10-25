@@ -1,0 +1,70 @@
+{
+  "rule": "Two lowest mean losses in each of OLS, screening/refit, and spectral families; equal main-scenario weight; even-link cases excluded; no confirmation data used.",
+  "candidates": [
+    {
+      "id": "projections-60-moment-20",
+      "bank": "projections",
+      "L": 60,
+      "method": "moment",
+      "k": 20
+    },
+    {
+      "id": "projections-60-screen-10",
+      "bank": "projections",
+      "L": 60,
+      "method": "screen",
+      "k": 10
+    },
+    {
+      "id": "projections-60-ols-20",
+      "bank": "projections",
+      "L": 60,
+      "method": "ols",
+      "k": 20
+    },
+    {
+      "id": "projections-60-screen-6",
+      "bank": "projections",
+      "L": 60,
+      "method": "screen",
+      "k": 6
+    },
+    {
+      "id": "mixed-60-moment-20",
+      "bank": "mixed",
+      "L": 60,
+      "method": "moment",
+      "k": 20
+    },
+    {
+      "id": "mixed-60-ols-20",
+      "bank": "mixed",
+      "L": 60,
+      "method": "ols",
+      "k": 20
+    },
+    {
+      "id": "complete-0-ols-20",
+      "bank": "complete",
+      "L": 0,
+      "method": "ols",
+      "k": 20
+    },
+    {
+      "id": "complete-0-screen-6",
+      "bank": "complete",
+      "L": 0,
+      "method": "screen",
+      "k": 6
+    },
+    {
+      "id": "complete-0-screen-10",
+      "bank": "complete",
+      "L": 0,
+      "method": "screen",
+      "k": 10
+    }
+  ],
+  "fixed_default": "projections-60-moment-20",
+  "amendment": "Development-only specialist safeguard: include complete quadratic OLS and k6/k10 refits. Initial confirmation cancelled without inspecting estimates; all final seeds are fresh."
+}

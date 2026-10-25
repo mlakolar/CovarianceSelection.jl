@@ -1,0 +1,10 @@
+{
+  "stage": "pointwise",
+  "rows": 135000,
+  "expected_rows": 135000,
+  "shards": 100,
+  "duplicate_identities": 0,
+  "failures_retained": true,
+  "groups": 135,
+  "plan": "experiments/single_index/sample_size_estimated.toml"
+}

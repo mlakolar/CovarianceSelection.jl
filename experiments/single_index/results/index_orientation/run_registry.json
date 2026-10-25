@@ -1,0 +1,51 @@
+{
+  "authorization": "User requests correction of the first-coordinate restriction; existing Discovery execution authorization persists.",
+  "ci_policy": "GitHub CI allowed by user clarification. New commit will not suppress CI; Julia validation for this work used Discovery.",
+  "created_utc": "2026-10-25T09:45:44.979646Z",
+  "jobs": [
+    {
+      "elapsed": "00:01:31",
+      "exit_code": "0:0",
+      "job_id": "13423220",
+      "scheduler_state": "COMPLETED"
+    }
+  ],
+  "limitations": "No new normal-theory or bootstrap coverage study. The correction removes unnecessary fixed-coordinate failures; empty-support failures remain.",
+  "outputs": [
+    "results/comparison.csv",
+    "results/summary.csv",
+    "results/receipt.json",
+    "slurm-13423220.out",
+    "source.sha256"
+  ],
+  "purpose": "Correct index sign orientation; test a truly zero first coefficient and distinguish empty-support from missing-anchor failures in a bounded paired first-stage check. No new coverage claims.",
+  "recreation": {
+    "command": "sbatch --parsable --job-name=sig-20261025-orient experiments/single_index/index_orientation.sbatch",
+    "dirty_source_snapshot": "source.tar.gz",
+    "environment": "Julia1.13.2; Manifest copied from 20261025-sig-index-confirmation; reusable depot",
+    "source_commit": "cb868e8f909a3e2a59857b7a6f09a168812dc3fd",
+    "working_directory": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-index-orientation"
+  },
+  "resources": {
+    "cpus": 1,
+    "memory_gb": 4,
+    "wall_minutes": 15
+  },
+  "revision": 3,
+  "run_id": "20261025-sig-index-orientation",
+  "schema_version": 1,
+  "status": "validated",
+  "submission_intent": "One CPU validation, existing inference and fixed-support regression tests, then 1000 paired datasets across n800/3200 with original and permuted covariate labels,500rep per n;4000policy rows. <10MB output.",
+  "updated_utc": "2026-10-25T09:51:01.926479Z",
+  "validation": {
+    "duplicate_identities": 0,
+    "existing_inference_checks": 92,
+    "failures_retained": true,
+    "fixed_support_worker_checks": 107,
+    "groups": 8,
+    "new_orientation_checks": 20,
+    "ols_orientation_checks": 2,
+    "paired_rows": 4000,
+    "replicates_per_group": 500
+  }
+}

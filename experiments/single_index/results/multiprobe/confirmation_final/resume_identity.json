@@ -1,0 +1,21 @@
+{
+  "input_snapshots": [
+    "inputs-13423599.sha256",
+    "inputs-13423691.sha256",
+    "inputs-13423994.sha256"
+  ],
+  "matching_fitting_inputs": {
+    "Project.toml": "9a5983541c2e1c0254af6082168d590914edef7b3cb42da67bb67351b85ef08d",
+    "Manifest.toml": "65668ad06ab22d5d708aaabbaea7c0b86537c40b18d540715cde641516c39802",
+    "src/SingleIndexGraph/SingleIndexGraph.jl": "d719d37db1444cdea05709513a604ff28df1806dc37afbcf1049784cece18172",
+    "src/SingleIndexGraph/index.jl": "ebdfe76e9f9bead9a8b43e1837d61d80c4077c82c2ae208bf20ab71bb8bfac38",
+    "src/SingleIndexGraph/inference.jl": "0299bcd06fe446c6d893c1efb5bc77103332d7689c1bb0c1aa081e350bae4abb",
+    "src/SingleIndexGraph/probe_index.jl": "040a5999c5da4bdf621e8b736ba235adc4a0e2826f83f6f2e727b865de06cf39",
+    "src/SingleIndexGraph/smoothing.jl": "0d71a5628b8d23ec32587828698c62ce70db4f8b42e331676916f378e69a55ab",
+    "src/SingleIndexGraph/tuning.jl": "bda02009ddd1a0a18e9fde91ec342c9fc9e7678dee912e5f75f5ba3bce0068a2",
+    "experiments/single_index/multiprobe_common.jl": "14f6fe9c83b9ed17a80be271447a8b7c4098da0ec53152015bb8258a579a5935",
+    "experiments/single_index/multiprobe_confirmation_final.toml": "95b356b30b020eef812ff2d8f958466545bbb10161a032f24e26078f8f0ec056",
+    "experiments/single_index/multiprobe_worker.jl": "64bd2ef602521ab2c781ffd7f1b6887d4fc1896af494803578e2ee4ae58f2b10"
+  },
+  "all_fitting_input_hashes_equal": true
+}

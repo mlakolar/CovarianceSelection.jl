@@ -1,0 +1,210 @@
+{
+  "status": "gate_passed",
+  "selected": {
+    "method": "mean_ols",
+    "index_multiplier": 1.25,
+    "passed_scenarios": [
+      "n4800_p40_d20",
+      "n4800_p80_d50",
+      "n9600_p80_d50"
+    ],
+    "mean_error2": 0.00878106664014075
+  },
+  "coverage_scenarios": [
+    {
+      "id": 5,
+      "name": "n4800_p40_d20",
+      "n": 4800,
+      "p": 40,
+      "d": 20,
+      "index_sparsity": 4,
+      "index_equal": true,
+      "design": "gaussian",
+      "graph": "fixed_chain",
+      "noise": "gaussian",
+      "index_methods": [
+        "mean_soft",
+        "mean_hard",
+        "mean_ols",
+        "mom_soft",
+        "mom_hard",
+        "mom_ols",
+        "oracle_support_ols"
+      ],
+      "index_multipliers": [
+        0.75,
+        1.0,
+        1.25,
+        1.5,
+        2.0
+      ],
+      "replicates": 1000
+    },
+    {
+      "id": 7,
+      "name": "n9600_p80_d50",
+      "n": 9600,
+      "p": 80,
+      "d": 50,
+      "index_sparsity": 4,
+      "index_equal": true,
+      "design": "gaussian",
+      "graph": "fixed_chain",
+      "noise": "gaussian",
+      "index_methods": [
+        "mean_soft",
+        "mean_hard",
+        "mean_ols",
+        "mom_soft",
+        "mom_hard",
+        "mom_ols",
+        "oracle_support_ols"
+      ],
+      "index_multipliers": [
+        0.75,
+        1.0,
+        1.25,
+        1.5,
+        2.0
+      ],
+      "replicates": 1000
+    }
+  ],
+  "criterion": "Maximum passing equal-direction scenarios, then minimum mean direction squared error across passing scenarios.",
+  "gate": {
+    "exact": 0.99,
+    "contains": 0.995,
+    "failures": 0
+  },
+  "ranking": [
+    {
+      "method": "mean_ols",
+      "index_multiplier": 1.25,
+      "passed_scenarios": [
+        "n4800_p40_d20",
+        "n4800_p80_d50",
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.00878106664014075
+    },
+    {
+      "method": "mean_hard",
+      "index_multiplier": 1.25,
+      "passed_scenarios": [
+        "n4800_p40_d20",
+        "n4800_p80_d50",
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.011146953359575851
+    },
+    {
+      "method": "mean_soft",
+      "index_multiplier": 1.25,
+      "passed_scenarios": [
+        "n4800_p40_d20",
+        "n4800_p80_d50",
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.034613173672836915
+    },
+    {
+      "method": "mean_ols",
+      "index_multiplier": 1.5,
+      "passed_scenarios": [
+        "n4800_p40_d20",
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.007825137306898221
+    },
+    {
+      "method": "mean_hard",
+      "index_multiplier": 1.5,
+      "passed_scenarios": [
+        "n4800_p40_d20",
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.0099347549906764
+    },
+    {
+      "method": "mean_soft",
+      "index_multiplier": 1.5,
+      "passed_scenarios": [
+        "n4800_p40_d20",
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.038214974685831335
+    },
+    {
+      "method": "mean_ols",
+      "index_multiplier": 2.0,
+      "passed_scenarios": [
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.005322641868726825
+    },
+    {
+      "method": "mom_ols",
+      "index_multiplier": 2.0,
+      "passed_scenarios": [
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.005322641868726825
+    },
+    {
+      "method": "mom_ols",
+      "index_multiplier": 1.5,
+      "passed_scenarios": [
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.005384825461161687
+    },
+    {
+      "method": "mean_hard",
+      "index_multiplier": 2.0,
+      "passed_scenarios": [
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.006897196192982339
+    },
+    {
+      "method": "mom_hard",
+      "index_multiplier": 2.0,
+      "passed_scenarios": [
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.009774107135579352
+    },
+    {
+      "method": "mom_hard",
+      "index_multiplier": 1.5,
+      "passed_scenarios": [
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.010017255251403305
+    },
+    {
+      "method": "mom_soft",
+      "index_multiplier": 1.5,
+      "passed_scenarios": [
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.02859156822800465
+    },
+    {
+      "method": "mean_soft",
+      "index_multiplier": 2.0,
+      "passed_scenarios": [
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.034339138101277436
+    },
+    {
+      "method": "mom_soft",
+      "index_multiplier": 2.0,
+      "passed_scenarios": [
+        "n9600_p80_d50"
+      ],
+      "mean_error2": 0.05017954811770199
+    }
+  ]
+}

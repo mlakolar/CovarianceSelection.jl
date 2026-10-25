@@ -1,0 +1,57 @@
+seed_base = 967000000
+shard_size = 10
+bootstrap_draws = 399
+
+[[scenario]]
+id = 1
+name = "bootstrap_n800_p40"
+n = 800
+p = 40
+d = 20
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_ols", "oracle_support_ols"]
+replicates = 300
+entries = [[1, 1], [1, 2], [1, 4]]
+grid_min = -0.5
+grid_max = 0.5
+grid_n = 3
+
+[[scenario]]
+id = 2
+name = "bootstrap_n1600_p40"
+n = 1600
+p = 40
+d = 20
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_ols", "oracle_support_ols"]
+replicates = 300
+entries = [[1, 1], [1, 2], [1, 4]]
+grid_min = -0.5
+grid_max = 0.5
+grid_n = 3
+
+[[scenario]]
+id = 3
+name = "bootstrap_n3200_p40"
+n = 3200
+p = 40
+d = 20
+index_sparsity = 4
+index_equal = true
+design = "gaussian"
+graph = "fixed_chain"
+noise = "gaussian"
+index_methods = ["mean_ols", "oracle_support_ols"]
+replicates = 300
+entries = [[1, 1], [1, 2], [1, 4]]
+grid_min = -0.5
+grid_max = 0.5
+grid_n = 3

@@ -1,0 +1,204 @@
+{
+  "authorization": "User approved the detailed plan on 2026-10-25. Initial allocation 8 CPUs,16 GB; earlier user authorization permits necessary simulation resources.",
+  "cancellation_intent": {
+    "job_id": "13423664",
+    "reason": "Still pending; available cores fragmented across nodes. Same total resource request spread over four nodes. No new datasets run."
+  },
+  "confirmation": {
+    "configurations": 9,
+    "datasets": 30000,
+    "expected_rows": 330000,
+    "frozen_utc": "2026-10-25T10:48:23Z",
+    "plan_sha256": "95b356b30b020eef812ff2d8f958466545bbb10161a032f24e26078f8f0ec056",
+    "replicates_per_scenario": 1000,
+    "scenarios": 30,
+    "shortlist_sha256": "ae678d46b3038f956b9e36126e41207edceaadde802d79ca4e94d95b543f50f8"
+  },
+  "confirmation_initial": {
+    "configurations": 6,
+    "datasets": 30000,
+    "expected_rows": 240000,
+    "frozen_utc": "2026-10-25T10:40:42Z",
+    "plan_sha256": "f94ce57bad5e27e8380889893dfca5867e1c2f0f5a00280cef6d1cebfae13ee6",
+    "replicates_per_scenario": 1000,
+    "scenarios": 30,
+    "shortlist_sha256": "ef5d958e37ff1343d872d18dc51f8e3b566702ff4bf6326c91487bffa3137d74"
+  },
+  "created_utc": "2026-10-25T10:26:42.331943Z",
+  "development": {
+    "configurations": 75,
+    "datasets": 4800,
+    "duplicates": 0,
+    "expected_rows": 360000,
+    "failures": 0,
+    "rows": 360000
+  },
+  "jobs": [
+    {
+      "elapsed": "00:01:24",
+      "exit_code": "0:0",
+      "job_id": "13423525",
+      "stage": "canary",
+      "state": "COMPLETED"
+    },
+    {
+      "job_id": "13423550",
+      "reason": "Result-writer try-scope initialization repaired before production.",
+      "stage": "worker_canary",
+      "state": "FAILED"
+    },
+    {
+      "elapsed": "00:00:25",
+      "exit_code": "0:0",
+      "job_id": "13423553",
+      "stage": "worker_canary_repair",
+      "state": "COMPLETED"
+    },
+    {
+      "elapsed": "00:03:10",
+      "exit_code": "0:0",
+      "job_id": "13423559",
+      "stage": "development",
+      "state": "COMPLETED"
+    },
+    {
+      "elapsed": "00:05:30",
+      "job_id": "13423572",
+      "reason": "Specialist omission found using development only; partial data retained and excluded from final evidence.",
+      "stage": "confirmation",
+      "state": "CANCELLED"
+    },
+    {
+      "elapsed": "00:07:01",
+      "job_id": "13423599",
+      "reason": "Resource-only resume; 90 finalized shards reused in final evidence.",
+      "stage": "confirmation_final",
+      "state": "CANCELLED"
+    },
+    {
+      "dependency": "afterok:13423994",
+      "focused_checks": 138,
+      "job_id": "13423645",
+      "stage": "regression_and_report",
+      "state": "COMPLETED"
+    },
+    {
+      "job_id": "13423664",
+      "reason": "Pending single-node request replaced by four-node layout; zero compute used.",
+      "remaining_shards": 210,
+      "retained_shards": 90,
+      "stage": "confirmation_resume32",
+      "state": "CANCELLED"
+    },
+    {
+      "elapsed": "00:45:21",
+      "job_id": "13423691",
+      "note": "Remaining partial dataset rows retained for batching-only recovery.",
+      "remaining_shards": 210,
+      "retained_shards": 90,
+      "stage": "confirmation_spread32",
+      "state": "TIMEOUT"
+    },
+    {
+      "dependency": "afterany:13423691",
+      "job_id": "13423994",
+      "recomputed_datasets": 54,
+      "retained_partial_rows": 1606,
+      "stage": "tail_recovery",
+      "state": "COMPLETED"
+    },
+    {
+      "job_id": "13424115",
+      "stage": "support_diagnostic_correction",
+      "state": "submitted"
+    }
+  ],
+  "outputs": [
+    "canary",
+    "development",
+    "confirmation"
+  ],
+  "protocol_amendment": {
+    "action": "Cancel owned initial confirmation; retain partial records; restart all scenarios with fresh independent seed and nine candidates.",
+    "original_confirmation_estimates_inspected": false,
+    "reason": "Global development averaging omitted complete-quadratic specialist for constant-variance design. Add complete OLS and its existing k6/k10 refits before inspecting any confirmation estimates."
+  },
+  "purpose": "Low-dimensional Gaussian multiple-probe Stein index development and independent tuning confirmation. No precision coverage.",
+  "recovery_policy": "Retain all complete per-replicate groups, including failed numerical outcomes. Change batching only to one replicate; original scientific plan, fitting code and deterministic seeds unchanged. Recompute incomplete dataset groups only. Validate full final identities and row counts.",
+  "recreation": {
+    "command": "sbatch --parsable experiments/single_index/multiprobe.sbatch MODE PLAN OUTPUT",
+    "environment": "Julia1.13.2 and Manifest/depot from 20261025-sig-index-confirmation",
+    "resume_source_commit": "f3f0759b8cbcf0e050296e4843c95ea991144b33",
+    "source_commit": "32e757efa9094107890bb8164be01f174d9a708f",
+    "source_snapshot": "source-production.tar.gz + specialists.tar.gz + preflight.tar.gz",
+    "working_directory": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-multiprobe"
+  },
+  "reporting": {
+    "duplicate_identities": 0,
+    "figures_visually_reviewed": true,
+    "focused_discovery_checks": 138,
+    "primary_failures": 0,
+    "primary_rows": 690000,
+    "primary_tables_complete": true,
+    "publication_pending": true,
+    "selected_support_columns_withheld": true
+  },
+  "resources": {
+    "concurrent_cpus": 16,
+    "nodes": 2,
+    "total_memory_gb": 32,
+    "wall_minutes": 45,
+    "workers_per_node": 8
+  },
+  "revision": 23,
+  "run_id": "20261025-sig-multiprobe",
+  "schema_version": 1,
+  "scientific_plan": {
+    "confirmation_replicates": 1000,
+    "d": 20,
+    "development_main_replicates": 300,
+    "exact_support_gate": false,
+    "first_coordinate_anchor": false,
+    "shortlist_rule": "Two best configurations per family (OLS, screening/refit, spectral), ranked by equal-weight mean main-scenario projective error; even-link diagnostic excluded."
+  },
+  "source_patches": [
+    "patch1.tar.gz",
+    "patch2.tar.gz",
+    "specialists.tar.gz",
+    "preflight.tar.gz"
+  ],
+  "status": "primary_validated_support_replay_queued",
+  "submission_intent": null,
+  "support_correction": {
+    "job_id": "13424115",
+    "method": "Replay selected row sets from unchanged full OLS projection. Normal-equation ranking checked against direct QR, with QR fallback for near ties. Do not recompute primary estimates.",
+    "reason": "QOSMaxJobsPerUserLimit",
+    "root": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-multiprobe-support",
+    "source_commit": "a3fcd19",
+    "source_snapshots": [
+      "source.tar.gz",
+      "report-patch.tar.gz"
+    ],
+    "state": "PENDING"
+  },
+  "unresolved": [
+    "Selected-row diagnostic replay and new exact-zero Discovery tests await a per-user concurrent-job slot. Other tasks jobs were not changed."
+  ],
+  "updated_utc": "2026-10-25T12:47:52.105639Z",
+  "validation": {
+    "confirmation_failures": 0,
+    "confirmation_rows": 330000,
+    "design_population_rows": 12,
+    "duplicate_identities": 0,
+    "focused_checks": 138,
+    "largest_case_worker_failures": 0,
+    "largest_case_worker_rows": 11,
+    "primary_fitting_hashes_identical": true,
+    "recovery_prefix_matches": 16,
+    "representative_estimator_fits": 300,
+    "unit_checks": 26,
+    "worker_expected_rows": 32,
+    "worker_failures": 0,
+    "worker_rows": 32
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "rows": 48600,
+  "expected_rows": 48600,
+  "shards": 90,
+  "groups": 162,
+  "duplicate_identities": 0,
+  "failures_retained": true,
+  "bootstrap_draws": 399,
+  "invalid_draw_policy": "Any invalid pivot makes that entry/location bootstrap interval unavailable; count as noncoverage."
+}

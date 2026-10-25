@@ -1,0 +1,11 @@
+{
+  "initial_confirmation_partial_shards": 135,
+  "initial_confirmation_location": "confirmation",
+  "initial_confirmation_used_in_final_evidence": false,
+  "reason": "Development-only specialist amendment before inspecting confirmation estimates.",
+  "raw_production_locations": [
+    "development",
+    "confirmation_final"
+  ],
+  "raw_production_retained": true
+}
