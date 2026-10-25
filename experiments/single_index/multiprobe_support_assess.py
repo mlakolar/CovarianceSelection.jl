@@ -1,5 +1,6 @@
 """Validate support replay and combine its compact evaluation lookup."""
-import csv,json,math,sys,tomllib
+import csv,json,math,sys,tomllib,statistics
+from collections import defaultdict
 from pathlib import Path
 
 planfile,out=sys.argv[1:];out=Path(out)
@@ -21,3 +22,13 @@ receipt=dict(rows=len(rows),expected_rows=expected,duplicate_identities=0,qr_com
              maximum_relative_ols_difference=maxerr,maximum_direction_projection_change=maxleak,
              support_cardinality_identity_verified=True)
 (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt))
+groups=defaultdict(list)
+for r in rows:groups[(r['scenario'],r['id'],r['k'])].append(r)
+summary=[]
+for (sid,candidate,k),rr in sorted(groups.items()):
+    summary.append(dict(scenario=sid,id=candidate,k=k,replicates=len(rr),
+        mean_missing=statistics.mean(int(r['missing']) for r in rr),
+        mean_extra=statistics.mean(int(r['extra']) for r in rr),
+        contains_true_support=sum(int(r['missing'])==0 for r in rr)/len(rr)))
+with (out/'support_summary.csv').open('w') as f:
+    w=csv.DictWriter(f,fieldnames=list(summary[0]),lineterminator='\n');w.writeheader();w.writerows(summary)

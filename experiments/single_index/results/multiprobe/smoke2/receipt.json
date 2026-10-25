@@ -1,0 +1,10 @@
+{
+  "rows": 32,
+  "expected_rows": 32,
+  "duplicate_identities": 0,
+  "scenarios": 2,
+  "configs": 6,
+  "failures": 0,
+  "all_outcomes_retained": true,
+  "plan": "experiments/single_index/multiprobe_smoke.toml"
+}

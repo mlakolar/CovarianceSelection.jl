@@ -1,0 +1,33 @@
+
+Inactive Modules:
+  1) openblas/0.3.28     2) openmpi/5.0.5
+
+Due to MODULEPATH changes, the following have been reloaded:
+  1) python/3.11.9
+
+The following have been reloaded with a version change:
+  1) gcc/13.3.0 => gcc/14.3.0
+
+ERROR: LoadError: UndefVarError: `metrics` not defined in `Main`
+Suggestion: check for spelling errors or missing imports.
+Stacktrace:
+ [1] (::var"#mp_worker##6#mp_worker##7"{Vector{NamedTuple}, UnitRange{Int64}, Dict{String, Any}, Dict{String, Any}})(io::IOStream)
+   @ Main /project2/mkolar_1314/SingleIndexGraph/20261025-sig-multiprobe/experiments/single_index/multiprobe_worker.jl:45
+ [2] open(::var"#mp_worker##6#mp_worker##7"{Vector{NamedTuple}, UnitRange{Int64}, Dict{String, Any}, Dict{String, Any}}, ::String, ::Vararg{String}; kwargs::@Kwargs{})
+   @ Base ./io.jl:429
+ [3] open
+   @ ./io.jl:426 [inlined]
+ [4] mp_worker(planpath::String, task::Int64, outdir::String)
+   @ Main /project2/mkolar_1314/SingleIndexGraph/20261025-sig-multiprobe/experiments/single_index/multiprobe_worker.jl:17
+ [5] top-level scope
+   @ /project2/mkolar_1314/SingleIndexGraph/20261025-sig-multiprobe/experiments/single_index/multiprobe_worker.jl:77
+ [6] include(mod::Module, _path::String)
+   @ Base ./Base.jl:309
+ [7] exec_options(opts::Base.JLOptions)
+   @ Base ./client.jl:344
+ [8] _start()
+   @ Base ./client.jl:577
+in expression starting at /project2/mkolar_1314/SingleIndexGraph/20261025-sig-multiprobe/experiments/single_index/multiprobe_worker.jl:76
+srun: error: a01-02: task 0: Exited with exit code 1
+parallel: This job failed:
+srun --exclusive --exact -N1 -n1 -c1 --mem=1900M /home1/mkolar/juliaPkg/julia-1.13.2/bin/julia --heap-size-hint=1400M --project experiments/single_index/multiprobe_worker.jl experiments/single_index/multiprobe_smoke.toml 1 smoke

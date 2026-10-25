@@ -5,6 +5,11 @@ alternate between a nonparametric fit and an index fit. Precision-matrix
 coverage is outside its scope. The methods below are research extensions;
 their empirical tuning rules are not established inference guarantees.
 
+Primary simulations and direction-error comparisons are complete. A correction
+to secondary selected-support diagnostics is queued on Discovery as job
+`13424115`, currently subject to the per-user job limit. Those columns are
+withheld from the versioned reporting tables until replay is validated.
+
 ## Identification and estimators
 
 Let Z have independent standard Gaussian coordinates and let
@@ -191,6 +196,16 @@ extra variables, runtime, and reasons for failures. Summaries include medians,
 90th percentiles, and Monte Carlo standard errors. Failures remain in denominators
 with maximal projective loss one. There is no exact-support gate.
 
+Support diagnostics must use the selected row set, not numerical nonzeros of a
+dense eigenvector. A symmetric eigensolver can leave tiny entries outside a
+zero block. The public estimator now projects its direction back onto the selected
+rows and normalizes again. The experiment worker counts missing and extra
+variables from `fit.selected`. A separate selected-row replay corrects these
+secondary diagnostics in the original campaign. It uses normal equations with
+direct-QR checks across settings and a QR fallback for near ties. It does not
+re-estimate primary directions or change their reported errors. The replay also
+checks that every primary summary quantity remains exactly unchanged.
+
 Fixed-candidate runtimes measure fitting on cached probe responses; validation
 runtime includes its own probe construction and fits. These two timings serve
 different purposes and must not be compared as identical costs. Worker timings
@@ -220,3 +235,82 @@ sbatch experiments/single_index/multiprobe.sbatch confirmation experiments/singl
 The source snapshot, installed Julia environment, and manifest used by a run
 must be preserved for recreation. Results and job identities are added after
 validation; scheduler completion alone is not scientific validation.
+
+The final campaign retained completed records across a resource-only resume.
+After the 45-minute allocation limit, 54 unfinished datasets were regenerated
+with the original fitter and seeds. The recovery changed only I/O batching.
+Sixteen already-written rows from those partial datasets matched their regenerated
+values. All 330,000 confirmation identities were checked after merging.
+
+## Completed primary results
+
+Development contains 4,800 datasets and 360,000 records. Fresh confirmation
+contains 30,000 datasets and 330,000 records. Both have expected counts, unique
+identities, and zero failed fits. There is no privileged response block and
+the first true index coefficient is zero. The main findings concern index
+estimation only; no new precision-interval or band coverage is measured here.
+
+At p=40 and n=3200, mean projective errors are:
+
+| Procedure | Chain | Constant-variance pairs |
+|---|---:|---:|
+| 60 projection squares, full OLS | 0.278 | 0.801 |
+| Same probes, select 10 rows and refit OLS | 0.217 | 0.794 |
+| Complete quadratics, full OLS | 0.832 | 0.189 |
+| Complete quadratics, select 10 rows and refit OLS | 0.834 | 0.140 |
+| Feasible held-out selection among nine candidates | 0.416 | 0.251 |
+| Oracle choice among the nine full-data fits | 0.153 | 0.093 |
+
+Every row uses the same 1,000 datasets within a design. Oracle choice uses the
+true direction only for evaluation; it is not OLS on the true support.
+The direction-error table and paired comparisons are in the
+[compact reporting inputs](../../experiments/single_index/results/multiprobe/).
+
+Screening plus refitting helps when paired with useful probes. Its paired mean
+error reduction relative to full OLS is 0.0606 (Monte Carlo SE 0.0022) for
+projection probes in the chain design, and 0.0491 (SE 0.0035) for complete
+quadratics in the paired design. These comparisons combine selection and
+refitting; both baseline and refitted regressions are unpenalized.
+
+More aggressive selection is not uniformly better. For complete quadratics in
+the paired design, retaining six variables gives mean error 0.197 and median
+0.088. Retaining ten gives mean 0.140 and median 0.095. The six-variable rule
+has worse upper-tail behavior despite its better median. No support gate
+removes its bad realizations.
+
+The held-out criterion has the right conditional population objective, but
+its finite-sample variability is too large. At n=3200 its paired excess mean
+error over the corresponding ten-variable refit is 0.1990 (SE 0.0097) for
+the chain and 0.1111 (SE 0.0079) for pairs. It is not recommended as a default.
+
+The p=160 sensitivity is harder. At n=1600, mixed-probe OLS has mean error
+0.216 for the chain. For constant-variance pairs, complete-quadratic OLS and its
+ten-variable refit have errors 0.877 and 0.875. Even oracle selection among the
+nine candidates gives 0.764 for pairs. Tuning within this candidate family
+cannot recover an accurate index there.
+
+Increasing the signal multiplier to 1.5 helps, but does not make small samples
+easy. At p=40,n=1600, the projection ten-variable refit gives error 0.209 for
+the chain and the complete ten-variable refit gives 0.156 for pairs. At n=400
+the corresponding errors remain 0.755 and 0.904.
+
+Second-order aggregation did not improve the development comparison. In the
+even-link diagnostic at n=1600, mixed-probe second-order errors are 0.968
+for the chain and 0.950 for pairs. Split aggregation gives 0.944 and 0.950.
+The identifying second-order population moments are nonzero, but these
+unregularized finite-sample estimators remain close to an unrelated random
+direction, whose expected projective error is 19/20. This does not rule out
+better regularized or bias-corrected second-order estimators.
+
+Random product probes can entirely miss identification. For paired responses,
+only p/2 of p(p-1)/2 coordinate products carry signal. A uniform dictionary of
+L distinct products misses all informative pairs with probability
+`binomial(p(p-1)/2-p/2,L) / binomial(p(p-1)/2,L)`. At L=60 this probability is
+0.198 for p=40 and 0.684 for p=160. These exact generator diagnostics never
+enter feasible fitting or tuning.
+
+The present study does not identify a universally reliable index estimator.
+Probe weighting and aggregation need improvement before these rules advance
+to precision-inference experiments. Sample whitening, noise-bias correction,
+and probes learned on independent training data are proposed next steps, not
+methods validated by these results.

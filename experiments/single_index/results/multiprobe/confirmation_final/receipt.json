@@ -1,0 +1,10 @@
+{
+  "rows": 330000,
+  "expected_rows": 330000,
+  "duplicate_identities": 0,
+  "scenarios": 30,
+  "configs": 9,
+  "failures": 0,
+  "all_outcomes_retained": true,
+  "plan": "experiments/single_index/multiprobe_confirmation_final.toml"
+}

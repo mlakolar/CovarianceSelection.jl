@@ -6,6 +6,18 @@ validation remain an active numerical investigation. The large `paper.toml`
 suite is prepared but has not been submitted: the exploratory results do not
 yet justify declaring every inference variant satisfactory.
 
+## Multiple-probe index-only study
+
+The new d=20 Gaussian study completed 4,800 development and 30,000 fresh
+confirmation datasets. Its 690,000 primary records have expected counts,
+unique identities, and zero failed fits. Probe choice dominates the comparison.
+Liberal selection followed by OLS refitting helps with an appropriate dictionary,
+but the held-out tuning rule is unreliable and the p=160 paired design remains
+difficult even for oracle selection among the tested fits. Second-order Stein
+aggregation did not solve the even-link diagnostic. No new precision-coverage
+claim follows from this index-only study. See
+[the design and findings](MULTIPROBE_INDEX.md#completed-primary-results).
+
 ## Software validation
 
 All numerical checks ran in Discovery Slurm allocations.

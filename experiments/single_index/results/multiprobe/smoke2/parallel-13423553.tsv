@@ -1,0 +1,3 @@
+Seq	Host	Starttime	JobRuntime	Send	Receive	Exitval	Signal	Command
+1	:	1792924392.928	    11.446	0	0	0	0	srun --exclusive --exact -N1 -n1 -c1 --mem=1900M /home1/mkolar/juliaPkg/julia-1.13.2/bin/julia --heap-size-hint=1400M --project experiments/single_index/multiprobe_worker.jl experiments/single_index/multiprobe_smoke.toml 1 smoke2
+2	:	1792924404.912	    11.171	0	0	0	0	srun --exclusive --exact -N1 -n1 -c1 --mem=1900M /home1/mkolar/juliaPkg/julia-1.13.2/bin/julia --heap-size-hint=1400M --project experiments/single_index/multiprobe_worker.jl experiments/single_index/multiprobe_smoke.toml 2 smoke2

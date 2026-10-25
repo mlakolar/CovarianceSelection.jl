@@ -76,7 +76,7 @@ def main(root):
                   lambda k:not ('-ols-' in k or '-screen-' in k)):
         selected.append(next(k for k in ids if match(k)))
     selected+=['validation','oracle']
-    selected[3:3]=['complete-0-ols-20','complete-0-screen-6']
+    selected[3:3]=['complete-0-ols-20','complete-0-screen-6','complete-0-screen-10']
     figdir=root/'figures';figdir.mkdir(exist_ok=True)
     for metric,ylabel,filename in [('mean_loss','Mean projective error','direction_error'),
                                  ('prob_loss_below_01','Probability(error < 0.1)','reliable_direction')]:

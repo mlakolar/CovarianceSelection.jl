@@ -1,5 +1,5 @@
 """Ensure the diagnostic correction leaves every primary reported quantity unchanged."""
-import csv,json,math,sys
+import csv,json,math,sys,shutil
 from pathlib import Path
 
 root,parent=map(Path,sys.argv[1:]);checks=[]
@@ -17,5 +17,6 @@ for stage in ('development','confirmation_final'):
             assert math.isclose(float(new['mean_extra']),k-4+float(new['mean_missing']),abs_tol=1e-12)
     checks.append(dict(stage=stage,groups=len(after),primary_quantities_unchanged=True,
                        selected_support_cardinality_identity=True))
+    shutil.copy2(root/'results'/stage/'support_summary.csv',parent/stage/'support_summary.csv')
 (root/'correction_identity.json').write_text(json.dumps(checks,indent=2)+'\n')
 print(json.dumps(checks))

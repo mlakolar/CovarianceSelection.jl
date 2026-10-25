@@ -20,6 +20,13 @@ anchor. A `reference` vector instead aligns the direction by a positive inner
 product, which is useful for bootstrap replicates. A zero direction remains a
 failure. Threshold calibration and probe identification remain explicit choices.
 
+`estimate_probe_index` is a separate Gaussian-covariate extension. It pools fixed
+scalar probes through multivariate OLS, row selection with OLS refitting, or
+first- and second-order Stein matrices. It estimates no nonparametric link.
+`probe_index_moments` exposes the underlying sample moments. These experimental
+procedures do not replace the manuscript's first stage or establish a new
+generated-index coverage theorem. See [MULTIPROBE_INDEX.md](MULTIPROBE_INDEX.md).
+
 The pairs `(gamma,Omega(t))` and `(-gamma,Omega(-t))` describe the same model.
 Changing the sign convention therefore changes the index axis. Automatic
 orientation is locally stable when the largest-magnitude population coordinate

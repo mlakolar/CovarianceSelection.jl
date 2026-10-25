@@ -1,0 +1,10 @@
+{
+  "rows": 11,
+  "expected_rows": 11,
+  "duplicate_identities": 0,
+  "scenarios": 1,
+  "configs": 9,
+  "failures": 0,
+  "all_outcomes_retained": true,
+  "plan": "experiments/single_index/multiprobe_specialist_canary.toml"
+}
