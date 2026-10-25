@@ -286,5 +286,6 @@
     "Gaussian d20 strong-design evidence does not establish weak-index, non-Gaussian, or high-dimensional-covariate performance.",
     "Small-n correlation/fixed-diagonal direction errors remain large."
   ],
-  "run_registry": "SingleIndexGraph/.slurm/runs/20261026-sig-mave-refinement.json"
+  "run_registry": "SingleIndexGraph/.slurm/runs/20261026-sig-mave-refinement.json",
+  "publication_format": "Compact CSV line endings normalized to LF in Git; no field values changed. Remote source/results bundles retained unchanged."
 }

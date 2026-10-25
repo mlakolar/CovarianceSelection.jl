@@ -55,3 +55,7 @@ source snapshot and later report hashes are recorded separately. Current code
 contains the finite-validation guard and public hybrid API; the retained primary
 comparison predates the guard. Raw shards, full trajectories, interrupted
 checkpoint files, and source snapshots remain on Discovery.
+
+Committed CSV files use LF line endings. Remote CSV-writer artifacts may use
+CRLF; field values are unchanged. Recorded transfer hashes refer to the
+original remote bundles.
