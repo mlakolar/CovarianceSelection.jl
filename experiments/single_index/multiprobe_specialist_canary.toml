@@ -1,0 +1,73 @@
+seed = 89128763
+shard_size = 100
+validate = true
+
+[[candidate]]
+id = "projections-60-moment-20"
+bank = "projections"
+L = 60
+method = "moment"
+k = 20
+
+[[candidate]]
+id = "projections-60-screen-10"
+bank = "projections"
+L = 60
+method = "screen"
+k = 10
+
+[[candidate]]
+id = "projections-60-ols-20"
+bank = "projections"
+L = 60
+method = "ols"
+k = 20
+
+[[candidate]]
+id = "projections-60-screen-6"
+bank = "projections"
+L = 60
+method = "screen"
+k = 6
+
+[[candidate]]
+id = "mixed-60-moment-20"
+bank = "mixed"
+L = 60
+method = "moment"
+k = 20
+
+[[candidate]]
+id = "mixed-60-ols-20"
+bank = "mixed"
+L = 60
+method = "ols"
+k = 20
+
+[[candidate]]
+id = "complete-0-ols-20"
+bank = "complete"
+L = 0
+method = "ols"
+k = 20
+
+[[candidate]]
+id = "complete-0-screen-6"
+bank = "complete"
+L = 0
+method = "screen"
+k = 6
+
+[[candidate]]
+id = "complete-0-screen-10"
+bank = "complete"
+L = 0
+method = "screen"
+k = 10
+
+[[scenario]]
+id = 1
+n = 1600
+p = 160
+design = "pairs"
+replicates = 1

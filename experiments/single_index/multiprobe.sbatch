@@ -20,6 +20,16 @@ sha256sum Project.toml Manifest.toml src/SingleIndexGraph/*.jl \
 if [[ "$MODE" == canary ]]; then
     "$JULIA" --project experiments/single_index/multiprobe_canary.jl "$OUT"
 else
+    if [[ "$OUT" == confirmation_final ]]; then
+        # Exercise the largest new validation path at the same per-worker memory
+        # limit before launching all workers. Its seed is separate from evidence.
+        srun --exclusive --exact -N1 -n1 -c1 --mem=1900M "$JULIA" --heap-size-hint=1400M --project \
+          experiments/single_index/multiprobe_worker.jl \
+          experiments/single_index/multiprobe_specialist_canary.toml 1 specialist_canary
+        python3 experiments/single_index/multiprobe_report.py \
+          experiments/single_index/multiprobe_specialist_canary.toml specialist_canary
+        python3 -c 'import json; assert json.load(open("specialist_canary/receipt.json"))["failures"] == 0'
+    fi
     python3 - "$PLAN" > "$OUT/tasks.txt" <<'PY'
 import sys,math,tomllib
 with open(sys.argv[1],'rb') as f: plan=tomllib.load(f)
