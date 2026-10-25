@@ -1,7 +1,7 @@
 module Danaher2014ExampleTest
 
 using Test, Random, LinearAlgebra, Statistics
-using CovarianceSelection: fusedGraphicalLasso, ADMMOptions
+using CovarianceSelection: fused_graphical_lasso, ADMMOptions
 include("../examples/danaher2014/simulation.jl")
 using .Danaher2014
 
@@ -45,8 +45,8 @@ using .Danaher2014
     # Verify the Section 7 penalty convention against the normalized API.
     options = ADMMOptions(; abstol=1e-10, reltol=1e-10)
     S = data.S[1:5, 1:5, :]
-    A = fusedGraphicalLasso(S, 0.175, 0.025; weights=ones(3), penalize_diag=false, options)
-    B = fusedGraphicalLasso(S, [150, 150, 150], 0.175/3, 0.025/3; penalize_diag=false, options)
+    A = fused_graphical_lasso(S, 0.175, 0.025; weights=ones(3), penalize_diag=false, options)
+    B = fused_graphical_lasso(S, [150, 150, 150], 0.175/3, 0.025/3; penalize_diag=false, options)
     @test A ≈ B atol=1e-8
     @test Danaher2014.fixedpoint(A, S, 0.175, 0.025) < 1e-8
 

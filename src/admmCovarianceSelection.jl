@@ -65,18 +65,18 @@ ADMMInfo() = ADMMInfo(0, false, NaN, NaN, NaN)
 # Residual balancing (Boyd et al., 2011, Section 3.4.1), with each residual
 # measured relative to its tolerance: the factor by which to multiply ρ when one
 # of them is more than ten times the other. The caller divides its scaled dual
-# variables by the same factor. ρ is left fixed after _maxPenaltyChanges
+# variables by the same factor. ρ is left fixed after _MAX_PENALTY_CHANGES
 # changes, which keeps the convergence guarantee of ADMM with a fixed ρ.
-const _maxPenaltyChanges = 50
+const _MAX_PENALTY_CHANGES = 50
 
-function _penaltyFactor(r_norm, eps_pri, s_norm, eps_dual, changes)
-  changes >= _maxPenaltyChanges && return 1
+function _penalty_factor(r_norm, eps_pri, s_norm, eps_dual, changes)
+  changes >= _MAX_PENALTY_CHANGES && return 1
   r, s = r_norm / eps_pri, s_norm / eps_dual
   r > 10 * s ? 2 : s > 10 * r ? 1 // 2 : 1
 end
 
 # the scale of the data: the average variance, or 1 if that is not positive
-_dataScale(v) = v > 0 && isfinite(v) ? v : one(v)
+_data_scale(v) = v > 0 && isfinite(v) ? v : one(v)
 
 # record the final state in info, with ρ relative to ρscale, and warn if the
 # tolerances were not met
@@ -122,7 +122,7 @@ function covsel!(
   g = penalize_diag ? NormL1(T(λ)) : NormL1(T(λ), ones(T, p, p) - I)
 
   # ρ has the units of Σ², the primal residual those of Ω and the dual one those of Σ
-  s = _dataScale(tr(Σ) / p)
+  s = _data_scale(tr(Σ) / p)
   method = ADMMSolver(; ρ = T(options.ρ * s^2), α = T(options.α), adaptive = options.adaptive,
                       abstol = T(options.abstol / s), abstol_dual = T(options.abstol * s), reltol = T(options.reltol))
   r = solve!(Z, LogDetLoss(Σ), g, method, ProximalOptions(; maxiter = options.maxiter); u = U)

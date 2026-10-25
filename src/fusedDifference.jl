@@ -7,8 +7,8 @@
 ###############################
 
 """
-    fusedGraphicalLasso(Σx, nx, Σy, ny, λ1, λ2; options=ADMMOptions(), penalize_diag=true, info=ADMMInfo())
-    fusedGraphicalLasso!(Θx, Θy, Zx, Zy, Ux, Uy, Σx, nx, Σy, ny, λ1, λ2; options=ADMMOptions(), penalize_diag=true, info=ADMMInfo())
+    fused_graphical_lasso(Σx, nx, Σy, ny, λ1, λ2; options=ADMMOptions(), penalize_diag=true, info=ADMMInfo())
+    fused_graphical_lasso!(Θx, Θy, Zx, Zy, Ux, Uy, Σx, nx, Σy, ny, λ1, λ2; options=ADMMOptions(), penalize_diag=true, info=ADMMInfo())
 
 Fused graphical lasso (Danaher, Wang and Witten, 2014) for two groups by ADMM:
 
@@ -29,7 +29,7 @@ options are scaled by the data as in [`covsel!`](@ref), with `s` the average of
 the two average variances, and the residuals are those of the two matrices
 added.
 """
-function fusedGraphicalLasso!(
+function fused_graphical_lasso!(
     Θx::StridedMatrix{T}, Θy::StridedMatrix{T},
     Zx::StridedMatrix{T}, Zy::StridedMatrix{T},
     Ux::StridedMatrix{T}, Uy::StridedMatrix{T},
@@ -53,7 +53,7 @@ function fusedGraphicalLasso!(
     # iterates are those of the two matrices added, the stopping test
     # ‖r_x‖ + ‖r_y‖ ≤ p abstol + reltol (…), as ADMMSolver's √n abstol is
     # √2 p abstol for the 2p² entries
-    s = _dataScale((tr(Σx) + tr(Σy)) / (2p))
+    s = _data_scale((tr(Σx) + tr(Σy)) / (2p))
     method = ADMMSolver(; ρ = T(options.ρ * s^2), α = T(options.α), adaptive = options.adaptive,
                         abstol = T(options.abstol / (sqrt(2) * s)), abstol_dual = T(options.abstol * s / sqrt(2)),
                         reltol = T(options.reltol), norm = _pairnorm)
@@ -62,7 +62,7 @@ function fusedGraphicalLasso!(
     copyto!(Zx, view(Z, :, :, 1)); copyto!(Zy, view(Z, :, :, 2))
     copyto!(Ux, view(U, :, :, 1)); copyto!(Uy, view(U, :, :, 2))
     copyto!(Θx, Zx); copyto!(Θy, Zy)
-    _finish!(info, "fusedGraphicalLasso!", r.iterations, r.converged, r.ρ, s^2, r.r_norm, r.s_norm)
+    _finish!(info, "fused_graphical_lasso!", r.iterations, r.converged, r.ρ, s^2, r.r_norm, r.s_norm)
     (Zx, Zy)
 end
 
@@ -89,7 +89,7 @@ function _pairnorm(x::Array{T, 3}, y::Array{T, 3}) where {T}
   sqrt(s1) + sqrt(s2)
 end
 
-function fusedGraphicalLasso(
+function fused_graphical_lasso(
     Σx::StridedMatrix{T}, nx::Int,
     Σy::StridedMatrix{T}, ny::Int,
     λ1::Real, λ2::Real;
@@ -106,7 +106,7 @@ function fusedGraphicalLasso(
     Ux = zeros(T, p, p)
     Uy = zeros(T, p, p)
 
-    fusedGraphicalLasso!(
+    fused_graphical_lasso!(
     Θx, Θy,
     Zx, Zy,
     Ux, Uy,
@@ -117,10 +117,10 @@ end
 
 
 """
-    fusedGraphicalLasso(S, λ1, λ2; weights=fill(1/K, K), penalize_diag=true, options=ADMMOptions(), info=ADMMInfo())
-    fusedGraphicalLasso(S, ns, λ1, λ2; kwargs...)
-    fusedGraphicalLasso!(Z, U, S, λ1, λ2; kwargs...)
-    fusedGraphicalLasso!(Z, U, S, ns, λ1, λ2; kwargs...)
+    fused_graphical_lasso(S, λ1, λ2; weights=fill(1/K, K), penalize_diag=true, options=ADMMOptions(), info=ADMMInfo())
+    fused_graphical_lasso(S, ns, λ1, λ2; kwargs...)
+    fused_graphical_lasso!(Z, U, S, λ1, λ2; kwargs...)
+    fused_graphical_lasso!(Z, U, S, ns, λ1, λ2; kwargs...)
 
 Fused graphical lasso of K groups (Danaher, Wang and Witten, 2014), by ADMM:
 
@@ -149,12 +149,12 @@ these collection methods always return a stacked array.
 The solver uses ProximalBase's `SliceSum` of weighted `LogDetLoss`es and
 `FiberSum(NormL1Fused(λ1, λ2); symmetric=true)`. `NormL1Fused` computes the
 all-pairs proximal operator by sorting and pooling, in O(K log K) per fiber.
-As in [`groupGraphicalLasso`](@ref), the ADMM penalty parameter is
+As in [`group_graphical_lasso`](@ref), the ADMM penalty parameter is
 `ρ s² w̄`, where `s` is the average variance across the groups and `w̄` the
-average likelihood weight. See [`groupGraphicalLasso`](@ref) for joint
+average likelihood weight. See [`group_graphical_lasso`](@ref) for joint
 estimation with a group penalty that encourages shared sparsity.
 """
-function fusedGraphicalLasso!(
+function fused_graphical_lasso!(
     Z::Array{T, 3}, U::Array{T, 3},
     S::Union{AbstractArray{<:Real, 3}, AbstractVector{<:AbstractMatrix}},
     λ1::Real, λ2::Real;
@@ -178,22 +178,22 @@ function fusedGraphicalLasso!(
     h = NormL1Fused(l1, l2)
     g = FiberSum(h; diagonal = penalize_diag ? h : NormL1Fused(zero(T), l2), symmetric = true)
 
-    s = _dataScale(sum(k -> tr(_covslice(S, k)), 1:K) / (p * K))
+    s = _data_scale(sum(k -> tr(_covslice(S, k)), 1:K) / (p * K))
     w̄ = sum(w) / K
     method = ADMMSolver(; ρ = T(options.ρ * s^2 * w̄), α = T(options.α), adaptive = options.adaptive,
                         abstol = T(options.abstol / s), abstol_dual = T(options.abstol * s * w̄),
                         reltol = T(options.reltol))
     r = solve!(Z, f, g, method, ProximalOptions(; maxiter = options.maxiter); u = U)
-    _finish!(info, "fusedGraphicalLasso!", r.iterations, r.converged, r.ρ, s^2 * w̄, r.r_norm, r.s_norm)
+    _finish!(info, "fused_graphical_lasso!", r.iterations, r.converged, r.ρ, s^2 * w̄, r.r_norm, r.s_norm)
     Z
 end
 
-function fusedGraphicalLasso(
+function fused_graphical_lasso(
     S::Union{AbstractArray{<:Real, 3}, AbstractVector{<:AbstractMatrix}},
     λ1::Real, λ2::Real; kwargs...)
     p, K = _fglsize(S)
     T = float(eltype(_covslice(S, 1)))
-    fusedGraphicalLasso!(zeros(T, p, p, K), zeros(T, p, p, K), S, λ1, λ2; kwargs...)
+    fused_graphical_lasso!(zeros(T, p, p, K), zeros(T, p, p, K), S, λ1, λ2; kwargs...)
 end
 
 function _fglsize(S)
@@ -214,17 +214,17 @@ function _fglweights(S, ns)
     n ./ sum(n)
 end
 
-function fusedGraphicalLasso(
+function fused_graphical_lasso(
     S::Union{AbstractArray{<:Real, 3}, AbstractVector{<:AbstractMatrix}},
     ns::AbstractVector{<:Integer}, λ1::Real, λ2::Real; kwargs...)
-    fusedGraphicalLasso(S, λ1, λ2; weights = _fglweights(S, ns), kwargs...)
+    fused_graphical_lasso(S, λ1, λ2; weights = _fglweights(S, ns), kwargs...)
 end
 
-function fusedGraphicalLasso!(
+function fused_graphical_lasso!(
     Z::Array{T, 3}, U::Array{T, 3},
     S::Union{AbstractArray{<:Real, 3}, AbstractVector{<:AbstractMatrix}},
     ns::AbstractVector{<:Integer}, λ1::Real, λ2::Real; kwargs...) where {T<:AbstractFloat}
-    fusedGraphicalLasso!(Z, U, S, λ1, λ2; weights = _fglweights(S, ns), kwargs...)
+    fused_graphical_lasso!(Z, U, S, λ1, λ2; weights = _fglweights(S, ns), kwargs...)
 end
 
 
@@ -236,7 +236,7 @@ end
 ####################################
 
 """
-    fusedNeighborhoodSelection(A1, b1, A2, b2, λ1, λ2; options=ADMMOptions(), info=ADMMInfo())
+    fused_neighborhood_selection(A1, b1, A2, b2, λ1, λ2; options=ADMMOptions(), info=ADMMInfo())
 
 Fused neighborhood selection for one node in two groups by ADMM:
 
@@ -245,7 +245,7 @@ Fused neighborhood selection for one node in two groups by ADMM:
 
 Returns `(x1, x2)`; see [`ADMMInfo`](@ref) for `info`.
 """
-function fusedNeighborhoodSelection(
+function fused_neighborhood_selection(
     A1, b1,
     A2, b2,
     λ1, λ2;
@@ -276,8 +276,8 @@ function fusedNeighborhoodSelection(
 
     # scales of the columns of A and of b: ρ has the units of A², the primal
     # residual those of the coefficients and the dual one those of Aᵀb / n
-    sa = sqrt(_dataScale((sum(D1) + sum(D2)) / (2p)))
-    sb = sqrt(_dataScale((sum(abs2, b1) / n1 + sum(abs2, b2) / n2) / 2))
+    sa = sqrt(_data_scale((sum(D1) + sum(D2)) / (2p)))
+    sb = sqrt(_data_scale((sum(abs2, b1) / n1 + sum(abs2, b2) / n2) / 2))
     ρ = options.ρ * sa^2
     abstol_pri, abstol_dual = options.abstol * sb / sa, options.abstol * sa * sb
 
@@ -334,7 +334,7 @@ function fusedNeighborhoodSelection(
 
         # update ρ, and rescale the scaled dual variables
         if options.adaptive
-            f = _penaltyFactor(r_norm, eps_pri, s_norm, eps_dual, changes)
+            f = _penalty_factor(r_norm, eps_pri, s_norm, eps_dual, changes)
             if f != 1
                 ρ *= f
                 u1 ./= f
@@ -343,6 +343,6 @@ function fusedNeighborhoodSelection(
             end
         end
     end
-    _finish!(info, "fusedNeighborhoodSelection", iter, converged, ρ, sa^2, r_norm, s_norm)
+    _finish!(info, "fused_neighborhood_selection", iter, converged, ρ, sa^2, r_norm, s_norm)
     (z1, z2)
 end

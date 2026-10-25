@@ -53,7 +53,7 @@ end
 function _LatentDTrace(Σx::Symmetric{T}, Σy::Symmetric{T}) where {T<:AbstractFloat}
   p = _iht_covariance(Σx)
   _iht_covariance(Σy) == p || throw(DimensionMismatch())
-  _LatentDTrace(directDifferenceLoss(Σx, Σy), zeros(T, p, p), zeros(T, p, p))
+  _LatentDTrace(direct_difference_loss(Σx, Σy), zeros(T, p, p), zeros(T, p, p))
 end
 ProximalBase.issmooth(::Type{<:_LatentLogdet}) = true
 ProximalBase.issmooth(::Type{<:_LatentDTrace}) = true
@@ -104,16 +104,16 @@ function _automatic_iht!(x, f, g, method, options::ProximalOptions, accepted)
     state = options.store_trace ? last(record) : record
     push!(fvals, state.fg_x)
     accepted === nothing || accepted()
-    options.callback === nothing || state.iteration % options.printEvery != 0 || return options.callback(record)
+    options.callback === nothing || state.iteration % options.print_every != 0 || return options.callback(record)
     false
   end
   settings = (; (key => getfield(options, key) for key in fieldnames(typeof(options)))...)
-  result = solve!(x, f, g, method, ProximalOptions(; settings..., callback = cb, printEvery = 1))
+  result = solve!(x, f, g, method, ProximalOptions(; settings..., callback = cb, print_every = 1))
   fvals, result.iterations
 end
 
 """
-    differencePrecisionIHT(Σx, Σy, s; method=ProximalGradientDescent(), options=ProximalOptions(), init=nothing)
+    difference_precision_iht(Σx, Σy, s; method=ProximalGradientDescent(), options=ProximalOptions(), init=nothing)
 
 IHT with an automatically backtracked step and ProximalBase's Frobenius
 projection onto at most `s` lower-triangle coordinates, including the diagonal.
@@ -121,17 +121,17 @@ projection onto at most `s` lower-triangle coordinates, including the diagonal.
 with the initial objective and every accepted iteration in `fvals`.
 The overload with positional `η` retains its explicit step and legacy projection.
 """
-function differencePrecisionIHT(Σx::Symmetric{T}, Σy::Symmetric{T}, s::Int;
+function difference_precision_iht(Σx::Symmetric{T}, Σy::Symmetric{T}, s::Int;
   method = ProximalSolvers.ProximalGradientDescent(), options::ProximalOptions = ProximalOptions(), init = nothing) where {T<:AbstractFloat}
   p = _iht_covariance(Σx)
   _iht_covariance(Σy) == p || throw(DimensionMismatch())
   Δ, _ = _iht_start(T, p, s, 0, init === nothing ? nothing : (init, zeros(T, p, 0)))
-  fvals, _ = _automatic_iht!(Δ, directDifferenceLoss(Σx, Σy), IndBallL0(s), method, options, nothing)
+  fvals, _ = _automatic_iht!(Δ, direct_difference_loss(Σx, Σy), IndBallL0(s), method, options, nothing)
   Δ, fvals
 end
 
 """
-    covselLatentIHT!(Σ, s, r; method=ProximalGradientDescent(), options=ProximalOptions(), init=nothing, callback=nothing)
+    covsel_latent_iht!(Σ, s, r; method=ProximalGradientDescent(), options=ProximalOptions(), init=nothing, callback=nothing)
 
 Automatic-step IHT for `tr(ΣΘ)-logdet(Θ)`, `Θ=S+UU'`, with at most `s`
 off-diagonal pairs in `S`. Returns `(S,L,U,fvals,iter)`, with `S` a
@@ -143,7 +143,7 @@ with inverse covariance variances and `U` has small deterministic orthogonal
 columns. This nonconvex initialization need not yield a global minimum.
 The overload with positional `ηS,ηU` keeps its legacy alternating updates.
 """
-function covselLatentIHT!(Σ::AbstractMatrix{T}, s::Int, r::Int;
+function covsel_latent_iht!(Σ::AbstractMatrix{T}, s::Int, r::Int;
   method = ProximalSolvers.ProximalGradientDescent(), options::ProximalOptions = ProximalOptions(), init = nothing, callback = nothing) where {T<:AbstractFloat}
   p = _iht_covariance(Σ)
   S, U = _iht_start(T, p, s, r, init; covariance = Σ)
@@ -155,8 +155,8 @@ function covselLatentIHT!(Σ::AbstractMatrix{T}, s::Int, r::Int;
 end
 
 """
-    differenceLatentPrecisionIHT!(Δ, L, U, Σx, Σy, s; method=ProximalGradientDescent(), options=ProximalOptions(), callback=nothing)
-    differenceLatentPrecisionIHT(Σx, Σy, s, r; init=nothing, kwargs...)
+    difference_latent_precision_iht!(Δ, L, U, Σx, Σy, s; method=ProximalGradientDescent(), options=ProximalOptions(), callback=nothing)
+    difference_latent_precision_iht(Σx, Σy, s, r; init=nothing, kwargs...)
 
 Automatic-step IHT for the direct difference loss at `Δ+UU'`. The in-place
 method starts from and updates `Δ,U`, and overwrites `L=UU'`. Its sparsity budget
@@ -166,7 +166,7 @@ callbacks belong in `options`. The convenience method copies `init=(Δ,U)`, or
 starts from zero `Δ` and a small deterministic orthogonal `U`. The explicit-η
 overloads retain their original alternating updates and initialization.
 """
-function differenceLatentPrecisionIHT!(Δ::SymmetricSparseIterate{T}, L::StridedMatrix{T}, U::StridedMatrix{T},
+function difference_latent_precision_iht!(Δ::SymmetricSparseIterate{T}, L::StridedMatrix{T}, U::StridedMatrix{T},
   Σx::Symmetric{T}, Σy::Symmetric{T}, s::Int;
   method = ProximalSolvers.ProximalGradientDescent(), options::ProximalOptions = ProximalOptions(), callback = nothing) where {T<:AbstractFloat}
   p = _iht_covariance(Σx)
@@ -178,9 +178,9 @@ function differenceLatentPrecisionIHT!(Δ::SymmetricSparseIterate{T}, L::Strided
   mul!(L, U, transpose(U))
   Δ, L, U, fvals, iter
 end
-function differenceLatentPrecisionIHT(Σx::Symmetric{T}, Σy::Symmetric{T}, s::Int, r::Int;
+function difference_latent_precision_iht(Σx::Symmetric{T}, Σy::Symmetric{T}, s::Int, r::Int;
   init = nothing, kwargs...) where {T<:AbstractFloat}
   p = _iht_covariance(Σx)
   Δ, U = _iht_start(T, p, s, r, init)
-  differenceLatentPrecisionIHT!(Δ, zeros(T, p, p), U, Σx, Σy, s; kwargs...)
+  difference_latent_precision_iht!(Δ, zeros(T, p, p), U, Σx, Σy, s; kwargs...)
 end

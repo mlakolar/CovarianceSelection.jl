@@ -10,7 +10,7 @@ Zhang), so the estimator has nothing to tune. This directory compares it
 
 - for speed, with the R package scalreg (Sun, 2013), by the authors of the
   method, and with the scaled lasso of
-  [CoordinateDescent](https://github.com/mlakolar/CoordinateDescent.jl) applied
+  [HighDimensionalModels](https://github.com/mlakolar/HighDimensionalModels.jl) applied
   to each column;
 - for accuracy, with CLIME and ACLIME whose tuning parameters are chosen on
   validation data, in three designs.
@@ -22,10 +22,10 @@ Zhang), so the estimator has nothing to tune. This directory compares it
   finds exactly: on each segment of the path the residual variance is a
   quadratic in the penalty. On one CPU it took 0.85–1.7 s for p = 4000, and 8
   threads were 6.0–7.3 times faster. It was 13–112 times faster than the scaled
-  lasso of CoordinateDescent column by column, with tight tolerances, and
+  lasso of HighDimensionalModels column by column, with tight tolerances, and
   1,500–45,000 times faster than scalreg, which computes the whole lars path of
   every column (701 s for p = 500, n = 1000, against 0.026 s). Their estimates
-  agree with those of `slassoinv` to 2e-6 (CoordinateDescent) and 2e-4
+  agree with those of `slassoinv` to 2e-6 (HighDimensionalModels) and 2e-4
   (scalreg, whose noise level is iterated to an absolute tolerance of 1e-4).
 - **It reproduces Table 1 of Sun and Zhang (2013).** The mean spectral errors
   of the scaled lasso are within 0.02 of those of the paper in 15 of the 18
@@ -70,11 +70,11 @@ single-threaded OpenBLAS; one CPU per run, with 8 runs at a time on a node
 up to twice as fast). The data are n draws from the AR(1), band and Erdős–Rényi
 precision matrices of [`../clime/problems.jl`](../clime/problems.jl), and
 `S = X'X/n`; all methods use the penalty level `λ₀` of `slassoinv`.
-CoordinateDescent ran up to p = 1000, scalreg up to p = 500.
+HighDimensionalModels ran up to p = 1000, scalreg up to p = 500.
 
 Seconds for the whole estimate (in parentheses, relative to `slassoinv` on one thread):
 
-| problem | slassoinv | refit | 8 threads | CoordinateDescent | scalreg | nonzero entries |
+| problem | slassoinv | refit | 8 threads | HighDimensionalModels | scalreg | nonzero entries |
 |---|---:|---:|---:|---:|---:|---:|
 | AR(1), p = 100, n = 50 | 0.0007 | 0.0006 | — | 0.012 (18×) | 1.33 (2039×) | 462 |
 | AR(1), p = 100, n = 200 | 0.0006 | 0.0006 | — | 0.015 (23×) | 2.42 (3745×) | 424 |

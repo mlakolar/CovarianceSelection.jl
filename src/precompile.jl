@@ -19,13 +19,13 @@ using PrecompileTools: @setup_workload, @compile_workload
   @compile_workload begin
     covsel!(zeros(p, p), zeros(p, p), zeros(p, p), Matrix(Sy), 0.1)
     covselpath(Matrix(Sy), [0.2, 0.1])
-    fusedGraphicalLasso(Matrix(Sx), n, Matrix(Sy), n, 0.05, 0.05)
-    tvCovSel(Y, t, [0.3, 0.7], 0.3, 0.1)
-    tvCovSel(Y, t, [0.3, 0.7], 0.3, 0.1; λ1 = 0.05)
+    fused_graphical_lasso(Matrix(Sx), n, Matrix(Sy), n, 0.05, 0.05)
+    tv_covsel(Y, t, [0.3, 0.7], 0.3, 0.1)
+    tv_covsel(Y, t, [0.3, 0.7], 0.3, 0.1; λ1 = 0.05)
     clime(Matrix(Sy), 0.2)
     aclime(Matrix(Sy), n)
     slassoinv(Matrix(Sy), n)
-    Δ = differencePrecisionActiveShooting(Sx, Sy, NormL1(0.1))
-    differencePrecisionRefit(Sx, Sy, findall(!iszero, vec(Matrix(Δ))))
+    Δ = difference_precision_active_shooting(Sx, Sy, NormL1(0.1))
+    difference_precision_refit(Sx, Sy, findall(!iszero, vec(Matrix(Δ))))
   end
 end

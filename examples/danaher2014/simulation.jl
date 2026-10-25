@@ -213,7 +213,7 @@ function run(config)
     rows = NamedTuple[]
     # Compile the solver before timing the fits. Every point starts from zero,
     # so timings are cold fits rather than a mixture of warm and cold starts.
-    fusedGraphicalLasso(cat(Matrix{Float64}(I, 2, 2), Matrix{Float64}(I, 2, 2),
+    fused_graphical_lasso(cat(Matrix{Float64}(I, 2, 2), Matrix{Float64}(I, 2, 2),
                             Matrix{Float64}(I, 2, 2); dims=3), 0.1, 0.1;
                         weights=ones(3), penalize_diag=false, options=OPTIONS)
     for rep in 1:config.reps
@@ -234,7 +234,7 @@ function run(config)
             # objective. Divide the whole objective by n: weights=ones(3),
             # displayed penalties unchanged. With default weights=1/3, both
             # displayed penalties would instead need to be divided by 3.
-            seconds = @elapsed Z = fusedGraphicalLasso(data.S, λ1, λ2;
+            seconds = @elapsed Z = fused_graphical_lasso(data.S, λ1, λ2;
                 weights=ones(3), penalize_diag=false, options=OPTIONS, info)
             info.converged || error("unconverged fit at rep=$rep, λ1=$λ1, λ2=$λ2")
             r = fixedpoint(Z, data.S, λ1, λ2)

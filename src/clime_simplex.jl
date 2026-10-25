@@ -130,7 +130,7 @@ function _combine!(out::Vector{T}, S::Matrix{T}, idx::Vector{Int}, coef::Vector{
 end
 
 # out[1:k] = N[1:k, 1:k] v[1:k], column by column
-function _mulN!(out::Vector{T}, N::Matrix{T}, v::Vector{T}, k::Int) where {T}
+function _mul_n!(out::Vector{T}, N::Matrix{T}, v::Vector{T}, k::Int) where {T}
   @inbounds for q in 1:k
     out[q] = zero(T)
   end
@@ -144,7 +144,7 @@ function _mulN!(out::Vector{T}, N::Matrix{T}, v::Vector{T}, k::Int) where {T}
 end
 
 # out[1:k] = N[1:k, 1:k]' v[1:k]
-function _mulNt!(out::Vector{T}, N::Matrix{T}, v::Vector{T}, k::Int) where {T}
+function _mul_nt!(out::Vector{T}, N::Matrix{T}, v::Vector{T}, k::Int) where {T}
   @inbounds for t in 1:k
     acc = zero(T)
     @simd for q in 1:k
@@ -229,7 +229,7 @@ end
 # η solves M'η = τ, then σ = G[R, :]'η; done from scratch after a factorization
 function _dual!(ws::_PSMWorkspace{T}) where {T}
   k, N = ws.k, ws.N
-  _mulNt!(ws.η, N, ws.τ, k)
+  _mul_nt!(ws.η, N, ws.τ, k)
   _combine!(ws.σ, ws.S, ws.R, ws.η, k)
   corr = zero(T)
   @inbounds for t in 1:k
@@ -357,7 +357,7 @@ function _pivot!(ws::_PSMWorkspace{T}, kind::Int, idx::Int, s::T, tol::T, bland:
     @inbounds for q in 1:k
       x[q] = _G(ws, j, s, ws.A[q])
     end
-    _mulNt!(ρ, N, x, k)
+    _mul_nt!(ρ, N, x, k)
     @inbounds for t in 1:k
       ρ[t] *= -s
     end
@@ -504,7 +504,7 @@ function _replace_column!(ws::_PSMWorkspace{T}, q::Int, l::Int, τl::T) where {T
   @inbounds for t in 1:k
     ws.y[t] = _G(ws, ws.R[t], ws.sd[t], l)
   end
-  _mulN!(w, N, ws.y, k)
+  _mul_n!(w, N, ws.y, k)
   piv = w[q]
   @inbounds for t in 1:k
     N[q, t] /= piv
@@ -570,8 +570,8 @@ function _border!(ws::_PSMWorkspace{T}, j::Int, s::T, l::Int, τl::T, ηj::T) wh
   @inbounds for q in 1:k
     v[q] = _G(ws, j, s, ws.A[q])
   end
-  _mulN!(xx, N, u, k)
-  _mulNt!(yy, N, v, k)
+  _mul_n!(xx, N, u, k)
+  _mul_nt!(yy, N, v, k)
   schur = _G(ws, j, s, l)
   @inbounds for q in 1:k
     schur -= v[q] * xx[q]
@@ -602,7 +602,7 @@ function _replace_row!(ws::_PSMWorkspace{T}, r::Int, j::Int, s::T, ηj::T) where
   @inbounds for q in 1:k
     ws.x[q] = _G(ws, j, s, ws.A[q])
   end
-  _mulNt!(yy, N, ws.x, k)
+  _mul_nt!(yy, N, ws.x, k)
   piv = yy[r]
   @inbounds for q in 1:k
     N[q, r] /= piv

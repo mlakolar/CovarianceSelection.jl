@@ -27,11 +27,11 @@ end
 Δ = Ωx - Ωy
 
 nx, ny = 300, 300
-X = CovarianceSelection.generateData(Ωx, nx)
-Y = CovarianceSelection.generateData(Ωy, ny)
+X = CovarianceSelection.generate_data(Ωx, nx)
+Y = CovarianceSelection.generate_data(Ωy, ny)
 Sx, Sy = cov(X), cov(Y)
 
-# fusedGraphicalLasso solves
+# fused_graphical_lasso solves
 #
 #   minimize  Σₖ nₖ/n (tr(SₖΩₖ) - log det Ωₖ) + λ1 (‖Ωx‖₁ + ‖Ωy‖₁) + λ2 ‖Ωx - Ωy‖₁
 #
@@ -44,9 +44,9 @@ println("the graphs differ in ", count(!iszero, tril(Δ, -1)), " edges\n")
 
 println("   λ2   edges x   edges y   entries differing   TPR    FPR   ‖Ẑx - Ωx‖ + ‖Ẑy - Ωy‖")
 for λ2 in (0.0, 0.01, 0.02, 0.05, 0.1, 0.2)
-  Zx, Zy = fusedGraphicalLasso(Sx, nx, Sy, ny, λ1, λ2)
+  Zx, Zy = fused_graphical_lasso(Sx, nx, Sy, ny, λ1, λ2)
   # the estimated difference is Zx - Zy; compare its support with that of Δ
-  c = CovarianceSelection.getConfusionMatrix(Δ, Zx - Zy; diagonal=false)
+  c = CovarianceSelection.get_confusion_matrix(Δ, Zx - Zy; diagonal=false)
   @printf("%5.2f   %7d   %7d   %17d   %.2f   %.3f   %.3f\n", λ2,
     count(x -> abs(x) > 1e-4, tril(Zx, -1)), count(x -> abs(x) > 1e-4, tril(Zy, -1)),
     c.tp + c.fp, CovarianceSelection.tpr(c), CovarianceSelection.fpr(c), norm(Zx - Ωx) + norm(Zy - Ωy))
@@ -63,13 +63,13 @@ too large the two estimates are equal and the real differences are lost.
 Ωz[6, 5] = Ωz[5, 6] = 0.0
 Ωz[15, 1] = Ωz[1, 15] = 0.3
 nz = 400
-Sz = cov(CovarianceSelection.generateData(Ωz, nz))
+Sz = cov(CovarianceSelection.generate_data(Ωz, nz))
 ns = [nx, ny, nz]
 S = [Sx, Sy, Sz]                         # a p × p × 3 array also works
 println("three groups, sample sizes = $ns; every pair fused")
 for λ2 in (0.0, 0.02, 0.1)
   info = ADMMInfo()
-  Z = fusedGraphicalLasso(S, ns, λ1, λ2; penalize_diag=false, info)
+  Z = fused_graphical_lasso(S, ns, λ1, λ2; penalize_diag=false, info)
   differences = [count(v -> abs(v) > 1e-4, tril(Z[:, :, k] - Z[:, :, l], -1))
                  for (k, l) in ((1, 2), (1, 3), (2, 3))]
   @printf("λ2 = %.2f: differing edges (x-y, x-z, y-z) = %s; converged = %s\n",
@@ -77,7 +77,7 @@ for λ2 in (0.0, 0.02, 0.1)
 end
 println()
 
-# fusedNeighborhoodSelection solves, for one node a,
+# fused_neighborhood_selection solves, for one node a,
 #
 #   minimize  ‖bx - Ax βx‖² / (2nx) + ‖by - Ay βy‖² / (2ny)
 #               + λ1 (‖βx‖₁ + ‖βy‖₁) + λ2 ‖βx - βy‖₁
@@ -99,7 +99,7 @@ println("           node 5 in x, y    node 7 in x, y    other nonzeros in x, y  
 @printf("truth      %6.3f %6.3f     %6.3f %6.3f     %8d %8d          %8d\n",
   βx[5], βy[5], βx[6], βy[6], nonzeros(βx[rest]), nonzeros(βy[rest]), nonzeros(βx - βy))
 for λ2 in (0.0, 0.05, 0.1, 0.5)
-  zx, zy = fusedNeighborhoodSelection(X[:, others], X[:, a], Y[:, others], Y[:, a], λ, λ2)
+  zx, zy = fused_neighborhood_selection(X[:, others], X[:, a], Y[:, others], Y[:, a], λ, λ2)
   @printf("λ2 = %.2f  %6.3f %6.3f     %6.3f %6.3f     %8d %8d          %8d\n", λ2,
     zx[5], zy[5], zx[6], zy[6], nonzeros(zx[rest]), nonzeros(zy[rest]), nonzeros(zx - zy))
 end

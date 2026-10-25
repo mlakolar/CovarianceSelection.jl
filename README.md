@@ -6,13 +6,11 @@
 
 Various methods for learning high-dimensional Gaussian graphical models.
 
-```julia
-using Pkg
-# not registered yet, and neither are the versions of ProximalBase and
-# ProximalSolvers that it needs: add the three from GitHub in one call
-Pkg.add([PackageSpec(url = "https://github.com/mlakolar/ProximalBase.jl", rev = "master"),
-         PackageSpec(url = "https://github.com/mlakolar/ProximalSolvers.jl", rev = "master"),
-         PackageSpec(url = "https://github.com/mlakolar/CovarianceSelection.jl")])
+From a `master` checkout, prepare sibling dependencies and run the tests:
+
+```sh
+julia scripts/instantiate.jl
+julia scripts/test_master.jl
 ```
 
 CovarianceSelection was called CovSel before its first release.
@@ -26,16 +24,16 @@ CovarianceSelection was called CovSel before its first release.
 * Sparse matrix inversion with the scaled lasso of each column (Sun and Zhang,
   2013), which needs no tuning: `slassoinv`
 * Graphical lasso by ADMM: `covsel!`, `covselpath`
-* Fused graphical lasso for K groups (Danaher, Wang and Witten, 2014), with all pairs fused: `fusedGraphicalLasso`, `fusedGraphicalLasso!`
-* K precision matrices with a shared sparsity pattern, the group graphical lasso (Danaher, Wang and Witten, 2014): `groupGraphicalLasso`, `groupGraphicalLasso!`
-* Graphs that vary over time (Zhou, Lafferty and Wasserman, 2010), the group graphical lasso of kernel-weighted covariances: `tvCovSel`, `kernelCovariances`
-* Fused neighborhood selection: `fusedNeighborhoodSelection`
+* Fused graphical lasso for K groups (Danaher, Wang and Witten, 2014), with all pairs fused: `fused_graphical_lasso`, `fused_graphical_lasso!`
+* K precision matrices with a shared sparsity pattern, the group graphical lasso (Danaher, Wang and Witten, 2014): `group_graphical_lasso`, `group_graphical_lasso!`
+* Graphs that vary over time (Zhou, Lafferty and Wasserman, 2010), the group graphical lasso of kernel-weighted covariances: `tv_covsel`, `kernel_covariances`
+* Fused neighborhood selection: `fused_neighborhood_selection`
 * Direct estimation of the difference of two precision matrices `Ωx - Ωy` (Zhao, Cai and Li, 2014)
-  * ℓ1 penalized, by active shooting coordinate descent: `differencePrecisionActiveShooting`; the loss is `directDifferenceLoss`
-  * the exact refit on a support: `differencePrecisionRefit`
-  * the residual of its estimating equation, a validation loss for choosing λ: `diffLoss`
-  * sparsity constrained, by iterative hard thresholding: `differencePrecisionIHT`
-  * sparse plus low rank: `differenceLatentPrecisionIHT`
+  * ℓ1 penalized, by active shooting coordinate descent: `difference_precision_active_shooting`; the loss is `direct_difference_loss`
+  * the exact refit on a support: `difference_precision_refit`
+  * the residual of its estimating equation, a validation loss for choosing λ: `diff_loss`
+  * sparsity constrained, by iterative hard thresholding: `difference_precision_iht`
+  * sparse plus low rank: `difference_latent_precision_iht`
 
 CovarianceSelection is one of five Julia packages for high-dimensional
 statistics, three for estimation and inference and two for the optimization
@@ -43,7 +41,7 @@ beneath them:
 
 | Package | |
 |---|---|
-| [CoordinateDescent.jl](https://github.com/mlakolar/CoordinateDescent.jl) | the lasso and its paths; the group, square-root, scaled and heteroscedastic lasso; varying-coefficient models |
+| [HighDimensionalModels.jl](https://github.com/mlakolar/HighDimensionalModels.jl) | the lasso and its paths; the group, square-root, scaled and heteroscedastic lasso; varying-coefficient models |
 | **CovarianceSelection.jl** (this package) | Gaussian graphical models: the graphical lasso, CLIME and ACLIME, precision matrices by the scaled lasso, the fused graphical lasso, and the difference of two precision matrices |
 | [DiffPrecTest.jl](https://github.com/mlakolar/DiffPrecTest.jl) | confidence intervals and tests for the difference of two precision matrices |
 | [ProximalSolvers.jl](https://github.com/mlakolar/ProximalSolvers.jl) | the solvers: coordinate descent with penalty paths, screening and active sets; proximal gradient methods, proximal Newton and ADMM |
@@ -61,7 +59,7 @@ p, n = 20, 1000
 Ωy = Matrix(1.0I, p, p)
 Ωy[1, 2] = Ωy[2, 1] = 0.4
 X = randn(n, p)
-Y = CovarianceSelection.generateData(Ωy, n)
+Y = CovarianceSelection.generate_data(Ωy, n)
 Sx, Sy = cov(X), cov(Y)
 
 # graphical lasso: minimize tr(SΩ) - log det Ω + λ‖Ω‖₁
@@ -69,13 +67,13 @@ Sx, Sy = cov(X), cov(Y)
 
 # direct difference estimation:
 # minimize tr(Sx⋅Δ⋅Sy⋅Δ)/2 - tr(Δ⋅(Sy - Sx)) + λ‖Δ‖₁
-Δ = differencePrecisionActiveShooting(Symmetric(Sx), Symmetric(Sy), NormL1(0.1))
+Δ = difference_precision_active_shooting(Symmetric(Sx), Symmetric(Sy), NormL1(0.1))
 Matrix(Δ)
 
 # the same with ProximalSolvers' solver options, here a cyclic order, and along a
 # path of 20 penalties from λmax
-Δ = differencePrecisionActiveShooting(Symmetric(Sx), Symmetric(Sy), NormL1(0.1), CDSolver(; order=:cyclic))
-f = directDifferenceLoss(Symmetric(Sx), Symmetric(Sy))
+Δ = difference_precision_active_shooting(Symmetric(Sx), Symmetric(Sy), NormL1(0.1), CDSolver(; order=:cyclic))
+f = direct_difference_loss(Symmetric(Sx), Symmetric(Sy))
 λs = lambda_max(f, NormL1(1.0), SymmetricSparseIterate(p)) .* 0.8 .^ (0:19)
 path = solve_path(f, NormL1(1.0), λs; x=SymmetricSparseIterate(p), screening=false)
 ```
@@ -97,17 +95,17 @@ penalty couples every pair of groups, as in
 ```julia
 S = [S1, S2, S3]                               # sample covariances
 ns = [200, 300, 500]                           # observations in each group
-Z = fusedGraphicalLasso(S, ns, 0.02, 0.05; penalize_diag=false)
+Z = fused_graphical_lasso(S, ns, 0.02, 0.05; penalize_diag=false)
 Ω1, Ω2, Ω3 = eachslice(Z; dims=3)
 
 # Equal likelihood weights by default, or supply positive weights explicitly.
-Z = fusedGraphicalLasso(S, 0.02, 0.05; weights=ns/sum(ns))
+Z = fused_graphical_lasso(S, 0.02, 0.05; weights=ns/sum(ns))
 
 # Warm start: retain both the estimates and scaled dual variables.
 Z, U = zeros(size(Z)), zeros(size(Z))
 info = ADMMInfo()
-fusedGraphicalLasso!(Z, U, S, ns, 0.02, 0.05; info)
-fusedGraphicalLasso!(Z, U, S, ns, 0.02, 0.04;
+fused_graphical_lasso!(Z, U, S, ns, 0.02, 0.05; info)
+fused_graphical_lasso!(Z, U, S, ns, 0.02, 0.04;
                     options=ADMMOptions(; ρ=info.ρ), info)
 ```
 
@@ -116,7 +114,7 @@ The objective is `Σₖ wₖ (tr(SₖΩₖ) - logdet(Ωₖ)) + λ1 Σₖ ‖Ω�
 penalties from the paper's objective with unnormalized sample-size weights,
 divide both by `sum(ns)`. `penalize_diag=false` omits the diagonal from the
 ℓ1 term while retaining its fusion. The existing two-matrix call
-`fusedGraphicalLasso(Sx, nx, Sy, ny, λ1, λ2)` still returns `(Zx, Zy)`.
+`fused_graphical_lasso(Sx, nx, Sy, ny, λ1, λ2)` still returns `(Zx, Zy)`.
 
 The implementation uses ProximalBase's all-pairs `NormL1Fused` proximal
 operator through `FiberSum`, together with `SliceSum(LogDetLoss(...))` and
@@ -213,11 +211,11 @@ Omit the step-size arguments to use ProximalSolvers' backtracking methods:
 
 ```julia
 using LinearAlgebra, ProximalSolvers
-Δ, objectives = differencePrecisionIHT(Symmetric(Σx), Symmetric(Σy), s)
-Δ, L, U, objectives, iterations = differenceLatentPrecisionIHT(
+Δ, objectives = difference_precision_iht(Symmetric(Σx), Symmetric(Σy), s)
+Δ, L, U, objectives, iterations = difference_latent_precision_iht(
     Symmetric(Σx), Symmetric(Σy), s, r;
     method = MonotoneAccProxGradDescent())
-S, L, U, objectives, iterations = covselLatentIHT!(Σ, s, r;
+S, L, U, objectives, iterations = covsel_latent_iht!(Σ, s, r;
     method = ProximalGradientDescent(; normalized = true))
 ```
 

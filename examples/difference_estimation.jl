@@ -17,12 +17,12 @@ p, n = 20, 1000
 Ωy[1, 2] = Ωy[2, 1] = 0.4
 Δ = Ωx - Ωy
 
-X = CovarianceSelection.generateData(Ωx, n)
-Y = CovarianceSelection.generateData(Ωy, n)
+X = CovarianceSelection.generate_data(Ωx, n)
+Y = CovarianceSelection.generate_data(Ωy, n)
 Sx, Sy = Symmetric(cov(X)), Symmetric(cov(Y))
 println("p = $p, n = $n per group, Δ = Ωx - Ωy has one nonzero entry, Δ[2, 1] = ", Δ[2, 1])
 
-# differencePrecisionActiveShooting minimizes the direct difference loss
+# difference_precision_active_shooting minimizes the direct difference loss
 #
 #   tr(Sx Δ Sy Δ) / 2 - tr(Δ (Sy - Sx)) + λ‖Δ‖₁
 #
@@ -30,8 +30,8 @@ println("p = $p, n = $n per group, Δ = Ωx - Ωy has one nonzero entry, Δ[2, 1
 # loss is minimized at Ωx - Ωy, so Δ is estimated without estimating Ωx or Ωy,
 # which need not be sparse. The estimate is a SymmetricSparseIterate.
 λ = 0.1
-hΔ = differencePrecisionActiveShooting(Sx, Sy, NormL1(λ))
-c = CovarianceSelection.getConfusionMatrix(Δ, hΔ)
+hΔ = difference_precision_active_shooting(Sx, Sy, NormL1(λ))
+c = CovarianceSelection.get_confusion_matrix(Δ, hΔ)
 @printf("\ndirect estimate (λ = %.2f): %d nonzero entries in the lower triangle, TPR = %.2f, FPR = %.3f\n",
   λ, nnz(hΔ), CovarianceSelection.tpr(c), CovarianceSelection.fpr(c))
 @printf("  Δ̂[2, 1] = %.3f, shrunk towards zero by the penalty\n", hΔ[2, 1])
@@ -44,7 +44,7 @@ c = CovarianceSelection.getConfusionMatrix(Δ, hΔ)
 #
 # where J holds the entries of the support in both triangles.
 support = [CartesianIndex(r, c) for c=1:p for r=c:p if hΔ[r, c] != 0]
-rΔ = differencePrecisionRefit(Sx, Sy, support)
+rΔ = difference_precision_refit(Sx, Sy, support)
 
 J = LinearIndices((p, p))[unique([support; [CartesianIndex(k[2], k[1]) for k in support]])]
 x = zeros(p, p)
@@ -56,7 +56,7 @@ x[J] = ((kron(Sy, Sx) + kron(Sx, Sy))[J, J] / 2) \ (Sy - Sx)[J]
 # nonzero entries in the lower triangle, with step size η = 1 / (‖Sx‖‖Sy‖),
 # the reciprocal of the Lipschitz constant of the gradient.
 η = 1 / (opnorm(Sx) * opnorm(Sy))
-iΔ, fvals = differencePrecisionIHT(Sx, Sy, η, 1)
+iΔ, fvals = difference_precision_iht(Sx, Sy, η, 1)
 @printf("\niterative hard thresholding with s = 1: Δ̂[2, 1] = %.3f after %d iterations\n",
   iΔ[2, 1], length(fvals) - 1)
 
@@ -66,6 +66,6 @@ iΔ, fvals = differencePrecisionIHT(Sx, Sy, η, 1)
 Zx, Zy = (covselpath(Matrix(S), [0.1])[1] for S in (Sx, Sy))
 @printf("\nnonzero entries in the lower triangle of the difference of two graphical lasso estimates: %d\n",
   count(x -> abs(x) > 1e-4, tril(Zx - Zy)))
-Fx, Fy = fusedGraphicalLasso(Matrix(Sx), n, Matrix(Sy), n, 0.05, 0.05)
+Fx, Fy = fused_graphical_lasso(Matrix(Sx), n, Matrix(Sy), n, 0.05, 0.05)
 @printf("nonzero entries in the lower triangle of Ω̂x - Ω̂y from the fused graphical lasso: %d\n",
   count(x -> abs(x) > 1e-4, tril(Fx - Fy)))

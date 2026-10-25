@@ -7,8 +7,8 @@
 ####################################
 
 """
-    diffLoss(Σx, Δ, Σy, p)
-    diffLoss(Σx, Δ, U, Σy, p)
+    diff_loss(Σx, Δ, Σy, p)
+    diff_loss(Σx, Δ, U, Σy, p)
 
 Residual of the estimating equation of direct difference estimation,
 
@@ -22,19 +22,19 @@ residual of `Δ + UU'`. `Σx` and `Σy` are `Symmetric` covariance matrices and
 With the population covariances the residual is zero at `Δ = Ωx - Ωy`. With
 the sample covariances of held-out data it measures how well an estimate fits
 new data, so it serves as a validation loss for choosing the penalty of
-[`differencePrecisionActiveShooting`](@ref).
+[`difference_precision_active_shooting`](@ref).
 """
-diffLoss(Σx::Symmetric{T}, Δ::AbstractMatrix{T}, Σy::Symmetric{T}, p::Real) where {T<:AbstractFloat} =
-  _diffLoss(Σx * _dense(Δ) * Σy - Σy + Σx, p)
+diff_loss(Σx::Symmetric{T}, Δ::AbstractMatrix{T}, Σy::Symmetric{T}, p::Real) where {T<:AbstractFloat} =
+  _diff_loss(Σx * _dense(Δ) * Σy - Σy + Σx, p)
 
-diffLoss(Σx::Symmetric{T}, Δ::AbstractMatrix{T}, U::StridedMatrix{T}, Σy::Symmetric{T}, p::Real) where {T<:AbstractFloat} =
-  _diffLoss(Σx * (_dense(Δ) + U * U') * Σy - Σy + Σx, p)
+diff_loss(Σx::Symmetric{T}, Δ::AbstractMatrix{T}, U::StridedMatrix{T}, Σy::Symmetric{T}, p::Real) where {T<:AbstractFloat} =
+  _diff_loss(Σx * (_dense(Δ) + U * U') * Σy - Σy + Σx, p)
 
 # products with a dense matrix go to BLAS
 _dense(Δ::SymmetricSparseIterate) = Matrix(Δ)
 _dense(Δ::AbstractMatrix) = Δ
 
-function _diffLoss(R::AbstractMatrix, p::Real)
+function _diff_loss(R::AbstractMatrix, p::Real)
   if p == 2
     return norm(R)
   elseif p == Inf
@@ -53,7 +53,7 @@ end
 #
 ####################################
 """
-    directDifferenceLoss(Σx::Symmetric, Σy::Symmetric)
+    direct_difference_loss(Σx::Symmetric, Σy::Symmetric)
 
 The direct difference loss `tr(Σx⋅Δ⋅Σy⋅Δ)/2 - tr(Δ⋅(Σy - Σx))` of a symmetric
 `Δ`, as ProximalBase's `KronQuadratic(Σx, Σy, Σx - Σy)`. Its minimizer with
@@ -62,7 +62,7 @@ matrices (Zhao, Cai and Li, 2014). ProximalSolvers' coordinate descent minimizes
 it, plus a penalty, over a `SymmetricSparseIterate`, whose coordinates are the
 entries of the lower triangle.
 """
-directDifferenceLoss(Σx::Symmetric, Σy::Symmetric) = KronQuadratic(Σx, Σy, Σx - Σy)
+direct_difference_loss(Σx::Symmetric, Σy::Symmetric) = KronQuadratic(Σx, Σy, Σx - Σy)
 
 
 #####################################################
@@ -72,8 +72,8 @@ directDifferenceLoss(Σx::Symmetric, Σy::Symmetric) = KronQuadratic(Σx, Σy, �
 #####################################################
 
 """
-    differencePrecisionActiveShooting(Σx, Σy, g, method=CDSolver())
-    differencePrecisionActiveShooting!(x, Σx, Σy, g, method=CDSolver())
+    difference_precision_active_shooting(Σx, Σy, g, method=CDSolver())
+    difference_precision_active_shooting!(x, Σx, Σy, g, method=CDSolver())
 
 Direct estimation of the difference of precision matrices `Δ = Ωx - Ωy`
 (Zhao, Cai and Li, 2014) by active shooting coordinate descent:
@@ -87,26 +87,26 @@ and `Δ[c, r]`. `method` is ProximalSolvers' `CDSolver`. The in-place version wa
 starts from the `SymmetricSparseIterate` `x`. Returns the
 `SymmetricSparseIterate` estimate.
 """
-function differencePrecisionActiveShooting!(
+function difference_precision_active_shooting!(
   x::SymmetricSparseIterate,
   Σx::Symmetric,
   Σy::Symmetric,
   g::AbstractFunction,
   method::CDSolver=CDSolver())
 
-  solve!(x, directDifferenceLoss(Σx, Σy), g, method)
+  solve!(x, direct_difference_loss(Σx, Σy), g, method)
   x
 end
 
-differencePrecisionActiveShooting(
+difference_precision_active_shooting(
   Σx::Symmetric,
   Σy::Symmetric,
   g::AbstractFunction,
   method::CDSolver=CDSolver()) =
-  differencePrecisionActiveShooting!(SymmetricSparseIterate(float(eltype(Σx)), size(Σx, 1)), Σx, Σy, g, method)
+  difference_precision_active_shooting!(SymmetricSparseIterate(float(eltype(Σx)), size(Σx, 1)), Σx, Σy, g, method)
 
 """
-    differencePrecisionRefit(Σx, Σy, S)
+    difference_precision_refit(Σx, Σy, S)
 
 Minimize the direct difference loss `tr(Σx⋅Δ⋅Σy⋅Δ)/2 - tr(Δ⋅(Σy - Σx))` over
 symmetric `Δ` supported on `S`, a collection of linear or Cartesian indices into
@@ -114,11 +114,11 @@ a `p × p` matrix (an entry and its transpose are the same coordinate). The
 minimizer solves the linear system of the Hessian on the support; when it is
 singular, a solution of the rank-deficient system.
 """
-function differencePrecisionRefit(Σx::Symmetric, Σy::Symmetric, S)
+function difference_precision_refit(Σx::Symmetric, Σy::Symmetric, S)
   p = size(Σx, 1)
   entries = CartesianIndices((p, p))
   support = unique!(sort!([(rc = Tuple(entries[i]); tril_index(p, max(rc...), min(rc...))) for i in S]))
-  refit!(SymmetricSparseIterate(float(eltype(Σx)), p), directDifferenceLoss(Σx, Σy); support)
+  refit!(SymmetricSparseIterate(float(eltype(Σx)), p), direct_difference_loss(Σx, Σy); support)
 end
 
 
@@ -132,7 +132,7 @@ end
 
 # gradient (A + A')/2 + Σx - Σy of the loss with respect to Θ; the IHT solvers
 # pass Σx and Σy as dense matrices, which are faster to index than a Symmetric
-function diffPrecision_grad_delta!(
+function diff_precision_grad_delta!(
   grad_out::StridedMatrix{T},
   A::StridedMatrix{T},
   Σx::AbstractMatrix{T}, Σy::AbstractMatrix{T}) where {T<:AbstractFloat}
@@ -153,14 +153,14 @@ end
 
 
 # gradient with respect to U, where Θ = Δ + UU'
-function differencePrecisionIHT_grad_u!(grad_U, grad_Δ, A, Σx, Σy, U)
-  diffPrecision_grad_delta!(grad_Δ, A, Σx, Σy)
+function difference_precision_iht_grad_u!(grad_U, grad_Δ, A, Σx, Σy, U)
+  diff_precision_grad_delta!(grad_Δ, A, Σx, Σy)
   rmul!(grad_Δ, 2)
   mul!(grad_U, grad_Δ, U)
 end
 
 # Δ ← Δ - η⋅G on the lower triangle
-function _gradientStep!(Δ::SymmetricSparseIterate{T}, η, G::StridedMatrix{T}) where {T<:AbstractFloat}
+function _gradient_step!(Δ::SymmetricSparseIterate{T}, η, G::StridedMatrix{T}) where {T<:AbstractFloat}
   p = size(G, 1)
   for c=1:p, r=c:p
     Δ[r, c] = Δ[r, c] - T(η) * G[r, c]
@@ -185,7 +185,7 @@ function _sandwich!(A::StridedMatrix{T}, tmp::StridedMatrix{T}, Σx::Symmetric{T
 end
 
 # Θ = Δ + L as a dense matrix and A = Σx⋅Θ⋅Σy
-function _latentSandwich!(A, tmp, Θ, Σx, Δ, L, Σy)
+function _latent_sandwich!(A, tmp, Θ, Σx, Δ, L, Σy)
   _densify!(Θ, Δ)
   Θ .+= L
   _sandwich!(A, tmp, Σx, Θ, Σy)
@@ -202,19 +202,21 @@ end
 
 
 """
-    differencePrecisionIHT(Σx, Σy, η, s; epsTol=1e-5, maxIter=1000)
+    difference_precision_iht(Σx, Σy, η, s; eps_tol=1e-5, maxiter=1000)
 
 Direct estimation of the difference of precision matrices `Δ = Ωx - Ωy` with
 at most `s` nonzero entries in its lower triangle, by projected gradient
 descent on `tr(Σx⋅Δ⋅Σy⋅Δ)/2 - tr(Δ⋅(Σy - Σx))` with step size `η` and hard
-thresholding. Stops when the objective changes by at most `epsTol`.
+thresholding. Stops when the objective changes by at most `eps_tol`.
 Returns `(Δ, fvals)` with `Δ` a `SymmetricSparseIterate` and `fvals` the
 objective values.
 """
-function differencePrecisionIHT(
+function difference_precision_iht(
   Σx::Symmetric{T}, Σy::Symmetric{T},
   η::Real, s::Int;
-  epsTol=1e-5, maxIter=1000) where {T<:AbstractFloat}
+  eps_tol=nothing, maxiter=nothing, epsTol=nothing, maxIter=nothing) where {T<:AbstractFloat}
+  eps_tol = _naming_keyword(eps_tol, epsTol, 1e-5, :eps_tol, :epsTol)
+  maxiter = _naming_keyword(maxiter, maxIter, 1000, :maxiter, :maxIter)
 
   size(Σx) == size(Σy) || throw(DimensionMismatch())
 
@@ -232,17 +234,17 @@ function differencePrecisionIHT(
   #
   fv = _objective(A, X, Y, D)
   push!(fvals, fv)
-  for iter=1:maxIter
+  for iter=1:maxiter
     # update Δ
-    diffPrecision_grad_delta!(gD, A, X, Y)
-    _gradientStep!(Δ, η, gD)
-    HardThreshold!(Δ, s)
+    diff_precision_grad_delta!(gD, A, X, Y)
+    _gradient_step!(Δ, η, gD)
+    hard_threshold!(Δ, s)
     _sandwich!(A, tmp, Σx, _densify!(D, Δ), Σy)
 
     # check for convergence
     fv_new = _objective(A, X, Y, D)
     push!(fvals, fv_new)
-    if abs(fv_new - fv) <= epsTol
+    if abs(fv_new - fv) <= eps_tol
       break
     end
     fv = fv_new
@@ -263,8 +265,8 @@ end
 
 
 """
-    differenceLatentPrecisionIHT(Σx, Σy, ηΔ, ηU, s, r; options=IHTOptions(), callback=nothing)
-    differenceLatentPrecisionIHT!(Δ, L, U, gD, gU, Σx, Σy, ηΔ, ηU, s, r; options=IHTOptions(), callback=nothing)
+    difference_latent_precision_iht(Σx, Σy, ηΔ, ηU, s, r; options=IHTOptions(), callback=nothing)
+    difference_latent_precision_iht!(Δ, L, U, gD, gU, Σx, Σy, ηΔ, ηU, s, r; options=IHTOptions(), callback=nothing)
 
 Estimate the difference of precision matrices as `Δ + L`, with `Δ` sparse
 (at most `s` nonzero entries in its lower triangle) and `L = UU'` of rank `r`,
@@ -274,16 +276,16 @@ version starts from `Δ` and `U` and uses `gD` (`p × p`) and `gU` (`p × r`) as
 gradient storage. `callback(Δ, L)`, if given, is called after every iteration.
 
 Returns `(Δ, L, U, fvals, iter)`: the estimates, the objective values checked
-every `options.checkEvery` iterations, and the number of iterations.
+every `options.check_every` iterations, and the number of iterations.
 """
-function differenceLatentPrecisionIHT!(
+function difference_latent_precision_iht!(
   Δ::SymmetricSparseIterate{T}, L::StridedMatrix{T},                 # these are pre-allocated
   U::StridedMatrix{T}, gD::StridedMatrix{T}, gU::StridedMatrix{T},   # these are pre-allocated
   Σx::Symmetric{T}, Σy::Symmetric{T},
   ηΔ, ηU, s::Int, r::Int;
   options::IHTOptions=IHTOptions(), callback=nothing) where {T<:AbstractFloat}
 
-  epsTol, maxIter, checkEvery = options.epsTol, options.maxIter, options.checkEvery
+  eps_tol, maxiter, check_every = options.eps_tol, options.maxiter, options.check_every
 
   p = size(Σx, 1)
   X, Y = Matrix(Σx), Matrix(Σy)
@@ -291,7 +293,7 @@ function differenceLatentPrecisionIHT!(
   Θ = zeros(T, p, p)      # Δ + L as a dense matrix
   tmp = zeros(T, p, p)
   mul!(L, U, U')
-  _latentSandwich!(A, tmp, Θ, Σx, Δ, L, Σy)
+  _latent_sandwich!(A, tmp, Θ, Σx, Δ, L, Σy)
 
   fvals = T[]
   # gradient descent
@@ -299,36 +301,36 @@ function differenceLatentPrecisionIHT!(
   fv = _objective(A, X, Y, Θ)
   push!(fvals, fv)
   iter = 0
-  while iter < maxIter
+  while iter < maxiter
     iter += 1
     # update Δ
-    diffPrecision_grad_delta!(gD, A, X, Y)
+    diff_precision_grad_delta!(gD, A, X, Y)
     max_gD = maximum(abs, gD)
-    _gradientStep!(Δ, ηΔ, gD)
-    HardThreshold!(Δ, s)
+    _gradient_step!(Δ, ηΔ, gD)
+    hard_threshold!(Δ, s)
 
     # update A
-    _latentSandwich!(A, tmp, Θ, Σx, Δ, L, Σy)
+    _latent_sandwich!(A, tmp, Θ, Σx, Δ, L, Σy)
 
     # update U and L
-    differencePrecisionIHT_grad_u!(gU, gD, A, X, Y, U)
+    difference_precision_iht_grad_u!(gU, gD, A, X, Y, U)
     @. U -= ηU * gU
     mul!(L, U, U')
     max_gU = maximum(abs, gU)
 
     # update A
-    _latentSandwich!(A, tmp, Θ, Σx, Δ, L, Σy)
+    _latent_sandwich!(A, tmp, Θ, Σx, Δ, L, Σy)
 
     if callback !== nothing
       callback(Δ, L)
     end
 
-    done = max(max_gD, max_gU) < epsTol
+    done = max(max_gD, max_gU) < eps_tol
     # check for convergence
-    if mod(iter, checkEvery) == 0
+    if mod(iter, check_every) == 0
       fv_new = _objective(A, X, Y, Θ)
       push!(fvals, fv_new)
-      done = abs(fv_new - fv) <= epsTol
+      done = abs(fv_new - fv) <= eps_tol
       fv = fv_new
     end
     done && break
@@ -341,7 +343,7 @@ end
 
 # initialize Δ by hard thresholding inv(Σx) - inv(Σy) and U from the top r
 # singular vectors of the remainder
-function differenceLatentPrecisionIHT_init(
+function difference_latent_precision_iht_init(
   Σx::Symmetric{T}, Σy::Symmetric{T},
   s::Int, r::Int) where {T<:AbstractFloat}
 
@@ -355,11 +357,11 @@ function differenceLatentPrecisionIHT_init(
   # initialize Δ, L, U
   #
   tmp = Matrix(inv(Σx) - inv(Σy))
-  HardThreshold!(Δ, tmp, s)
-  for colInd=1:p, rowInd=colInd:p
-    tmp[rowInd,colInd] = tmp[rowInd,colInd] - Δ[rowInd, colInd]
-    if rowInd != colInd
-      tmp[colInd,rowInd] = tmp[rowInd,colInd]
+  hard_threshold!(Δ, tmp, s)
+  for col_ind=1:p, row_ind=col_ind:p
+    tmp[row_ind,col_ind] = tmp[row_ind,col_ind] - Δ[row_ind, col_ind]
+    if row_ind != col_ind
+      tmp[col_ind,row_ind] = tmp[row_ind,col_ind]
     end
   end
   F = svd(tmp)
@@ -369,13 +371,13 @@ function differenceLatentPrecisionIHT_init(
   (Δ, L, U, gD, gU)
 end
 
-function differenceLatentPrecisionIHT(
+function difference_latent_precision_iht(
   Σx::Symmetric{T}, Σy::Symmetric{T},
   ηΔ, ηU, s::Int, r::Int;
   options::IHTOptions=IHTOptions(), callback=nothing) where {T<:AbstractFloat}
 
-  Δ, L, U, gD, gU = differenceLatentPrecisionIHT_init(Σx, Σy, s, r)
-  differenceLatentPrecisionIHT!(Δ, L, U, gD, gU, Σx, Σy, ηΔ, ηU, s, r; options=options, callback=callback)
+  Δ, L, U, gD, gU = difference_latent_precision_iht_init(Σx, Σy, s, r)
+  difference_latent_precision_iht!(Δ, L, U, gD, gU, Σx, Σy, ηΔ, ηU, s, r; options=options, callback=callback)
 end
 
 

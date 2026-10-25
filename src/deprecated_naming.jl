@@ -1,0 +1,28 @@
+# Compatibility bindings preserve the generic function, including downstream methods.
+Base.@deprecate_binding fusedGraphicalLasso fused_graphical_lasso
+Base.@deprecate_binding fusedGraphicalLasso! fused_graphical_lasso!
+Base.@deprecate_binding fusedNeighborhoodSelection fused_neighborhood_selection
+Base.@deprecate_binding groupGraphicalLasso group_graphical_lasso
+Base.@deprecate_binding groupGraphicalLasso! group_graphical_lasso!
+Base.@deprecate_binding kernelCovariances kernel_covariances
+Base.@deprecate_binding tvCovSel tv_covsel
+Base.@deprecate_binding differencePrecisionActiveShooting difference_precision_active_shooting
+Base.@deprecate_binding differencePrecisionActiveShooting! difference_precision_active_shooting!
+Base.@deprecate_binding differencePrecisionRefit difference_precision_refit
+Base.@deprecate_binding directDifferenceLoss direct_difference_loss
+Base.@deprecate_binding diffLoss diff_loss
+Base.@deprecate_binding differencePrecisionIHT difference_precision_iht
+Base.@deprecate_binding differenceLatentPrecisionIHT difference_latent_precision_iht
+Base.@deprecate_binding differenceLatentPrecisionIHT! difference_latent_precision_iht!
+Base.@deprecate_binding differenceLatentPrecisionIHT_init difference_latent_precision_iht_init false
+Base.@deprecate_binding covselLatentIHT! covsel_latent_iht!
+Base.@deprecate_binding covselLatentIHT_grad_S! covsel_latent_iht_grad_s! false
+Base.@deprecate_binding covselLatentIHT_grad_U! covsel_latent_iht_grad_u! false
+Base.@deprecate_binding diffPrecision_grad_delta! diff_precision_grad_delta! false
+Base.@deprecate_binding differencePrecisionIHT_grad_u! difference_precision_iht_grad_u! false
+Base.@deprecate_binding HardThreshold! hard_threshold! false
+Base.@deprecate_binding covSel_objective covsel_objective false
+Base.@deprecate_binding getConfusionMatrix get_confusion_matrix false
+Base.@deprecate_binding generateData generate_data false
+Base.@deprecate_binding generateSparseSPD generate_sparse_spd false
+Base.@deprecate_binding genLatentModel gen_latent_model false

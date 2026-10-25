@@ -4,7 +4,7 @@
 #
 # Groups:
 #   "direct difference": the ℓ1 penalized direct difference estimator solved by
-#     differencePrecisionActiveShooting, directly and along a path of λ values
+#     difference_precision_active_shooting, directly and along a path of λ values
 #     from λmax (ProximalSolvers' continuation), and by the naive reference solver
 #     in test/reference.jl
 #     (the comparison of the removed example1.jl); iterative hard
@@ -13,7 +13,7 @@
 #   "CLIME": clime along a path of 20 penalties and at one penalty, aclime, and
 #     slassoinv (the comparison of the CLIME solvers is in clime/, the
 #     benchmark of slassoinv in slassoinv/)
-#   "generateData": drawing samples, from Ω and from its Cholesky factor
+#   "generate_data": drawing samples, from Ω and from its Cholesky factor
 
 using BenchmarkTools
 using CovarianceSelection, ProximalBase, ProximalSolvers
@@ -47,20 +47,20 @@ for p in DIMENSIONS
     g = SUITE["direct difference"]["p = $p, λ = $λ"] = BenchmarkGroup()
     g["Reference.differencePrecisionNaive"] =
       @benchmarkable Reference.differencePrecisionNaive($Sxd, $Syd, $λ, $ω)
-    g["differencePrecisionActiveShooting"] =
-      @benchmarkable differencePrecisionActiveShooting($Sx, $Sy, NormL1($λ))
+    g["difference_precision_active_shooting"] =
+      @benchmarkable difference_precision_active_shooting($Sx, $Sy, NormL1($λ))
     g["path of 50 λ from λmax"] =
-      @benchmarkable solve!(SymmetricSparseIterate($p), directDifferenceLoss($Sx, $Sy), NormL1($λ), CDSolver(); continuation=50)
+      @benchmarkable solve!(SymmetricSparseIterate($p), direct_difference_loss($Sx, $Sy), NormL1($λ), CDSolver(); continuation=50)
   end
   # at most 2p - 1 nonzero entries in the lower triangle, the size of the true
   # support; step sizes as in examples/latent_difference.jl
   s = 2p - 1
   η = 1 / (opnorm(Sx) * opnorm(Sy))
-  ηU = η / (4 * opnorm(CovarianceSelection.differenceLatentPrecisionIHT_init(Sx, Sy, s, 1)[2]))
+  ηU = η / (4 * opnorm(CovarianceSelection.difference_latent_precision_iht_init(Sx, Sy, s, 1)[2]))
   g = SUITE["direct difference"]["p = $p, IHT"] = BenchmarkGroup()
-  g["differencePrecisionIHT"] = @benchmarkable differencePrecisionIHT($Sx, $Sy, $η, $s)
-  g["differenceLatentPrecisionIHT, r = 1"] = @benchmarkable differenceLatentPrecisionIHT($Sx, $Sy, $η, $ηU, $s, 1;
-    options=IHTOptions(; epsTol=1e-8, maxIter=500))
+  g["difference_precision_iht"] = @benchmarkable difference_precision_iht($Sx, $Sy, $η, $s)
+  g["difference_latent_precision_iht, r = 1"] = @benchmarkable difference_latent_precision_iht($Sx, $Sy, $η, $ηU, $s, 1;
+    options=IHTOptions(; eps_tol=1e-8, maxiter=500))
 end
 
 SUITE["ADMM"] = BenchmarkGroup()
@@ -69,7 +69,7 @@ for p in DIMENSIONS
   g = SUITE["ADMM"]["p = $p"] = BenchmarkGroup()
   # each sample starts from zero iterates, since covsel! warm starts from them
   g["covsel!"] = @benchmarkable covsel!(X, Z, U, $Sy, 0.1) setup=(X = zeros($p, $p); Z = zeros($p, $p); U = zeros($p, $p)) evals=1
-  g["fusedGraphicalLasso"] = @benchmarkable fusedGraphicalLasso($Sx, 1000, $Sy, 1000, 0.05, 0.05)
+  g["fused_graphical_lasso"] = @benchmarkable fused_graphical_lasso($Sx, 1000, $Sy, 1000, 0.05, 0.05)
 end
 
 SUITE["CLIME"] = BenchmarkGroup()
@@ -85,11 +85,11 @@ for p in DIMENSIONS
   g["slassoinv"] = @benchmarkable slassoinv($(Matrix(Sy)), 1000; ntasks=1)
 end
 
-SUITE["generateData"] = BenchmarkGroup()
+SUITE["generate_data"] = BenchmarkGroup()
 for p in DIMENSIONS
   Ω = Matrix(SymTridiagonal(fill(1.0, p), fill(0.3, p - 1)))
   F = cholesky(Symmetric(Ω))
-  g = SUITE["generateData"]["p = $p, n = 1000"] = BenchmarkGroup()
-  g["from Ω"] = @benchmarkable CovarianceSelection.generateData($Ω, 1000)
-  g["from the Cholesky factor"] = @benchmarkable CovarianceSelection.generateData($F, 1000)
+  g = SUITE["generate_data"]["p = $p, n = 1000"] = BenchmarkGroup()
+  g["from Ω"] = @benchmarkable CovarianceSelection.generate_data($Ω, 1000)
+  g["from the Cholesky factor"] = @benchmarkable CovarianceSelection.generate_data($F, 1000)
 end

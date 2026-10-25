@@ -1,6 +1,6 @@
 # A difference of two precision matrices that is sparse plus low rank, as when
 # one group has a latent factor that the other lacks. It is estimated by
-# iterative hard thresholding (differenceLatentPrecisionIHT) and compared with
+# iterative hard thresholding (difference_latent_precision_iht) and compared with
 # the sparse direct difference estimator.
 #
 # Run from the repository root (see examples/README.md for the setup):
@@ -24,17 +24,17 @@ end
 S = zeros(p, p)
 S[4, 3] = S[3, 4] = 0.3         # edge (3, 4) is absent in group y
 S[20, 10] = S[10, 20] = -0.3    # edge (10, 20) is present only in group y
-L = Matrix(CovarianceSelection.genLatentModel(Ωx, 1, 0.2)[2])   # random, rank one, ‖L‖ = 0.2 λmax(Ωx)
+L = Matrix(CovarianceSelection.gen_latent_model(Ωx, 1, 0.2)[2])   # random, rank one, ‖L‖ = 0.2 λmax(Ωx)
 Ωy = Ωx - S - L
 @assert isposdef(Symmetric(Ωy))
 
 n = 5000
-Sx = Symmetric(cov(CovarianceSelection.generateData(Ωx, n)))
-Sy = Symmetric(cov(CovarianceSelection.generateData(Ωy, n)))
+Sx = Symmetric(cov(CovarianceSelection.generate_data(Ωx, n)))
+Sy = Symmetric(cov(CovarianceSelection.generate_data(Ωy, n)))
 @printf("p = %d, n = %d per group, ‖S‖_F = %.3f, ‖L‖_F = %.3f, largest |L[i,j]| = %.3f\n\n",
   p, n, norm(S), norm(L), maximum(abs, L))
 
-# differenceLatentPrecisionIHT minimizes the direct difference loss
+# difference_latent_precision_iht minimizes the direct difference loss
 #
 #   ℓ(Θ) = tr(Sx Θ Sy Θ) / 2 - tr(Θ (Sy - Sx)),   Θ = Δ + UU',
 #
@@ -48,7 +48,7 @@ s, r = 2, 1
 
 # The starting values hard threshold inv(Sx) - inv(Sy) and take the top r
 # singular vectors of what is left; the in-place solver continues from them.
-Δ, L̂, U, gD, gU = CovarianceSelection.differenceLatentPrecisionIHT_init(Sx, Sy, s, r)
+Δ, L̂, U, gD, gU = CovarianceSelection.difference_latent_precision_iht_init(Sx, Sy, s, r)
 ηU = ηΔ / (4 * opnorm(L̂))
 
 # The callback is called after every iteration with the current Δ and L; here
@@ -60,9 +60,9 @@ function recordStep(Δ, L)
   push!(steps, norm(Θ - Θprev[]))
   Θprev[] = Θ
 end
-Δ, L̂, U, fvals, iter = differenceLatentPrecisionIHT!(Δ, L̂, U, gD, gU, Sx, Sy, ηΔ, ηU, s, r;
-  options=IHTOptions(; epsTol=1e-10, maxIter=10_000, checkEvery=10), callback=recordStep)
-# (differenceLatentPrecisionIHT(Sx, Sy, ηΔ, ηU, s, r) does both steps in one call)
+Δ, L̂, U, fvals, iter = difference_latent_precision_iht!(Δ, L̂, U, gD, gU, Sx, Sy, ηΔ, ηU, s, r;
+  options=IHTOptions(; eps_tol=1e-10, maxiter=10_000, check_every=10), callback=recordStep)
+# (difference_latent_precision_iht(Sx, Sy, ηΔ, ηU, s, r) does both steps in one call)
 
 support = sort([(r, c) for c=1:p for r=c:p if Δ[r, c] != 0])
 u, û = eigvecs(Symmetric(L))[:, end], U[:, 1] / norm(U)
@@ -77,6 +77,6 @@ println(lineplot(1:length(steps), log10.(steps); xlabel="iteration", ylabel="log
 # The sparse estimator has no low rank part, so it either leaves L out or
 # spreads it over many small entries.
 λ = 2 * sqrt(log(p) / n)
-Δsparse = differencePrecisionActiveShooting(Sx, Sy, NormL1(λ))
+Δsparse = difference_precision_active_shooting(Sx, Sy, NormL1(λ))
 @printf("\nsparse only (λ = %.3f): %d nonzero entries in the lower triangle, ‖Δ̂ - (S + L)‖_F = %.3f\n",
   λ, nnz(Δsparse), norm(Matrix(Δsparse) - S - L))

@@ -7,11 +7,11 @@ estimators, and prints what it found; plots are drawn in the terminal with
 | script | what it shows |
 |---|---|
 | [`graphical_lasso.jl`](graphical_lasso.jl) | The graphical lasso with `covsel!` and `covselpath`, and edge recovery (TPR, FPR, precision) along a path of penalties. |
-| [`difference_estimation.jl`](difference_estimation.jl) | Direct estimation of `Ωx - Ωy` with `differencePrecisionActiveShooting`, refitting with `differencePrecisionRefit` (checked against the closed form), `differencePrecisionIHT`, and the indirect approaches. |
-| [`fused_graphical_lasso.jl`](fused_graphical_lasso.jl) | `fusedGraphicalLasso` for two and three groups, with all pairs fused, and the effect of the fusion penalty λ2; `fusedNeighborhoodSelection` for a single node. |
+| [`difference_estimation.jl`](difference_estimation.jl) | Direct estimation of `Ωx - Ωy` with `difference_precision_active_shooting`, refitting with `difference_precision_refit` (checked against the closed form), `difference_precision_iht`, and the indirect approaches. |
+| [`fused_graphical_lasso.jl`](fused_graphical_lasso.jl) | `fused_graphical_lasso` for two and three groups, with all pairs fused, and the effect of the fusion penalty λ2; `fused_neighborhood_selection` for a single node. |
 | [`danaher2014.jl`](danaher2014.jl) | Recreate the three-group simulation design of Danaher, Wang and Witten (2014), Figure 2: FGL versus separate fits, recovery/error/KL curves, Monte Carlo output and an optional R/JGL check. [Protocol and commands](danaher2014/README.md). |
-| [`time_varying_graphs.jl`](time_varying_graphs.jl) | Graphs that change over time with `tvCovSel`: kernel-weighted covariances from `kernelCovariances`, and the group penalty that makes the graphs at several time points share their edges, against the graphical lasso of each time point alone. |
-| [`latent_difference.jl`](latent_difference.jl) | A sparse plus low rank difference with `differenceLatentPrecisionIHT!`: choosing the step sizes, monitoring convergence with a callback, and the comparison with the sparse estimator. |
+| [`time_varying_graphs.jl`](time_varying_graphs.jl) | Graphs that change over time with `tv_covsel`: kernel-weighted covariances from `kernel_covariances`, and the group penalty that makes the graphs at several time points share their edges, against the graphical lasso of each time point alone. |
+| [`latent_difference.jl`](latent_difference.jl) | A sparse plus low rank difference with `difference_latent_precision_iht!`: choosing the step sizes, monitoring convergence with a callback, and the comparison with the sparse estimator. |
 | [`clime.jl`](clime.jl) | CLIME and ACLIME with `clime` and `aclime`: a path of penalties, cross validation with `climecv` and `aclimecv`, edge recovery, and the solvers. |
 | [`inference.jl`](inference.jl) | A simulation of the test for one entry of `Ωx - Ωy` when p > n (the Gaussian case of ROCKET): size, coverage, and the null distribution against N(0, 1). |
 
@@ -36,10 +36,10 @@ repository, so add it explicitly:
 julia --project=examples -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
 ```
 
-Until ProximalBase 0.5.3, ProximalSolvers 0.1.1 and CoordinateDescent 0.8 are
+Until ProximalBase 0.5.3, ProximalSolvers 0.1.1 and HighDimensionalModels 0.8 are
 registered, `[sources]` also takes them from their masters on GitHub. On Julia
 1.10 they must be added in the same call:
-`Pkg.add([PackageSpec(url="https://github.com/mlakolar/ProximalBase.jl", rev="master"), PackageSpec(url="https://github.com/mlakolar/ProximalSolvers.jl", rev="master"), PackageSpec(url="https://github.com/mlakolar/CoordinateDescent.jl", rev="master")])`.
+`Pkg.add([PackageSpec(url="https://github.com/mlakolar/ProximalBase.jl", rev="master"), PackageSpec(url="https://github.com/mlakolar/ProximalSolvers.jl", rev="master"), PackageSpec(url="https://github.com/mlakolar/HighDimensionalModels.jl", rev="master")])`.
 
 ## Running
 
@@ -55,4 +55,4 @@ Each script takes a few seconds. With the environment variable
 default (p = 500, n = 400, 500 replications); CI runs all the examples this
 way.
 
-The inference example uses CoordinateDescent 0.8's `sqrt_lasso`.
+The inference example uses HighDimensionalModels 0.8's `sqrt_lasso`.

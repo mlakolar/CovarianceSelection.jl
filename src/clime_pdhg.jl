@@ -47,7 +47,7 @@ Base.@kwdef struct PDHG <: CLIMESolver
 end
 
 # out[:, 1:m] = S * X[:, 1:m], using the nonzero entries of X when it is sparse
-function _mulS!(out::Matrix{T}, S::Matrix{T}, X::Matrix{T}, m::Int, idx::Vector{Vector{Int}},
+function _mul_s!(out::Matrix{T}, S::Matrix{T}, X::Matrix{T}, m::Int, idx::Vector{Vector{Int}},
                 vals::Vector{Vector{T}}, threaded::Bool) where {T}
   p = size(S, 1)
   nz = 0
@@ -349,7 +349,7 @@ function _pdhg_step!(st::_PDHGState{T}, S::Matrix{T}, c::Vector{T}, iter::Int, m
       Xn[j, k] = copysign(max(abs(v) - τ, zero(T)), v)
     end
   end
-  _mulS!(st.SXn, S, Xn, m, st.idx, st.vals, threaded)
+  _mul_s!(st.SXn, S, Xn, m, st.idx, st.vals, threaded)
   SXn = st.SXn
   _foreach_maybe_threaded(m, threaded) do k
     σ = st.η[k] * st.ω[k]
@@ -359,7 +359,7 @@ function _pdhg_step!(st::_PDHGState{T}, S::Matrix{T}, c::Vector{T}, iter::Int, m
       Yn[j, k] = σ * copysign(max(abs(w) - μ * c[j], zero(T)), w)
     end
   end
-  _mulS!(st.SYn, S, Yn, m, st.idx, st.vals, threaded)
+  _mul_s!(st.SYn, S, Yn, m, st.idx, st.vals, threaded)
   SYn = st.SYn
   _foreach_maybe_threaded(m, threaded) do k
     dx = dy = inner = zero(T)

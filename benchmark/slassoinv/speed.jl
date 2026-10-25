@@ -8,13 +8,13 @@
 # instead. Writes OUTDIR/julia_MODEL_pP_nN_MODE.csv. Without `threads`, also
 # writes X.bin and the estimate est.bin for the
 # R package scalreg (bench_r.R), when p ≤ RPMAX (default 1000), and times the
-# scaled lasso of CoordinateDescent column by column, when p ≤ CDPMAX (default
+# scaled lasso of HighDimensionalModels column by column, when p ≤ CDPMAX (default
 # 1000). One line per method: model,p,n,method,threads,seconds,nnz,maxdiff
 # where maxdiff is the largest difference to slassoinv, relative to its largest
 # entry.
 
 include(joinpath(@__DIR__, "common.jl"))
-using CoordinateDescent
+using HighDimensionalModels
 
 const RPMAX = parse(Int, get(ENV, "RPMAX", "1000"))
 const CDPMAX = parse(Int, get(ENV, "CDPMAX", "1000"))
@@ -31,16 +31,16 @@ function best_time(f; runs=5, budget=2.0)
   v, best
 end
 
-# column j of the precision matrix from CoordinateDescent's scaled lasso of x_j on
+# column j of the precision matrix from HighDimensionalModels's scaled lasso of x_j on
 # the other columns, with the penalty weights √Sₖₖ of slassoinv
 function cd_slassoinv(X, λ₀)
   n, p = size(X)
   w = vec(sqrt.(sum(abs2, X; dims=1) / n))
-  opts = IterLassoOptions(maxIter=100, optTol=1e-6, optionsCD=CDOptions(optTol=1e-7))
+  opts = IterLassoOptions(max_iter=100, opt_tol=1e-6, options_cd=CDOptions(opt_tol=1e-7))
   cols = Vector{SparseVector{Float64,Int}}(undef, p)
   for j in 1:p
     others = [1:j-1; j+1:p]
-    sol = scaledLasso(X[:, others], X[:, j], λ₀, w[others], opts)
+    sol = scaled_lasso(X[:, others], X[:, j], λ₀, w[others], opts)
     c = zeros(p)
     c[others] = -Vector(sol.x) ./ sol.σ^2
     c[j] = 1 / sol.σ^2
@@ -80,7 +80,7 @@ function main(model, p, n, outdir, mode)
     if p <= CDPMAX
       cd_slassoinv(X[1:20, 1:10], 0.3)                # compile
       Ωc, t = best_time(() -> cd_slassoinv(X, λ₀); runs=1)
-      line("CoordinateDescent", 1, t, nnz(Ωc), maximum(abs, Ωc - Ω1) / maximum(abs, Ω1))
+      line("HighDimensionalModels", 1, t, nnz(Ωc), maximum(abs, Ωc - Ω1) / maximum(abs, Ω1))
     end
   end
   close(io)

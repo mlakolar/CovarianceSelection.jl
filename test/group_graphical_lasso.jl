@@ -2,7 +2,7 @@ module GroupGraphicalLassoTest
 
 using Test, Random, LinearAlgebra, Statistics
 import CovarianceSelection
-using CovarianceSelection: ADMMOptions, ADMMInfo, groupGraphicalLasso, groupGraphicalLasso!, kernelCovariances, tvCovSel
+using CovarianceSelection: ADMMOptions, ADMMInfo, group_graphical_lasso, group_graphical_lasso!, kernel_covariances, tv_covsel
 using ProximalBase: FiberSum, NormL2, SparseGroupNormL2, prox
 
 Random.seed!(7)
@@ -38,7 +38,7 @@ end
   # one matrix is the graphical lasso
   S1 = covariances(p, 1)
   for pd in (true, false)
-    Z = groupGraphicalLasso(S1, 0.1; penalize_diag = pd, options = tight)
+    Z = group_graphical_lasso(S1, 0.1; penalize_diag = pd, options = tight)
     Zc = zeros(p, p)
     CovarianceSelection.covsel!(zeros(p, p), Zc, zeros(p, p), S1[:, :, 1], 0.1; penalize_diag = pd, options = tight)
     @test Z[:, :, 1] ≈ Zc atol = 1e-6
@@ -50,7 +50,7 @@ end
   w = [0.2, 0.3, 0.5]
   λ = 0.05
   for pd in (true, false)
-    Z = groupGraphicalLasso(S, λ; weights = w, penalize_diag = pd, options = tight)
+    Z = group_graphical_lasso(S, λ; weights = w, penalize_diag = pd, options = tight)
     @test gglResidual(Z, S, λ, w; penalize_diag = pd) < 1e-6
     for k in 1:K
       @test issymmetric(Z[:, :, k]) && isposdef(Z[:, :, k])
@@ -60,65 +60,65 @@ end
     @test 0 < count(support) < p^2
   end
   # the same from a vector of matrices
-  Zv = groupGraphicalLasso([S[:, :, k] for k in 1:K], λ; weights = w, options = tight)
-  @test Zv ≈ groupGraphicalLasso(S, λ; weights = w, options = tight) atol = 1e-10
+  Zv = group_graphical_lasso([S[:, :, k] for k in 1:K], λ; weights = w, options = tight)
+  @test Zv ≈ group_graphical_lasso(S, λ; weights = w, options = tight) atol = 1e-10
   # equal weights by default
-  @test gglResidual(groupGraphicalLasso(S, λ; options = tight), S, λ, fill(1 / K, K)) < 1e-6
+  @test gglResidual(group_graphical_lasso(S, λ; options = tight), S, λ, fill(1 / K, K)) < 1e-6
 
   # the ℓ1 term of Danaher, Wang and Witten: with one matrix, the graphical lasso
   # with the penalty λ + λ1; with K, the optimality conditions of the sparse
   # group penalty, and entries that are zero in some of the matrices only
-  Z = groupGraphicalLasso(S1, 0.04; λ1 = 0.06, options = tight)
+  Z = group_graphical_lasso(S1, 0.04; λ1 = 0.06, options = tight)
   Zc = zeros(p, p)
   CovarianceSelection.covsel!(zeros(p, p), Zc, zeros(p, p), S1[:, :, 1], 0.1; options = tight)
   @test Z[:, :, 1] ≈ Zc atol = 1e-6
   for pd in (true, false)
-    Z = groupGraphicalLasso(S, λ; λ1 = 0.03, weights = w, penalize_diag = pd, options = tight)
+    Z = group_graphical_lasso(S, λ; λ1 = 0.03, weights = w, penalize_diag = pd, options = tight)
     @test gglResidual(Z, S, λ, w; λ1 = 0.03, penalize_diag = pd) < 1e-6
     @test all(issymmetric(Z[:, :, k]) && isposdef(Z[:, :, k]) for k in 1:K)
   end
-  Z = groupGraphicalLasso(S, 0.01; λ1 = 0.05, weights = w, options = tight)
+  Z = group_graphical_lasso(S, 0.01; λ1 = 0.05, weights = w, options = tight)
   zeros_in = [count(iszero, Z[i, j, :]) for i in 1:p, j in 1:p]
   @test any(0 .< zeros_in .< K)
-  @test groupGraphicalLasso(S, λ; λ1 = 0.0, options = tight) == groupGraphicalLasso(S, λ; options = tight)
-  @test_throws ArgumentError groupGraphicalLasso(S, λ; λ1 = -1.0)
+  @test group_graphical_lasso(S, λ; λ1 = 0.0, options = tight) == group_graphical_lasso(S, λ; options = tight)
+  @test_throws ArgumentError group_graphical_lasso(S, λ; λ1 = -1.0)
 
   # a large penalty leaves the diagonal only
-  Z = groupGraphicalLasso(S, 10.0; options = tight)
+  Z = group_graphical_lasso(S, 10.0; options = tight)
   @test all(Z[i, j, k] == 0 for i in 1:p, j in 1:p, k in 1:K if i != j)
 
   # info, and invariance to the scale of the data
-  Z1 = groupGraphicalLasso(S, λ; weights = w)
+  Z1 = group_graphical_lasso(S, λ; weights = w)
   its = Int[]
   for c in (1e-3, 1.0, 1e3)
     info = ADMMInfo()
-    Zc = groupGraphicalLasso(c * S, c * λ; weights = w, info)
+    Zc = group_graphical_lasso(c * S, c * λ; weights = w, info)
     @test info.converged
     push!(its, info.iterations)
     @test c * Zc ≈ Z1 rtol = 1e-6
   end
   @test its[1] == its[2] == its[3]
-  @test_logs (:warn, r"groupGraphicalLasso! stopped after 2 iterations") groupGraphicalLasso(S, λ;
+  @test_logs (:warn, r"group_graphical_lasso! stopped after 2 iterations") group_graphical_lasso(S, λ;
       options = ADMMOptions(; maxiter = 2))
 
   # a warm start from the iterates and the final ρ of a converged run stops at once
   Z, U = zeros(p, p, K), zeros(p, p, K)
   info = ADMMInfo()
-  groupGraphicalLasso!(Z, U, S, λ; weights = w, info)
+  group_graphical_lasso!(Z, U, S, λ; weights = w, info)
   info2 = ADMMInfo()
-  groupGraphicalLasso!(Z, U, S, λ; weights = w, options = ADMMOptions(; ρ = info.ρ), info = info2)
+  group_graphical_lasso!(Z, U, S, λ; weights = w, options = ADMMOptions(; ρ = info.ρ), info = info2)
   @test info2.converged && info2.iterations <= 2
 
   # argument checks
-  @test_throws DimensionMismatch groupGraphicalLasso(S, λ; weights = [0.5, 0.5])
-  @test_throws ArgumentError groupGraphicalLasso(S, λ; weights = [0.5, 0.5, 0.0])
-  @test_throws ArgumentError groupGraphicalLasso(S, -1.0)
-  @test_throws DimensionMismatch groupGraphicalLasso!(zeros(p, p, K - 1), zeros(p, p, K - 1), S, λ)
+  @test_throws DimensionMismatch group_graphical_lasso(S, λ; weights = [0.5, 0.5])
+  @test_throws ArgumentError group_graphical_lasso(S, λ; weights = [0.5, 0.5, 0.0])
+  @test_throws ArgumentError group_graphical_lasso(S, -1.0)
+  @test_throws DimensionMismatch group_graphical_lasso!(zeros(p, p, K - 1), zeros(p, p, K - 1), S, λ)
 
   # Float32
-  Z32 = groupGraphicalLasso(Float32.(S), 0.05f0; options = ADMMOptions(; abstol = 1e-6, reltol = 1e-6))
+  Z32 = group_graphical_lasso(Float32.(S), 0.05f0; options = ADMMOptions(; abstol = 1e-6, reltol = 1e-6))
   @test eltype(Z32) == Float32
-  @test Z32 ≈ groupGraphicalLasso(S, λ; options = ADMMOptions(; abstol = 1e-6, reltol = 1e-6)) atol = 1e-3
+  @test Z32 ≈ group_graphical_lasso(S, λ; options = ADMMOptions(; abstol = 1e-6, reltol = 1e-6)) atol = 1e-3
 end
 
 @testset "time-varying graphs" begin
@@ -129,7 +129,7 @@ end
 
   # the kernel-weighted covariances, against the formula
   for kernel in (:epanechnikov, :gaussian, u -> exp(-abs(u))), center in (true, false)
-    S = kernelCovariances(X, t, τ, h; kernel, center)
+    S = kernel_covariances(X, t, τ, h; kernel, center)
     kf = kernel isa Symbol ? CovarianceSelection._kernel(kernel) : kernel
     for (k, τk) in enumerate(τ)
       wk = kf.((t .- τk) ./ h)
@@ -139,16 +139,16 @@ end
       @test issymmetric(S[:, :, k])
     end
   end
-  @test_throws ArgumentError kernelCovariances(X, t, [2.0], 0.1)       # no observation near τ = 2
-  @test_throws ArgumentError kernelCovariances(X, t, τ, 0.0)
-  @test_throws ArgumentError kernelCovariances(X, t, τ, h; kernel = :box)
-  @test_throws DimensionMismatch kernelCovariances(X, t[2:end], τ, h)
+  @test_throws ArgumentError kernel_covariances(X, t, [2.0], 0.1)       # no observation near τ = 2
+  @test_throws ArgumentError kernel_covariances(X, t, τ, 0.0)
+  @test_throws ArgumentError kernel_covariances(X, t, τ, h; kernel = :box)
+  @test_throws DimensionMismatch kernel_covariances(X, t[2:end], τ, h)
 
-  # tvCovSel is the group graphical lasso of the kernel-weighted covariances
-  Z = tvCovSel(X, t, τ, h, 0.05; options = tight)
-  @test Z ≈ groupGraphicalLasso(kernelCovariances(X, t, τ, h), 0.05; options = tight)
-  @test tvCovSel(X, t, τ, h, 0.05; λ1 = 0.02, options = tight) ≈
-        groupGraphicalLasso(kernelCovariances(X, t, τ, h), 0.05; λ1 = 0.02, options = tight)
+  # tv_covsel is the group graphical lasso of the kernel-weighted covariances
+  Z = tv_covsel(X, t, τ, h, 0.05; options = tight)
+  @test Z ≈ group_graphical_lasso(kernel_covariances(X, t, τ, h), 0.05; options = tight)
+  @test tv_covsel(X, t, τ, h, 0.05; λ1 = 0.02, options = tight) ≈
+        group_graphical_lasso(kernel_covariances(X, t, τ, h), 0.05; λ1 = 0.02, options = tight)
 
   # a chain graph whose edges weaken over time: the edges are found at every time point
   n, p = 3000, 6
@@ -158,7 +158,7 @@ end
     Ω = Matrix(SymTridiagonal(fill(1.0, p), fill(0.45 - 0.2t[i], p - 1)))
     X[i, :] = cholesky(Ω).U \ randn(p)
   end
-  Z = tvCovSel(X, t, τ, h, 0.02)
+  Z = tv_covsel(X, t, τ, h, 0.02)
   for k in eachindex(τ), i in 1:p-1
     @test Z[i, i+1, k] > 0                           # the chain edges, with their sign
     @test Z[i, i+1, k] ≈ 0.45 - 0.2τ[k] atol = 0.1   # near the precision at τₖ, shrunk
