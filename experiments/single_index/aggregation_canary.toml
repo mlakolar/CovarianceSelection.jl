@@ -1,0 +1,57 @@
+seed = 729701
+shard_size = 1
+stage = "canary"
+
+[[scenario]]
+id = 1
+p = 20
+n = 200
+design = "chain"
+signal = 1.0
+beta_kind = "equal"
+replicates = 1
+
+[[scenario]]
+id = 2
+p = 20
+n = 200
+design = "pairs"
+signal = 1.0
+beta_kind = "equal"
+replicates = 1
+
+[[scenario]]
+id = 11
+p = 40
+n = 3200
+design = "chain"
+signal = 1.0
+beta_kind = "equal"
+replicates = 1
+
+[[scenario]]
+id = 12
+p = 40
+n = 3200
+design = "pairs"
+signal = 1.0
+beta_kind = "equal"
+replicates = 1
+
+[[scenario]]
+id = 17
+p = 160
+n = 3200
+design = "chain"
+signal = 1.0
+beta_kind = "equal"
+replicates = 1
+
+[[scenario]]
+id = 18
+p = 160
+n = 3200
+design = "pairs"
+signal = 1.0
+beta_kind = "equal"
+replicates = 1
