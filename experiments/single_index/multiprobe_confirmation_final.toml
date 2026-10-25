@@ -1,0 +1,288 @@
+seed = 67012863
+shard_size = 100
+validate = true
+
+[[candidate]]
+id = "projections-60-moment-20"
+bank = "projections"
+L = 60
+method = "moment"
+k = 20
+
+[[candidate]]
+id = "projections-60-screen-10"
+bank = "projections"
+L = 60
+method = "screen"
+k = 10
+
+[[candidate]]
+id = "projections-60-ols-20"
+bank = "projections"
+L = 60
+method = "ols"
+k = 20
+
+[[candidate]]
+id = "projections-60-screen-6"
+bank = "projections"
+L = 60
+method = "screen"
+k = 6
+
+[[candidate]]
+id = "mixed-60-moment-20"
+bank = "mixed"
+L = 60
+method = "moment"
+k = 20
+
+[[candidate]]
+id = "mixed-60-ols-20"
+bank = "mixed"
+L = 60
+method = "ols"
+k = 20
+
+[[candidate]]
+id = "complete-0-ols-20"
+bank = "complete"
+L = 0
+method = "ols"
+k = 20
+
+[[candidate]]
+id = "complete-0-screen-6"
+bank = "complete"
+L = 0
+method = "screen"
+k = 6
+
+[[candidate]]
+id = "complete-0-screen-10"
+bank = "complete"
+L = 0
+method = "screen"
+k = 10
+
+[[scenario]]
+id = 1
+n = 100
+p = 40
+design = "chain"
+replicates = 1000
+
+[[scenario]]
+id = 2
+n = 200
+p = 40
+design = "chain"
+replicates = 1000
+
+[[scenario]]
+id = 3
+n = 400
+p = 40
+design = "chain"
+replicates = 1000
+
+[[scenario]]
+id = 4
+n = 800
+p = 40
+design = "chain"
+replicates = 1000
+
+[[scenario]]
+id = 5
+n = 1600
+p = 40
+design = "chain"
+replicates = 1000
+
+[[scenario]]
+id = 6
+n = 3200
+p = 40
+design = "chain"
+replicates = 1000
+
+[[scenario]]
+id = 7
+n = 100
+p = 40
+design = "pairs"
+replicates = 1000
+
+[[scenario]]
+id = 8
+n = 200
+p = 40
+design = "pairs"
+replicates = 1000
+
+[[scenario]]
+id = 9
+n = 400
+p = 40
+design = "pairs"
+replicates = 1000
+
+[[scenario]]
+id = 10
+n = 800
+p = 40
+design = "pairs"
+replicates = 1000
+
+[[scenario]]
+id = 11
+n = 1600
+p = 40
+design = "pairs"
+replicates = 1000
+
+[[scenario]]
+id = 12
+n = 3200
+p = 40
+design = "pairs"
+replicates = 1000
+
+[[scenario]]
+id = 13
+n = 400
+p = 160
+design = "chain"
+replicates = 1000
+
+[[scenario]]
+id = 14
+n = 800
+p = 160
+design = "chain"
+replicates = 1000
+
+[[scenario]]
+id = 15
+n = 1600
+p = 160
+design = "chain"
+replicates = 1000
+
+[[scenario]]
+id = 16
+n = 400
+p = 160
+design = "pairs"
+replicates = 1000
+
+[[scenario]]
+id = 17
+n = 800
+p = 160
+design = "pairs"
+replicates = 1000
+
+[[scenario]]
+id = 18
+n = 1600
+p = 160
+design = "pairs"
+replicates = 1000
+
+[[scenario]]
+id = 19
+n = 400
+p = 40
+design = "chain"
+signal = 0.5
+replicates = 1000
+
+[[scenario]]
+id = 20
+n = 400
+p = 40
+design = "chain"
+signal = 1.5
+replicates = 1000
+
+[[scenario]]
+id = 21
+n = 1600
+p = 40
+design = "chain"
+signal = 0.5
+replicates = 1000
+
+[[scenario]]
+id = 22
+n = 1600
+p = 40
+design = "chain"
+signal = 1.5
+replicates = 1000
+
+[[scenario]]
+id = 23
+n = 400
+p = 40
+design = "pairs"
+signal = 0.5
+replicates = 1000
+
+[[scenario]]
+id = 24
+n = 400
+p = 40
+design = "pairs"
+signal = 1.5
+replicates = 1000
+
+[[scenario]]
+id = 25
+n = 1600
+p = 40
+design = "pairs"
+signal = 0.5
+replicates = 1000
+
+[[scenario]]
+id = 26
+n = 1600
+p = 40
+design = "pairs"
+signal = 1.5
+replicates = 1000
+
+[[scenario]]
+id = 27
+n = 400
+p = 40
+design = "chain"
+beta_kind = "mixed"
+replicates = 1000
+
+[[scenario]]
+id = 28
+n = 1600
+p = 40
+design = "chain"
+beta_kind = "mixed"
+replicates = 1000
+
+[[scenario]]
+id = 29
+n = 400
+p = 40
+design = "pairs"
+beta_kind = "mixed"
+replicates = 1000
+
+[[scenario]]
+id = 30
+n = 1600
+p = 40
+design = "pairs"
+beta_kind = "mixed"
+replicates = 1000

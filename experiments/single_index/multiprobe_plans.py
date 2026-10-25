@@ -23,8 +23,17 @@ def main(stage,out,shortlist=None):
         scenarios += [dict(n=n,p=40,design=d,replicates=200,even=True)
                       for d in ('chain','pairs') for n in (400,800,1600)]
         write(out,27012511,scenarios)
-    elif stage=='confirmation':
-        candidates=json.loads(Path(shortlist).read_text())['candidates']
+    elif stage in ('confirmation','confirmation_specialists'):
+        frozen=json.loads(Path(shortlist).read_text())
+        candidates=frozen['candidates'].copy()
+        if stage=='confirmation_specialists':
+            for method,k in [('ols',20),('screen',6),('screen',10)]:
+                c=dict(id=f'complete-0-{method}-{k}',bank='complete',L=0,method=method,k=k)
+                if c['id'] not in [x['id'] for x in candidates]:candidates.append(c)
+            frozen.update(candidates=candidates,amendment='Development-only specialist safeguard: '
+                          'include complete quadratic OLS and k6/k10 refits. Initial confirmation '
+                          'cancelled without inspecting estimates; all final seeds are fresh.')
+            Path(out).with_suffix('.shortlist.json').write_text(json.dumps(frozen,indent=2)+'\n')
         scenarios=[dict(n=n,p=40,design=d,replicates=1000)
                    for d in ('chain','pairs') for n in (100,200,400,800,1600,3200)]
         scenarios += [dict(n=n,p=160,design=d,replicates=1000)
@@ -33,7 +42,7 @@ def main(stage,out,shortlist=None):
                       for d in ('chain','pairs') for n in (400,1600) for signal in (0.5,1.5)]
         scenarios += [dict(n=n,p=40,design=d,beta_kind='mixed',replicates=1000)
                       for d in ('chain','pairs') for n in (400,1600)]
-        write(out,57012631,scenarios,candidates,True)
+        write(out,67012863 if stage=='confirmation_specialists' else 57012631,scenarios,candidates,True)
     else: raise ValueError(stage)
 
 if __name__=='__main__': main(*sys.argv[1:])

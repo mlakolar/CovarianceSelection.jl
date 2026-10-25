@@ -106,12 +106,19 @@ methods retain all 20 covariates. There are 75 fixed configurations.
 2. Development uses 300 paired repetitions for each combination of design and
    n in {100,200,400,800,1600,3200}, with p=40. Even-link diagnostics use 200
    repetitions per design at n in {400,800,1600}. Total: 4,800 datasets.
-3. Before confirmation, freeze six candidates: the two smallest average
+3. The initial development rule freezes six candidates: the two smallest average
    projective losses within each of the OLS, screening/refit, and spectral
    families. The twelve main scenarios receive equal weight. The spectral
    family contains moment, split, second, and second_split. Even-link cases
    cannot influence the shortlist. The overall smallest development average
    defines the fixed default.
+   Development revealed a design-specific specialist that this global average
+   omitted: complete quadratic OLS substantially outperformed random dictionaries
+   for constant-variance pairs. Before inspecting any confirmation estimates,
+   the initial confirmation was cancelled, its partial output retained, and the
+   candidate pool expanded with complete OLS and its k=6 and k=10 refits.
+   Final confirmation restarts every scenario with a fresh seed namespace.
+   The nine-candidate pool and amended plan are frozen before this restart.
 4. Confirmation uses fresh seeds and 1,000 repetitions per setting. It includes
    the twelve main settings, six p=160 settings (n=400,800,1600), eight signal
    sensitivities (a=0.5,1.5; n=400,1600; both designs), and four mixed-sign
@@ -163,8 +170,8 @@ Entry points:
 python3 experiments/single_index/multiprobe_plans.py development development.toml
 sbatch experiments/single_index/multiprobe.sbatch canary development.toml canary
 sbatch experiments/single_index/multiprobe.sbatch development development.toml development
-python3 experiments/single_index/multiprobe_plans.py confirmation confirmation.toml development/shortlist.json
-sbatch experiments/single_index/multiprobe.sbatch confirmation confirmation.toml confirmation
+python3 experiments/single_index/multiprobe_plans.py confirmation_specialists experiments/single_index/multiprobe_confirmation_final.toml development/shortlist.json
+sbatch experiments/single_index/multiprobe.sbatch confirmation experiments/single_index/multiprobe_confirmation_final.toml confirmation_final
 ```
 
 The source snapshot, installed Julia environment, and manifest used by a run
