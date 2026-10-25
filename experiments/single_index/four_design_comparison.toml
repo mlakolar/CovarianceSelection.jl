@@ -1,0 +1,2898 @@
+stage = "comparison"
+seed = 59470271
+shard_size = 25
+
+[[scenario]]
+id = 1
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 2
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 3
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 4
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 5
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 6
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 7
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 8
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 9
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 10
+design = "correlation"
+amplitude = 0.15
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 11
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 12
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 13
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 14
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 15
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 16
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 17
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 18
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 19
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 20
+design = "correlation"
+amplitude = 0.15
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 21
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 22
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 23
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 24
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 25
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 26
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 27
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 28
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 29
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 30
+design = "correlation"
+amplitude = 0.35
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 31
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 32
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 33
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 34
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 35
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 36
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 37
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 38
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 39
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 40
+design = "correlation"
+amplitude = 0.35
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 41
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 42
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 43
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 44
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 45
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 46
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 47
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 48
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 49
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 50
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 51
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 52
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 53
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 54
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 55
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 56
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 57
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 58
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 59
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 60
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 61
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 62
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 63
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 64
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 65
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 66
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 67
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 68
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 69
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 70
+design = "opposed_scale"
+amplitude = 0.2
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 71
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 72
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 73
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 74
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 75
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 76
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 77
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 78
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 79
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 80
+design = "opposed_scale"
+amplitude = 0.2
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 81
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 82
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 83
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 84
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 85
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 86
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 87
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 88
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 89
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 90
+design = "opposed_scale"
+amplitude = 0.4
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 91
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 92
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 93
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 94
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 95
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 96
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 97
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 98
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 99
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 100
+design = "opposed_scale"
+amplitude = 0.4
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 101
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 102
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 103
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 104
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 105
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 106
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 107
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 108
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 109
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 110
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 111
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 112
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 113
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 114
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 115
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 116
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 117
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 118
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 119
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 120
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 121
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 122
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 123
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 124
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 125
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 126
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 127
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 128
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 129
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 130
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 131
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 132
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 133
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 134
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 135
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 136
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 137
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 138
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 139
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 140
+design = "fixed_diagonal"
+amplitude = 0.2
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 141
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 142
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 143
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 144
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 145
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 146
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 147
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 148
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 149
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 150
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 151
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 152
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 153
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 154
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 155
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 156
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 157
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 158
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 159
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 160
+design = "fixed_diagonal"
+amplitude = 0.4
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 161
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 162
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 163
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 164
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 165
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 166
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 167
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 168
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 169
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 170
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 171
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 172
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 173
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 174
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 175
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 176
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 177
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 178
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 179
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 180
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 181
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 182
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 183
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 184
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 185
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 186
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 187
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 188
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 189
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 190
+design = "noncommuting"
+amplitude = 0.2
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 191
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 192
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 193
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 194
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 195
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 196
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 197
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 198
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 199
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 200
+design = "noncommuting"
+amplitude = 0.2
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 201
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 202
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 203
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 204
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 205
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 206
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 207
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 208
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 209
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 210
+design = "noncommuting"
+amplitude = 0.4
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 211
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 212
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 213
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 214
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 215
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 216
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 217
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 218
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 219
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 220
+design = "noncommuting"
+amplitude = 0.4
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 221
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 222
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 223
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 224
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 225
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 226
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 227
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 228
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 229
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 230
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 20
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 231
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 4
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 232
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 4
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 233
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 4
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 234
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 4
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 235
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 4
+n = 1600
+replicates = 300
+
+[[scenario]]
+id = 236
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 20
+n = 100
+replicates = 300
+
+[[scenario]]
+id = 237
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 20
+n = 200
+replicates = 300
+
+[[scenario]]
+id = 238
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 20
+n = 400
+replicates = 300
+
+[[scenario]]
+id = 239
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 20
+n = 800
+replicates = 300
+
+[[scenario]]
+id = 240
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 20
+n = 1600
+replicates = 300
+
+[[candidate]]
+d = 4
+bank = "global_trace"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "global_products"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "oracle_probe"
+method = "ols"
+k = 4
+rho = 0.0
+
+[[candidate]]
+d = 4
+bank = "oracle_probe"
+method = "true_support_ols"
+k = 4
+rho = 0.0
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "moment"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "rrr"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_ols"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_rrr"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_ols"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_rrr"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_ols"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_rrr"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "learned_crossfit"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "split"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "moment"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "rrr"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_ols"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_rrr"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_ols"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_rrr"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_ols"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_rrr"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "learned_crossfit"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "split"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "second"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "moment"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "rrr"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_ols"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_rrr"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_ols"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_rrr"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_ols"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_rrr"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "learned_crossfit"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "split"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "global_trace"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "global_trace"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "global_products"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "global_products"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "oracle_probe"
+method = "ols"
+k = 20
+rho = 0.0
+
+[[candidate]]
+d = 20
+bank = "oracle_probe"
+method = "true_support_ols"
+k = 4
+rho = 0.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "moment"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "moment"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "rrr"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "rrr"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "learned_crossfit"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "split"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "moment"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "moment"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "rrr"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "rrr"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "learned_crossfit"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "split"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "second"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "moment"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "moment"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "rrr"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "rrr"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "learned_crossfit"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "split"
+k = 20
+rho = 1.0

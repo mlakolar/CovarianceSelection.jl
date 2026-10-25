@@ -1,0 +1,810 @@
+stage = "canary"
+seed = 39473811
+shard_size = 1
+
+[[scenario]]
+id = 41
+design = "correlation"
+amplitude = 0.55
+p = 20
+d = 4
+n = 100
+replicates = 1
+
+[[scenario]]
+id = 60
+design = "correlation"
+amplitude = 0.55
+p = 40
+d = 20
+n = 1600
+replicates = 1
+
+[[scenario]]
+id = 101
+design = "opposed_scale"
+amplitude = 0.6
+p = 20
+d = 4
+n = 100
+replicates = 1
+
+[[scenario]]
+id = 120
+design = "opposed_scale"
+amplitude = 0.6
+p = 40
+d = 20
+n = 1600
+replicates = 1
+
+[[scenario]]
+id = 161
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 20
+d = 4
+n = 100
+replicates = 1
+
+[[scenario]]
+id = 180
+design = "fixed_diagonal"
+amplitude = 0.6
+p = 40
+d = 20
+n = 1600
+replicates = 1
+
+[[scenario]]
+id = 221
+design = "noncommuting"
+amplitude = 0.6
+p = 20
+d = 4
+n = 100
+replicates = 1
+
+[[scenario]]
+id = 240
+design = "noncommuting"
+amplitude = 0.6
+p = 40
+d = 20
+n = 1600
+replicates = 1
+
+[[candidate]]
+d = 4
+bank = "global_trace"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "global_products"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "oracle_probe"
+method = "ols"
+k = 4
+rho = 0.0
+
+[[candidate]]
+d = 4
+bank = "oracle_probe"
+method = "true_support_ols"
+k = 4
+rho = 0.0
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "moment"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "rrr"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_ols"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_rrr"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_ols"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_rrr"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_ols"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "weighted_rrr"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "learned_crossfit"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "projections"
+method = "split"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "moment"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "rrr"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_ols"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_rrr"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_ols"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_rrr"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_ols"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "weighted_rrr"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "learned_crossfit"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "split"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "mixed"
+method = "second"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "ols"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "moment"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "rrr"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_ols"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_rrr"
+k = 4
+rho = 0.05
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_ols"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_rrr"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_ols"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "weighted_rrr"
+k = 4
+rho = 0.5
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "learned_crossfit"
+k = 4
+rho = 0.2
+
+[[candidate]]
+d = 4
+bank = "complete"
+method = "split"
+k = 4
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "global_trace"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "global_trace"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "global_products"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "global_products"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "oracle_probe"
+method = "ols"
+k = 20
+rho = 0.0
+
+[[candidate]]
+d = 20
+bank = "oracle_probe"
+method = "true_support_ols"
+k = 4
+rho = 0.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "moment"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "moment"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "rrr"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "rrr"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_ols"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "weighted_rrr"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "learned_crossfit"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "projections"
+method = "split"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "moment"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "moment"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "rrr"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "rrr"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_ols"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "weighted_rrr"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "learned_crossfit"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "split"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "mixed"
+method = "second"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "ols"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "ols"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "moment"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "moment"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "rrr"
+k = 10
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "rrr"
+k = 20
+rho = 1.0
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 10
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 20
+rho = 0.05
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 10
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_ols"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 10
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "weighted_rrr"
+k = 20
+rho = 0.5
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "learned_crossfit"
+k = 20
+rho = 0.2
+
+[[candidate]]
+d = 20
+bank = "complete"
+method = "split"
+k = 20
+rho = 1.0
