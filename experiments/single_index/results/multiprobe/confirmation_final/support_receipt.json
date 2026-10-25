@@ -1,0 +1,9 @@
+{
+  "rows": 120000,
+  "expected_rows": 120000,
+  "duplicate_identities": 0,
+  "qr_comparisons": 240,
+  "maximum_relative_ols_difference": 1.5022877094178558e-15,
+  "maximum_direction_projection_change": 4.241957591920621e-16,
+  "support_cardinality_identity_verified": true
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "stage": "development",
+    "groups": 1350,
+    "primary_quantities_unchanged": true,
+    "selected_support_cardinality_identity": true
+  },
+  {
+    "stage": "confirmation_final",
+    "groups": 330,
+    "primary_quantities_unchanged": true,
+    "selected_support_cardinality_identity": true
+  }
+]

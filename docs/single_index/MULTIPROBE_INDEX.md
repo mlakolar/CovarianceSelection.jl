@@ -5,10 +5,13 @@ alternate between a nonparametric fit and an index fit. Precision-matrix
 coverage is outside its scope. The methods below are research extensions;
 their empirical tuning rules are not established inference guarantees.
 
-Primary simulations and direction-error comparisons are complete. A correction
-to secondary selected-support diagnostics is queued on Discovery as job
-`13424115`, currently subject to the per-user job limit. Those columns are
-withheld from the versioned reporting tables until replay is validated.
+Primary simulations and direction-error comparisons are complete. Selected-support
+diagnostics were corrected and validated by Discovery job `13424313`. The replay
+preserved every primary summary quantity exactly. See the result README for the
+checks and the original failed replay attempt.
+
+A subsequent fixed-rule aggregation comparison is specified in
+[PROBE_AGGREGATION.md](PROBE_AGGREGATION.md).
 
 ## Identification and estimators
 

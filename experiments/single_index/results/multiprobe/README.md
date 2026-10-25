@@ -60,19 +60,22 @@ is promoted as a universal first stage for precision inference.
 ## Selected-support diagnostic correction
 
 Primary direction errors, prediction errors, angles, failures, and tuning choices
-are validated. Secondary support-count columns are withheld from these versioned
-tables pending selected-row replay. Dense eigensolvers left tiny values outside
-the selected support, which made numerical-nonzero counts inappropriate.
-The public estimator now zeros those entries exactly; the worker counts
-membership in `fit.selected`.
+are validated. Corrected secondary support counts now use selected-row membership.
+Dense eigensolvers had left roundoff entries outside selected supports. The public
+estimator now zeros those entries exactly.
 
-Job `13424115` is queued for the diagnostic replay and new exact-zero tests.
-Discovery currently reports `QOSMaxJobsPerUserLimit`. The replay checks normal
-equations against direct QR and verifies that every primary summary quantity
-remains exactly unchanged. It does not rerun primary direction estimation.
-Original raw records, including their deprecated numerical-nonzero diagnostics,
-remain intact on Discovery. Use the primary columns here until this correction
-has completed and been reconciled into the reporting copy.
+Replay job `13424313` completed. It validated 105,600 development and 120,000
+confirmation support records with no duplicate identities. Across 1,032 comparisons,
+normal-equation OLS agreed with direct QR to relative error below 1.9e-15.
+Projecting away numerical leakage changed directions by less than 4.3e-16.
+The replay verified support-cardinality identities and exact equality of all
+primary summary quantities before and after correction. All 140 focused checks
+passed on Discovery. Receipts and `support_correction_identity.json` are included.
+
+The first replay, `13424115`, failed at startup because a Julia docstring preceded
+an include call. The header was repaired before the successful replay. Original
+raw records retain their deprecated numerical-nonzero diagnostics on Discovery;
+use the corrected selected-row columns in these summary tables.
 
 ## Provenance
 

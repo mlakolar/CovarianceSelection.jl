@@ -6,5 +6,7 @@
   "configs": 75,
   "failures": 0,
   "all_outcomes_retained": true,
-  "plan": "experiments/single_index/multiprobe_development.toml"
+  "plan": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-multiprobe/experiments/single_index/multiprobe_development.toml",
+  "support_diagnostics": "selected rows, corrected",
+  "support_replay": "/project2/mkolar_1314/SingleIndexGraph/20261025-sig-multiprobe-support/results/development"
 }
