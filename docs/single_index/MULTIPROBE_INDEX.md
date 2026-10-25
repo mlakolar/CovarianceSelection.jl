@@ -155,11 +155,16 @@ with maximal projective loss one. There is no exact-support gate.
 
 Fixed-candidate runtimes measure fitting on cached probe responses; validation
 runtime includes its own probe construction and fits. These two timings serve
-different purposes and must not be compared as identical costs.
+different purposes and must not be compared as identical costs. Worker timings
+can include initial JIT compilation and are descriptive, not controlled benchmarks.
 
 All numerical fitting, integration, aggregation, and figures run on Discovery.
 The launcher uses GNU Parallel within one Slurm allocation, with eight single-CPU
-workers and 16 GB total RAM. BLAS and Julia threads are one per worker. A canary
+workers and 16 GB total RAM initially. The remaining final confirmation work
+can resume with 32 single-CPU workers and 64 GB, under the user's existing larger
+allocation authorization. Atomic finalized shards are reused without refitting;
+only unfinished shards run. Scientific settings and seeds do not change.
+BLAS and Julia threads are one per worker. A canary
 uses one CPU and 4 GB. Plans, source hashes, task outcomes, per-repetition results,
 and the lightweight run registry supply the recreation recipe. No routine data
 archive or unrelated filesystem audit is required.

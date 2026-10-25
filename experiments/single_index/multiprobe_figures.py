@@ -90,7 +90,16 @@ def main(root):
                            se_difference=statistics.stdev(v)/math.sqrt(len(v)),
                            probability_better=sum(x<0 for x in v)/len(v)))
     write(conf/'paired_differences.csv',paired)
-    selected_rows=[r for r in rr if r['id'] in (default,'validation','oracle')]
+    # Exact identification diagnostic for RANDOM PRODUCT probes in the paired
+    # design. This uses the generator only to explain results, never for fitting.
+    diagnostic=[]
+    for p in (40,160):
+        total=p*(p-1)//2; informative=p//2
+        for L in (10,30,60):
+            diagnostic.append(dict(p=p,total_products=total,informative_products=informative,L=L,
+                probability_zero_first_order_signal=math.comb(total-informative,L)/math.comb(total,L)))
+    write(conf/'random_product_signal.csv',diagnostic)
+    selected_rows=[r for r in rr if r['id'] in selected]
     write(conf/'compact_comparison.csv',selected_rows)
     print('Figures and paired differences complete:',default,len(paired))
 

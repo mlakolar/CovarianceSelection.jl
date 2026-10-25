@@ -20,7 +20,7 @@ sha256sum Project.toml Manifest.toml src/SingleIndexGraph/*.jl \
 if [[ "$MODE" == canary ]]; then
     "$JULIA" --project experiments/single_index/multiprobe_canary.jl "$OUT"
 else
-    if [[ "$OUT" == confirmation_final ]]; then
+    if [[ "$OUT" == confirmation_final && ! -f specialist_canary/receipt.json ]]; then
         # Exercise the largest new validation path at the same per-worker memory
         # limit before launching all workers. Its seed is separate from evidence.
         srun --exclusive --exact -N1 -n1 -c1 --mem=1900M "$JULIA" --heap-size-hint=1400M --project \
@@ -30,14 +30,19 @@ else
           experiments/single_index/multiprobe_specialist_canary.toml specialist_canary
         python3 -c 'import json; assert json.load(open("specialist_canary/receipt.json"))["failures"] == 0'
     fi
-    python3 - "$PLAN" > "$OUT/tasks.txt" <<'PY'
+    TASKFILE="$OUT/tasks-$SLURM_JOB_ID.txt"
+    python3 - "$PLAN" "$OUT" > "$TASKFILE" <<'PY'
 import sys,math,tomllib
+from pathlib import Path
 with open(sys.argv[1],'rb') as f: plan=tomllib.load(f)
 for i in range(1,1+sum(math.ceil(c['replicates']/plan['shard_size']) for c in plan['scenario'])):
-    print(i)
+    # Finalized shards are atomic. Resume only unfinished shards; preserve every
+    # completed outcome, including numerical failures. Partial .tmp files are
+    # overwritten only for the same unfinished shard.
+    if not (Path(sys.argv[2])/f'part-{i:04}.csv').is_file():print(i)
 PY
     parallel --jobs "$SLURM_NTASKS" --joblog "$OUT/parallel-$SLURM_JOB_ID.tsv" --halt soon,fail=1 \
       srun --exclusive --exact -N1 -n1 -c1 --mem=1900M "$JULIA" --heap-size-hint=1400M --project \
-      experiments/single_index/multiprobe_worker.jl "$PLAN" {} "$OUT" :::: "$OUT/tasks.txt"
+      experiments/single_index/multiprobe_worker.jl "$PLAN" {} "$OUT" :::: "$TASKFILE"
     python3 experiments/single_index/multiprobe_report.py "$PLAN" "$OUT"
 fi
