@@ -20,8 +20,11 @@ allocations of each benchmark.
     solver against;
 
   and, with the size of the true support, `difference_precision_iht` and the
-  sparse plus rank one `difference_latent_precision_iht`. Before the timings,
-  `run.jl` checks that the package solver agrees with the reference solver.
+  sparse plus rank one `difference_latent_precision_iht`, with automatic
+  backtracking steps. The sparse fit uses the default method and options;
+  the latent fit uses `MonotoneAccProxGradDescent()` with
+  `ProximalOptions(; maxiter = 500, ftol = 1e-8)`. Before the timings, `run.jl`
+  checks that the package solver agrees with the reference solver.
 - **ADMM**: `covsel!` and `fused_graphical_lasso` on the same covariances.
 - **CLIME**: `clime` along a path of 20 penalties and at one penalty, and
   `aclime`, on the correlation and covariance matrices of the AR(1) sample.
@@ -78,6 +81,11 @@ julia --project=benchmark/compare/new -e 'using Pkg; Pkg.instantiate()'
 benchmark/compare/ab.sh 4
 ```
 
+The current comparison omits IHT: the old side only has explicit-step
+methods, which have been removed from the current API. The IHT rows below
+are historical measurements of those explicit-step methods. They do not
+measure the automatic-step methods in `benchmarks.jl`.
+
 Results of 23 October 2026: four rounds on one core of an AMD EPYC 7513
 (USC CARC Discovery, job 13326410), Julia 1.13.2, one BLAS thread; this
 version at ProximalOPT 1f82ae5 (the solver code of ProximalSolvers 0.1.0) and ProximalBase 0.5.0. Times are in ms; the
@@ -117,7 +125,7 @@ and the ratio within each of the four rounds is at most 1.01.
   coordinate descent with penalty weights of 1e10 off the support, is within
   1e-7 of it.
 - `covsel!` takes the iterations of the old ADMM loop and agrees with it to
-  rounding. The fused solvers and the IHT solvers run the same loops on the
+  rounding. The fused solvers and the explicit-step IHT solvers run the same loops on the
   ProximalBase 0.5 names: the same iterations, solutions equal to rounding
   (the IHT solutions are identical).
 - `diff_loss` multiplies dense matrices where it made `p²` sparse products.

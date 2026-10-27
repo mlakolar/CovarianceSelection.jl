@@ -10,6 +10,8 @@ Methods for learning high-dimensional Gaussian graphical models:
 * the precision matrix by the scaled lasso of each column, which needs no
   tuning ([`slassoinv`](@ref));
 * the graphical lasso by ADMM ([`covsel!`](@ref), [`covselpath`](@ref));
+* sparse minus low rank precision matrices of graphical models with latent
+  variables by iterative hard thresholding ([`covsel_latent_iht!`](@ref));
 * the fused graphical lasso for K groups ([`fused_graphical_lasso`](@ref)) and
   fused neighborhood selection ([`fused_neighborhood_selection`](@ref));
 * K precision matrices with a shared sparsity pattern, the group graphical
@@ -23,8 +25,8 @@ Methods for learning high-dimensional Gaussian graphical models:
 
 The losses and penalties are those of ProximalBase, and the graphical lasso and
 the direct difference estimator are solved by the ADMM and the coordinate
-descent of ProximalSolvers. Before its first release the package was called
-CovSel.
+descent of ProximalSolvers. The IHT estimators use ProximalSolvers' proximal
+gradient methods. Before its first release the package was called CovSel.
 """
 module CovarianceSelection
 
@@ -35,7 +37,7 @@ using Random: AbstractRNG, default_rng, randperm
 using SpecialFunctions: erfcinv
 
 export
-  ADMMOptions, ADMMInfo, IHTOptions,
+  ADMMOptions, ADMMInfo,
   covsel!, covselpath,
   covsel_latent_iht!,
 
@@ -64,7 +66,6 @@ export
 include("utils.jl")
 
 include("admmCovarianceSelection.jl")
-include("LatentCovarianceSelection_IHT.jl")
 
 include("directDifference.jl")
 include("automaticIHT.jl")

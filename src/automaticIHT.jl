@@ -1,5 +1,4 @@
-# Automatic-step IHT uses a single product-space step; the explicit-η methods
-# retain their alternating updates and legacy thresholding unchanged.
+# IHT uses a single product-space step chosen by backtracking.
 const _IHTGradientMethod = Union{ProximalSolvers.ProximalGradientDescent,
   ProximalSolvers.AccProxGradDescent, ProximalSolvers.MonotoneAccProxGradDescent}
 
@@ -58,12 +57,12 @@ end
 ProximalBase.issmooth(::Type{<:_LatentLogdet}) = true
 ProximalBase.issmooth(::Type{<:_LatentDTrace}) = true
 
-function _iht_theta!(Θ, x)
+function _iht_theta!(Θ, x, σ)
   _densify!(Θ, x[1])
-  mul!(Θ, x[2], transpose(x[2]), one(eltype(Θ)), one(eltype(Θ)))
+  mul!(Θ, x[2], transpose(x[2]), eltype(Θ)(σ), one(eltype(Θ)))
 end
 function _iht_factor!(f::_LatentLogdet, x)
-  _iht_theta!(f.Θ, x)
+  _iht_theta!(f.Θ, x, -1)
   all(isfinite, f.Θ) || return nothing
   F = cholesky!(Symmetric(copyto!(f.factor, f.Θ)); check = false)
   issuccess(F) ? F : nothing
@@ -81,12 +80,12 @@ function ProximalBase.value_and_gradient!(G::Tuple, f::_LatentLogdet{T}, x::Tupl
   end
   ldiv!(F, f.inverse)
   G[1] .= f.Σ .- f.inverse
-  mul!(G[2], G[1], x[2], T(2), zero(T))
+  mul!(G[2], G[1], x[2], T(-2), zero(T))
   dot(f.Σ, f.Θ) - logdet(F)
 end
-(f::_LatentDTrace)(x::Tuple) = f.loss(_iht_theta!(f.Θ, x))
+(f::_LatentDTrace)(x::Tuple) = f.loss(_iht_theta!(f.Θ, x, 1))
 function ProximalBase.value_and_gradient!(G::Tuple, f::_LatentDTrace{T}, x::Tuple) where {T}
-  value = value_and_gradient!(f.raw, f.loss, _iht_theta!(f.Θ, x))
+  value = value_and_gradient!(f.raw, f.loss, _iht_theta!(f.Θ, x, 1))
   G[1] .= (f.raw .+ transpose(f.raw)) ./ T(2)
   mul!(G[2], G[1], x[2], T(2), zero(T))
   value
@@ -98,7 +97,7 @@ function _automatic_iht!(x, f, g, method, options::ProximalOptions, accepted)
   method isa _IHTGradientMethod || throw(ArgumentError("automatic IHT needs ProximalGradientDescent, AccProxGradDescent or MonotoneAccProxGradDescent"))
   isfinite(g(x)) || throw(ArgumentError("the initial sparse matrix exceeds the sparsity budget"))
   initial = f(x)
-  isfinite(initial) || throw(ArgumentError("the initial loss must be finite; for latent log-det use S + U*U' positive definite"))
+  isfinite(initial) || throw(ArgumentError("the initial loss must be finite; for latent log-det use S - U*U' positive definite"))
   fvals = typeof(initial)[initial]
   cb = function (record)
     state = options.store_trace ? last(record) : record
@@ -119,7 +118,6 @@ IHT with an automatically backtracked step and ProximalBase's Frobenius
 projection onto at most `s` lower-triangle coordinates, including the diagonal.
 `init` optionally supplies a symmetric starting matrix. Returns `(Δ, fvals)`,
 with the initial objective and every accepted iteration in `fvals`.
-The overload with positional `η` retains its explicit step and legacy projection.
 """
 function difference_precision_iht(Σx::Symmetric{T}, Σy::Symmetric{T}, s::Int;
   method = ProximalSolvers.ProximalGradientDescent(), options::ProximalOptions = ProximalOptions(), init = nothing) where {T<:AbstractFloat}
@@ -133,15 +131,27 @@ end
 """
     covsel_latent_iht!(Σ, s, r; method=ProximalGradientDescent(), options=ProximalOptions(), init=nothing, callback=nothing)
 
-Automatic-step IHT for `tr(ΣΘ)-logdet(Θ)`, `Θ=S+UU'`, with at most `s`
-off-diagonal pairs in `S`. Returns `(S,L,U,fvals,iter)`, with `S` a
-`SymmetricSparseIterate`, `L=UU'` and an objective for the initial point and each
-accepted iteration. `callback(Σ,S,L)` observes only accepted iterates; its
-return value is ignored. `options.callback` keeps ProximalSolvers' convention.
-`init=(S,U)` is copied and must be feasible. By default `S` is positive diagonal
-with inverse covariance variances and `U` has small deterministic orthogonal
-columns. This nonconvex initialization need not yield a global minimum.
-The overload with positional `ηS,ηU` keeps its legacy alternating updates.
+Estimate `Θ = S - L`, with `L = UU' ⪰ 0` of rank at most `r`, by iterative
+hard thresholding of `S` on `tr(ΣΘ) - logdet(Θ)`. This is the marginal precision
+of the observed variables in a Gaussian graphical model with `r` latent
+variables (Chandrasekaran, Parrilo and Willsky, 2012). At most `s` off-diagonal
+pairs in `S` are nonzero; the diagonal is unconstrained.
+
+Step sizes are chosen by backtracking, and the line search rejects points
+outside the positive definite cone. With `MonotoneAccProxGradDescent` the
+objective does not increase up to rounding. This is a local method for a
+nonconvex problem and need not yield a global minimum.
+
+By default `S = Diagonal(1 ./ diag(Σ))`, `U[i, i] = sqrt(S[i, i]) / 10` for
+`i ≤ r`, and the other entries of `U` are zero. The covariance diagonal must
+be positive. `init = (S, U)` is copied and must have `S - UU'` positive definite
+and respect the sparsity budget.
+
+Returns `(S, L, U, fvals, iter)`, with `S` a `SymmetricSparseIterate`, `L = UU'`,
+`fvals` containing the objective at the initial point and every accepted
+iteration, and `iter` the number of iterations. `covsel_objective(Σ, S, L)` is
+the objective at the result. `callback(Σ, S, L)` observes only accepted iterates;
+its return value is ignored. `options.callback` keeps ProximalSolvers' convention.
 """
 function covsel_latent_iht!(Σ::AbstractMatrix{T}, s::Int, r::Int;
   method = ProximalSolvers.ProximalGradientDescent(), options::ProximalOptions = ProximalOptions(), init = nothing, callback = nothing) where {T<:AbstractFloat}
@@ -161,10 +171,9 @@ end
 Automatic-step IHT for the direct difference loss at `Δ+UU'`. The in-place
 method starts from and updates `Δ,U`, and overwrites `L=UU'`. Its sparsity budget
 counts diagonal coordinates. Returns `(Δ,L,U,fvals,iter)` with initial and every
-accepted objective. `callback(Δ,L)` has its legacy ignored return value; stopping
+accepted objective. The return value of `callback(Δ, L)` is ignored; stopping
 callbacks belong in `options`. The convenience method copies `init=(Δ,U)`, or
-starts from zero `Δ` and a small deterministic orthogonal `U`. The explicit-η
-overloads retain their original alternating updates and initialization.
+starts from zero `Δ` and a small deterministic orthogonal `U`.
 """
 function difference_latent_precision_iht!(Δ::SymmetricSparseIterate{T}, L::StridedMatrix{T}, U::StridedMatrix{T},
   Σx::Symmetric{T}, Σy::Symmetric{T}, s::Int;

@@ -53,14 +53,12 @@ for p in DIMENSIONS
       @benchmarkable solve!(SymmetricSparseIterate($p), direct_difference_loss($Sx, $Sy), NormL1($λ), CDSolver(); continuation=50)
   end
   # at most 2p - 1 nonzero entries in the lower triangle, the size of the true
-  # support; step sizes as in examples/latent_difference.jl
+  # support; step sizes chosen automatically by backtracking
   s = 2p - 1
-  η = 1 / (opnorm(Sx) * opnorm(Sy))
-  ηU = η / (4 * opnorm(CovarianceSelection.difference_latent_precision_iht_init(Sx, Sy, s, 1)[2]))
   g = SUITE["direct difference"]["p = $p, IHT"] = BenchmarkGroup()
-  g["difference_precision_iht"] = @benchmarkable difference_precision_iht($Sx, $Sy, $η, $s)
-  g["difference_latent_precision_iht, r = 1"] = @benchmarkable difference_latent_precision_iht($Sx, $Sy, $η, $ηU, $s, 1;
-    options=IHTOptions(; eps_tol=1e-8, maxiter=500))
+  g["difference_precision_iht"] = @benchmarkable difference_precision_iht($Sx, $Sy, $s)
+  g["difference_latent_precision_iht, r = 1"] = @benchmarkable difference_latent_precision_iht($Sx, $Sy, $s, 1;
+    method = MonotoneAccProxGradDescent(), options = ProximalOptions(; maxiter = 500, ftol = 1e-8))
 end
 
 SUITE["ADMM"] = BenchmarkGroup()

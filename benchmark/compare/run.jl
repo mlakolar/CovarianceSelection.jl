@@ -6,9 +6,10 @@
 # ProximalBase 0.5). The data come from Random and LinearAlgebra only, so that
 # both sides solve the same problems. Each case runs once to compile, then
 # until it has at least 5 runs and half a second of them, each from the same
-# seed. Writes the median times, the passes (the iterations of ADMM and IHT)
+# seed. Writes the median times, the passes (the iterations of ADMM)
 # and the solutions to results/<side>_<stamp>.jls; compare.jl compares the
-# two sides.
+# two sides. IHT is omitted because the old side only has the removed
+# explicit-step methods.
 #
 #     julia --project=benchmark/compare/old benchmark/compare/run.jl old [regex]
 #     julia --project=benchmark/compare/new benchmark/compare/run.jl new [regex]
@@ -139,20 +140,6 @@ function admm_cases()
   end)
 end
 
-function iht_cases()
-  p = 50
-  P = difference_problem(p)
-  Sx, Sy = P.Sx, P.Sy
-  s = 2p - 1
-  η = 1 / (opnorm(Sx) * opnorm(Sy))
-  run_case("difference_precision_iht p=50 s=$s", () -> ((Δ, fvals) = difference_precision_iht(Sx, Sy, η, s); (vec(Matrix(Δ)), length(fvals))))
-  ηU = η / (4 * opnorm(CS.difference_latent_precision_iht_init(Sx, Sy, s, 1)[2]))
-  run_case("difference_latent_precision_iht p=50 s=$s r=1", () -> begin
-    Δ, L, U, fvals, iter = difference_latent_precision_iht(Sx, Sy, η, ηU, s, 1; options=IHTOptions(; eps_tol=1e-8, maxiter=500))
-    (vcat(vec(Matrix(Δ)), vec(L)), iter)
-  end)
-end
-
 function loss_cases()
   p = 100
   P = difference_problem(p)
@@ -163,7 +150,6 @@ end
 dtrace_cases()
 refit_cases()
 admm_cases()
-iht_cases()
 loss_cases()
 
 mkpath(joinpath(@__DIR__, "results"))

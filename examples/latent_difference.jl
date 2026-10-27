@@ -7,7 +7,7 @@
 #
 #   julia --project=examples examples/latent_difference.jl
 
-using CovarianceSelection, ProximalBase
+using CovarianceSelection, ProximalBase, ProximalSolvers
 using LinearAlgebra, Printf, Random, Statistics
 using UnicodePlots
 
@@ -38,31 +38,28 @@ Sy = Symmetric(cov(CovarianceSelection.generate_data(Ωy, n)))
 #
 #   ℓ(Θ) = tr(Sx Θ Sy Θ) / 2 - tr(Θ (Sy - Sx)),   Θ = Δ + UU',
 #
-# by gradient steps on Δ, each followed by keeping the s largest entries, and
-# on U. The gradient of ℓ is Lipschitz with constant ‖Sx‖‖Sy‖, which gives the
-# step size for Δ. As a function of U the constant is about 4‖Sx‖‖Sy‖‖U‖², so
-# the step for U is scaled by 1 / (4‖L₀‖), with L₀ = U₀U₀' the starting value.
+# by gradient steps on Δ and U with a common step size chosen by backtracking.
+# Each step projects Δ onto at most s lower-triangle coordinates, including
+# the diagonal. The monotone accelerated method keeps the loss nonincreasing.
 # The sparsity s and the rank r are tuning parameters; here they are the truth.
 s, r = 2, 1
-ηΔ = 1 / (opnorm(Sx) * opnorm(Sy))
 
-# The starting values hard threshold inv(Sx) - inv(Sy) and take the top r
-# singular vectors of what is left; the in-place solver continues from them.
-Δ, L̂, U, gD, gU = CovarianceSelection.difference_latent_precision_iht_init(Sx, Sy, s, r)
-ηU = ηΔ / (4 * opnorm(L̂))
-
-# The callback is called after every iteration with the current Δ and L; here
-# it records the size of each step, ‖Θₖ - Θₖ₋₁‖_F, to monitor convergence.
+# The callback observes accepted iterates and records ‖Θₖ - Θₖ₋₁‖_F.
+# Initially Δ = 0 and U has 0.1 on its first r diagonal entries.
 steps = Float64[]
-Θprev = Ref(Matrix(Δ) + L̂)
+Θprev = Ref(zeros(p, p))
+for i=1:r
+  Θprev[][i, i] = 0.1^2
+end
 function recordStep(Δ, L)
   Θ = Matrix(Δ) + L
   push!(steps, norm(Θ - Θprev[]))
   Θprev[] = Θ
 end
-Δ, L̂, U, fvals, iter = difference_latent_precision_iht!(Δ, L̂, U, gD, gU, Sx, Sy, ηΔ, ηU, s, r;
-  options=IHTOptions(; eps_tol=1e-10, maxiter=10_000, check_every=10), callback=recordStep)
-# (difference_latent_precision_iht(Sx, Sy, ηΔ, ηU, s, r) does both steps in one call)
+Δ, L̂, U, fvals, iter = difference_latent_precision_iht(Sx, Sy, s, r;
+  method = MonotoneAccProxGradDescent(),
+  options = ProximalOptions(; maxiter = 10_000, ftol = 1e-12, xtol = 1e-12, gradtol = 1e-10),
+  callback = recordStep)
 
 support = sort([(r, c) for c=1:p for r=c:p if Δ[r, c] != 0])
 u, û = eigvecs(Symmetric(L))[:, end], U[:, 1] / norm(U)

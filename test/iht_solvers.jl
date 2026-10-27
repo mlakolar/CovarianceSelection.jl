@@ -9,13 +9,14 @@ const CS = CovarianceSelection
 const METHODS = (ProximalGradientDescent(), ProximalGradientDescent(; normalized = true),
                  AccProxGradDescent(), MonotoneAccProxGradDescent())
 
-theta(S, U) = Matrix(S) + U * U'
+logdet_theta(S, U) = Matrix(S) - U * U'
+dtrace_theta(S, U) = Matrix(S) + U * U'
 triangle_nnz(S; diagonal = true) = count(!iszero, S[i, j] for j in axes(S, 2) for i in (diagonal ? j : j+1):size(S, 1))
 function dtrace(A, B, S, U)
-  Θ = theta(S, U)
+  Θ = dtrace_theta(S, U)
   dot(Θ, A * Θ * B) / 2 + dot(A - B, Θ)
 end
-logloss(Σ, S, U) = (Θ = theta(S, U); dot(Σ, Θ) - logdet(Symmetric(Θ)))
+logloss(Σ, S, U) = (Θ = logdet_theta(S, U); dot(Σ, Θ) - logdet(Symmetric(Θ)))
 
 function latent_start(::Type{T}) where {T}
   Matrix{T}(I, 4, 4), reshape(T[0.12, -0.08, 0.06, 0.1], 4, 1)
@@ -33,13 +34,15 @@ end
   h = 1e-6
   xp = (SymmetricSparseIterate(S0 + h * D), U0 + h * V)
   xm = (SymmetricSparseIterate(S0 - h * D), U0 - h * V)
-  for f in (CS._LatentLogdet(Σ), CS._LatentDTrace(Symmetric(A), Symmetric(B)))
+  for (f, loss) in ((CS._LatentLogdet(Σ), (S, U) -> logloss(Σ, S, U)),
+                    (CS._LatentDTrace(Symmetric(A), Symmetric(B)), (S, U) -> dtrace(A, B, S, U)))
     G = (zeros(4, 4), zeros(4, 1))
     value = value_and_gradient!(G, f, x)
     @test value ≈ f(x)
+    @test value ≈ loss(S0, U0)
     @test G[1] ≈ G[1]' atol = 1e-13
     @test norm(G[1]) > 0 && norm(G[2]) > 0
-    @test (f(xp) - f(xm)) / (2h) ≈ dot(G[1], D) + dot(G[2], V) rtol = 1e-6 atol = 1e-7
+    @test (loss(xp...) - loss(xm...)) / (2h) ≈ dot(G[1], D) + dot(G[2], V) rtol = 1e-6 atol = 1e-7
   end
   f = CS._LatentLogdet(Σ)
   invalid = (SymmetricSparseIterate(-S0), zeros(4, 1))
@@ -83,17 +86,17 @@ end
 @testset "automatic latent log-det IHT guards the positive definite cone" begin
   Σ = Matrix(SymTridiagonal([4.0, 3.0, 2.5, 3.5], [0.25, -0.2, 0.15]))
   S0, U0 = latent_start(Float64)
-  Θ0 = theta(S0, U0)
+  Θ0 = logdet_theta(S0, U0)
   G = Σ - inv(Symmetric(Θ0))
   trialS = prox(IndBallL0(1; diagonal = false), Symmetric(S0 - G / 0.9))
-  trialU = U0 - 2G * U0 / 0.9
-  @test !isposdef(Symmetric(theta(trialS, trialU)))
+  trialU = U0 + 2G * U0 / 0.9
+  @test !isposdef(Symmetric(logdet_theta(trialS, trialU)))
   for method in METHODS
     saved = Matrix{Float64}[]
     callback_values = Float64[]
     callback = (Σ, S, L) -> begin
-      push!(saved, Matrix(S) + L)
-      push!(callback_values, dot(Σ, Matrix(S) + L) - logdet(Symmetric(Matrix(S) + L)))
+      push!(saved, Matrix(S) - L)
+      push!(callback_values, dot(Σ, Matrix(S) - L) - logdet(Symmetric(Matrix(S) - L)))
       true                         # The legacy callback does not stop the run.
     end
     S, L, U, values, iter = CS.covsel_latent_iht!(Σ, 1, 1; init = (S0, U0), method, callback,
@@ -119,7 +122,7 @@ end
   @test out[5] == 1 && calls[] == 1 && length(out[4]) == 2
   default = CS.covsel_latent_iht!(Σ, 1, 1;
       options = ProximalOptions(; maxiter = 10, callback = _ -> true))
-  @test all(isfinite, default[4]) && isposdef(Symmetric(Matrix(default[1]) + default[2]))
+  @test all(isfinite, default[4]) && isposdef(Symmetric(Matrix(default[1]) - default[2]))
   @test default[2] ≈ default[3] * default[3]'
 end
 

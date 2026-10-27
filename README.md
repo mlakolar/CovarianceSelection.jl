@@ -24,6 +24,8 @@ CovarianceSelection was called CovSel before its first release.
 * Sparse matrix inversion with the scaled lasso of each column (Sun and Zhang,
   2013), which needs no tuning: `slassoinv`
 * Graphical lasso by ADMM: `covsel!`, `covselpath`
+* Graphical models with latent variables, with a sparse minus low rank precision
+  matrix, by iterative hard thresholding: `covsel_latent_iht!`
 * Fused graphical lasso for K groups (Danaher, Wang and Witten, 2014), with all pairs fused: `fused_graphical_lasso`, `fused_graphical_lasso!`
 * K precision matrices with a shared sparsity pattern, the group graphical lasso (Danaher, Wang and Witten, 2014): `group_graphical_lasso`, `group_graphical_lasso!`
 * Graphs that vary over time (Zhou, Lafferty and Wasserman, 2010), the group graphical lasso of kernel-weighted covariances: `tv_covsel`, `kernel_covariances`
@@ -181,8 +183,9 @@ against the R package scalreg and its accuracy against CLIME and ACLIME.
 The [`examples`](examples) folder has a script for each estimator: the
 graphical lasso along a path of penalties, direct difference estimation and
 refitting, the fused graphical lasso and fused neighborhood selection, graphs
-that vary over time, a sparse plus low rank difference, and a simulation of
-inference for one entry of `Ωx - Ωy` when p > n. They have their own
+that vary over time, a sparse plus low rank difference, a graph confounded by
+a latent factor, and a simulation of inference for one entry of `Ωx - Ωy`
+when p > n. They have their own
 environment; from the repository root:
 
 ```sh
@@ -207,7 +210,7 @@ See [`benchmark/README.md`](benchmark/README.md) for details.
 
 ### IHT with automatic step sizes
 
-Omit the step-size arguments to use ProximalSolvers' backtracking methods:
+IHT uses ProximalSolvers' backtracking methods to choose the step size:
 
 ```julia
 using LinearAlgebra, ProximalSolvers
@@ -219,16 +222,27 @@ S, L, U, objectives, iterations = covsel_latent_iht!(Σ, s, r;
     method = ProximalGradientDescent(; normalized = true))
 ```
 
-The latent models use `S + U*U'` (or `Δ + U*U'`) and one step size for both
-blocks. The log-det loss checks a Cholesky factorization before taking an
-inverse, and the line search rejects points outside the positive definite
-cone. `init=(S,U)` supplies a copied feasible starting point. The latent
-D-trace in-place overload updates existing `Δ,L,U` buffers.
+`covsel_latent_iht!` estimates the marginal precision `Θ = S - L` of observed
+variables in a graphical model with latent variables, where `L = U*U'` is
+positive semidefinite. It minimizes `tr(ΣΘ) - logdet(Θ)` with at most `s`
+off-diagonal pairs in `S`; the diagonal is unconstrained. The latent difference
+estimator uses `Δ + U*U'` in the direct difference loss, and its sparsity
+budget counts diagonal coordinates too. Both use one step size for the two
+blocks and return `L = U*U'`.
+
+The log-det loss checks a Cholesky factorization before taking an inverse,
+and the line search rejects points outside the positive definite cone.
+`init=(S,U)` supplies a copied starting point for the latent graphical model;
+it must respect the sparsity budget and have `S - U*U'` positive definite.
+The latent difference estimator accepts `init=(Δ,U)`, and its in-place
+overload updates existing `Δ,L,U` buffers.
 
 `options=ProximalOptions(...)` controls stopping and callbacks. The returned
 objective vector contains the initial value and each accepted iteration.
 These are nonconvex local methods; different initializations can lead to
-different supports and objectives. Calls with explicit step-size arguments
-retain their original fixed-step behavior. Automatic steps use the exact
-Frobenius projection from ProximalBase 0.5.3, which can differ from the legacy
-magnitude threshold when diagonal entries count toward the sparsity budget.
+different supports and objectives. The explicit-step methods and `IHTOptions`
+were removed in favour of these automatic-step methods. The sparse projection
+is the exact Frobenius projection from ProximalBase 0.5.3, which can differ
+from a plain magnitude threshold (keeping the `s` largest entries in absolute
+value, as `hard_threshold!` does) when diagonal entries count toward the
+sparsity budget.
