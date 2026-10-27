@@ -1,5 +1,5 @@
 [deps]
-HighDimensionalModels = "c00ed354-b9be-54b8-8a23-c5ac771bc43a"
+HighDimensionalModels = "676596c9-8d02-4dfa-b091-57818f5febe0"
 CovarianceSelection = "fb9f034c-9bf8-4e47-a0a4-723273363029"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
@@ -9,21 +9,21 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
-# HighDimensionalModels 0.8, ProximalBase 0.5.3 and ProximalSolvers 0.1.1 come from
-# their masters until they are registered
+# HighDimensionalModels, ProximalBase and ProximalSolvers come from their master
+# checkouts while these packages are in flux
 [sources]
 HighDimensionalModels = {path = "../../HighDimensionalModels.jl"}
 CovarianceSelection = {path = ".."}
 ProximalBase = {path = "../../ProximalBase.jl"}
-ProximalSolvers = {path = "../../ProximalOPT.jl"}
+ProximalSolvers = {path = "../../ProximalSolvers.jl"}
 
 [compat]
-HighDimensionalModels = "0.8"
+HighDimensionalModels = "0.1"
 CovarianceSelection = "0.1"
 LinearAlgebra = "1"
 Printf = "1"
 ProximalBase = "0.5.3"
-ProximalSolvers = "0.1.1"
+ProximalSolvers = "0.2"
 Random = "1"
 Statistics = "1"
 UnicodePlots = "3"
