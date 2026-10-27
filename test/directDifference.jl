@@ -4,7 +4,7 @@ using Test, Random, LinearAlgebra, SparseArrays, Statistics
 import CovarianceSelection, ProximalBase, ProximalSolvers
 using CovarianceSelection: diff_loss
 using ProximalBase: SymmetricSparseIterate, NormL1, coordinates, ncoordinates, tril_cartesian, tril_index
-using ProximalSolvers: CDSolver
+using ProximalSolvers: CDSolver, ProximalOptions
 
 include("reference.jl")
 
@@ -172,7 +172,7 @@ denseLoss(Sx, Sy, D) = tr(Sx*D*Sy*D) / 2 - tr(D*(Sy - Sx))
       @test iszero(Matrix(CovarianceSelection.difference_precision_refit(Symmetric(hSx), Symmetric(hSy), Int[])))
   end
 
-  @testset "IHT" begin
+  @testset "automatic IHT recovers precision differences" begin
     p = 6
     Σx = [0.5^abs(i-j) for i=1:p, j=1:p]
     Ωy = inv(Σx)
@@ -180,26 +180,26 @@ denseLoss(Sx, Sy, D) = tr(Sx*D*Sy*D) / 2 - tr(D*(Sy - Sx))
     Σy = inv(Ωy)
     D = inv(Σx) - inv(Σy)
 
-    η = 1 / (opnorm(Σx) * opnorm(Σy))
-    Δ, fvals = CovarianceSelection.difference_precision_iht(Symmetric(Σx), Symmetric(Σy), η, 1; eps_tol=1e-14, maxiter=10000)
+    opt = ProximalOptions(; maxiter = 5000, ftol = 1e-14, xtol = 1e-14, gradtol = 1e-12)
+    Δ, fvals = CovarianceSelection.difference_precision_iht(Symmetric(Σx), Symmetric(Σy), 1; options = opt)
     @test Matrix(Δ) ≈ D atol=1e-6
     @test nnz(Δ) == 1
     @test fvals[end] ≈ denseLoss(Σx, Σy, D)
-    # projected gradient descent with step 1/L does not increase the objective here
+    # backtracking does not increase the objective here
     @test all(diff(fvals) .<= 1e-12)
 
     # without the sparsity constraint the iterates converge to inv(Σx) - inv(Σy)
     Σy = [0.3^abs(i-j) for i=1:p, j=1:p]
-    η = 1 / (opnorm(Σx) * opnorm(Σy))
-    Δ, _ = CovarianceSelection.difference_precision_iht(Symmetric(Σx), Symmetric(Σy), η, div(p * (p + 1), 2); eps_tol=1e-16, maxiter=20000)
+    Δ, _ = CovarianceSelection.difference_precision_iht(Symmetric(Σx), Symmetric(Σy), div(p * (p + 1), 2); options = opt)
     @test Matrix(Δ) ≈ inv(Σx) - inv(Σy) atol=1e-5
-    @test_throws DimensionMismatch CovarianceSelection.difference_precision_iht(Symmetric(Σx), Symmetric(Σy[1:2, 1:2]), η, 1)
+    @test_throws DimensionMismatch CovarianceSelection.difference_precision_iht(Symmetric(Σx), Symmetric(Σy[1:2, 1:2]), 1)
 
     # only the triangle that each Symmetric refers to is read
     Mx, My = copy(Σx), copy(Σy)
     Mx[2, 1] = My[1, 3] = 1e3
-    Δ1, fvals1 = CovarianceSelection.difference_precision_iht(Symmetric(Σx), Symmetric(Σy), η, 4; maxiter=50)
-    Δ2, fvals2 = CovarianceSelection.difference_precision_iht(Symmetric(Mx, :U), Symmetric(My, :L), η, 4; maxiter=50)
+    short = ProximalOptions(; maxiter = 50, ftol = 1e-14, xtol = 1e-14, gradtol = 1e-12)
+    Δ1, fvals1 = CovarianceSelection.difference_precision_iht(Symmetric(Σx), Symmetric(Σy), 4; options = short)
+    Δ2, fvals2 = CovarianceSelection.difference_precision_iht(Symmetric(Mx, :U), Symmetric(My, :L), 4; options = short)
     @test Matrix(Δ2) ≈ Matrix(Δ1)
     @test fvals2 ≈ fvals1
   end

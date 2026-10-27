@@ -53,10 +53,9 @@ x[J] = ((kron(Sy, Sx) + kron(Sx, Sy))[J, J] / 2) \ (Sy - Sx)[J]
   rΔ[2, 1], maximum(abs, Matrix(rΔ) - x))
 
 # Iterative hard thresholding minimizes the same loss subject to at most s
-# nonzero entries in the lower triangle, with step size η = 1 / (‖Sx‖‖Sy‖),
-# the reciprocal of the Lipschitz constant of the gradient.
-η = 1 / (opnorm(Sx) * opnorm(Sy))
-iΔ, fvals = difference_precision_iht(Sx, Sy, η, 1)
+# nonzero entries in the lower triangle, including the diagonal. The step
+# size is chosen automatically by backtracking.
+iΔ, fvals = difference_precision_iht(Sx, Sy, 1)
 @printf("\niterative hard thresholding with s = 1: Δ̂[2, 1] = %.3f after %d iterations\n",
   iΔ[2, 1], length(fvals) - 1)
 

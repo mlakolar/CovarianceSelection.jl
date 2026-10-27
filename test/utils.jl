@@ -57,9 +57,11 @@ end
   A = randn(20, 4)
   Σ = A'A / 20
   Ω = inv(Σ + I)
-  L = 0.1 * ones(4, 4)
+  v = ones(4) / 2
+  L = 0.1 * eigmin(Symmetric(Ω)) * v * v'
+  @test isposdef(Symmetric(Ω - L))
   @test CovarianceSelection.covsel_objective(Σ, Ω) ≈ tr(Σ * Ω) - log(det(Ω))
-  @test CovarianceSelection.covsel_objective(Σ, Ω, L) ≈ CovarianceSelection.covsel_objective(Σ, Ω + L)
+  @test CovarianceSelection.covsel_objective(Σ, Ω, L) ≈ CovarianceSelection.covsel_objective(Σ, Ω - L)
 end
 
 @testset "confusion matrix" begin
