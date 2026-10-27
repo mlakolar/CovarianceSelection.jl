@@ -112,21 +112,20 @@ passes are the iterations for ADMM and IHT.
 | difference_latent_precision_iht p=50 s=99 r=1 | 31.27 | 30.05 | 0.96 | 500 / 500 | 0 |
 | diff_loss p=100 tridiagonal Δ | 34.11 | 0.26 | 0.01 | | 4e-15 |
 
-No case was slower in these measurements: over the 18 cases the geometric
-mean of new / old was 0.53, and the ratio within each of the four rounds was
-at most 1.01.
+No case is slower: over the 18 cases the geometric mean of new / old is 0.53,
+and the ratio within each of the four rounds is at most 1.01.
 
 - The direct difference estimator (`dtrace`, ProximalSolvers' coordinate descent
-  on `KronQuadratic`) took 12 to 24% less time. Its passes differed by up to 15%
+  on `KronQuadratic`) takes 12 to 24% less time. Its passes differ by up to 15%
   in a random order: the old coordinate step stored a coordinate that ends at
   zero, which reorders the active coordinates. In the cyclic order the passes
-  were the same. Both stopped at the same tolerance, and the solutions agreed to
+  are the same. Both stop at the same tolerance, and the solutions agree to
   1e-7.
-- `difference_precision_refit` was 10 to 12 times faster and exact. The old refit,
-  coordinate descent with penalty weights of 1e10 off the support, was within
+- `difference_precision_refit` is 10 to 12 times faster and exact. The old refit,
+  coordinate descent with penalty weights of 1e10 off the support, is within
   1e-7 of it.
-- `covsel!` took the iterations of the old ADMM loop and agreed with it to
-  rounding. The fused solvers and the explicit-step IHT solvers ran the same
-  loops on the ProximalBase 0.5 names: the same iterations, solutions equal
-  to rounding (the IHT solutions were identical).
-- `diff_loss` multiplied dense matrices where it had made `p²` sparse products.
+- `covsel!` takes the iterations of the old ADMM loop and agrees with it to
+  rounding. The fused solvers and the explicit-step IHT solvers run the same loops on the
+  ProximalBase 0.5 names: the same iterations, solutions equal to rounding
+  (the IHT solutions are identical).
+- `diff_loss` multiplies dense matrices where it made `p²` sparse products.

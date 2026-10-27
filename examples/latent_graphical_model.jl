@@ -62,3 +62,7 @@ best = argmin([abs(tp + fp - (p - 1)) for (tp, fp) in counts])
 tp, fp = counts[best]
 @printf("graphical lasso (λ = %.4f): %d true positive edges, %d false positive edges\n",
   λs[best], tp, fp)
+@printf("  selected edge count = %d, target = %d\n", tp + fp, p - 1)
+if best == 1 && minimum(tp + fp for (tp, fp) in counts) > p - 1
+  @printf("  The graphical lasso does not reach %d edges on this grid.\n", p - 1)
+end

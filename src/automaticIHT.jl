@@ -57,9 +57,9 @@ end
 ProximalBase.issmooth(::Type{<:_LatentLogdet}) = true
 ProximalBase.issmooth(::Type{<:_LatentDTrace}) = true
 
-function _iht_theta!(Θ, x, sign)
+function _iht_theta!(Θ, x, σ)
   _densify!(Θ, x[1])
-  mul!(Θ, x[2], transpose(x[2]), eltype(Θ)(sign), one(eltype(Θ)))
+  mul!(Θ, x[2], transpose(x[2]), eltype(Θ)(σ), one(eltype(Θ)))
 end
 function _iht_factor!(f::_LatentLogdet, x)
   _iht_theta!(f.Θ, x, -1)
@@ -171,7 +171,7 @@ end
 Automatic-step IHT for the direct difference loss at `Δ+UU'`. The in-place
 method starts from and updates `Δ,U`, and overwrites `L=UU'`. Its sparsity budget
 counts diagonal coordinates. Returns `(Δ,L,U,fvals,iter)` with initial and every
-accepted objective. `callback(Δ,L)` has its legacy ignored return value; stopping
+accepted objective. The return value of `callback(Δ, L)` is ignored; stopping
 callbacks belong in `options`. The convenience method copies `init=(Δ,U)`, or
 starts from zero `Δ` and a small deterministic orthogonal `U`.
 """

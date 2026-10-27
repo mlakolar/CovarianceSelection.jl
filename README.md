@@ -243,5 +243,6 @@ These are nonconvex local methods; different initializations can lead to
 different supports and objectives. The explicit-step methods and `IHTOptions`
 were removed in favour of these automatic-step methods. The sparse projection
 is the exact Frobenius projection from ProximalBase 0.5.3, which can differ
-from the legacy magnitude threshold when diagonal entries count toward the
+from a plain magnitude threshold (keeping the `s` largest entries in absolute
+value, as `hard_threshold!` does) when diagonal entries count toward the
 sparsity budget.
