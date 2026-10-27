@@ -36,8 +36,9 @@ repository, so add it explicitly:
 julia --project=examples -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
 ```
 
-Until ProximalBase 0.5.3, ProximalSolvers 0.1.1 and HighDimensionalModels 0.8 are
-registered, `[sources]` also takes them from their masters on GitHub. On Julia
+While ProximalBase, ProximalSolvers and HighDimensionalModels are in flux,
+`[sources]` also takes them from their master checkouts next to this repository;
+`julia scripts/instantiate.jl examples` clones any that are missing. On Julia
 1.10 they must be added in the same call:
 `Pkg.add([PackageSpec(url="https://github.com/mlakolar/ProximalBase.jl", rev="master"), PackageSpec(url="https://github.com/mlakolar/ProximalSolvers.jl", rev="master"), PackageSpec(url="https://github.com/mlakolar/HighDimensionalModels.jl", rev="master")])`.
 
@@ -55,4 +56,4 @@ Each script takes a few seconds. With the environment variable
 default (p = 500, n = 400, 500 replications); CI runs all the examples this
 way.
 
-The inference example uses HighDimensionalModels 0.8's `sqrt_lasso`.
+The inference example uses HighDimensionalModels' `sqrt_lasso`.
