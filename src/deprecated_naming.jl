@@ -14,12 +14,7 @@ Base.@deprecate_binding diffLoss diff_loss
 Base.@deprecate_binding differencePrecisionIHT difference_precision_iht
 Base.@deprecate_binding differenceLatentPrecisionIHT difference_latent_precision_iht
 Base.@deprecate_binding differenceLatentPrecisionIHT! difference_latent_precision_iht!
-Base.@deprecate_binding differenceLatentPrecisionIHT_init difference_latent_precision_iht_init false
 Base.@deprecate_binding covselLatentIHT! covsel_latent_iht!
-Base.@deprecate_binding covselLatentIHT_grad_S! covsel_latent_iht_grad_s! false
-Base.@deprecate_binding covselLatentIHT_grad_U! covsel_latent_iht_grad_u! false
-Base.@deprecate_binding diffPrecision_grad_delta! diff_precision_grad_delta! false
-Base.@deprecate_binding differencePrecisionIHT_grad_u! difference_precision_iht_grad_u! false
 Base.@deprecate_binding HardThreshold! hard_threshold! false
 Base.@deprecate_binding covSel_objective covsel_objective false
 Base.@deprecate_binding getConfusionMatrix get_confusion_matrix false

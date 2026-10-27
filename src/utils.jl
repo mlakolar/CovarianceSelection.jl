@@ -77,4 +77,5 @@ end
 # tr(Σ Ω) - log det Ω
 covsel_objective(Σ, S) = tr(Σ*S) - logdet(S)
 
-covsel_objective(Σ, S, L) = tr(Σ*(S+L)) - logdet(S+L)
+# Θ = S - L as in covsel_latent_iht!.
+covsel_objective(Σ, S, L) = tr(Σ*(S-L)) - logdet(S-L)
