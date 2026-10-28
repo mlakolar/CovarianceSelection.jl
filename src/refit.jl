@@ -287,7 +287,7 @@ function _refit(S::Matrix{T}, P, method::PrimalCoordinate, info) where {T}
   neighbours = [findall(view(P, :, j)) for j in 1:p]
   d = maximum(length, neighbours)
   A = Matrix{T}(undef, d, d)
-  b, ax = Vector{T}(undef, d), Vector{T}(undef, d)
+  b = Vector{T}(undef, d)
   w, u = zeros(T, p), zeros(T, p)
   Ω, W = Matrix(Diagonal(one(T) ./ diag(S))), Matrix(Diagonal(diag(S)))
   r = one(T) ./ sqrt.(diag(S))
@@ -304,16 +304,15 @@ function _refit(S::Matrix{T}, P, method::PrimalCoordinate, info) where {T}
         fill!(u, zero(T))
       else
         block = view(A, 1:length(N), 1:length(N))
-        x, axn = view(b, 1:length(N)), view(ax, 1:length(N))
+        x = view(b, 1:length(N))
         for (a, k) in enumerate(N), (c, l) in enumerate(N)
           block[a, c] = W[k, l] - w[k] * w[l] / w₂₂
         end
-        factor = cholesky(Symmetric(block))
+        factor = cholesky!(Symmetric(block))
         copyto!(x, view(S, N, j))
         ldiv!(factor, x)
         x ./= -s
-        mul!(axn, block, x)
-        diagonal += dot(x, axn)
+        diagonal = one(T) / s - dot(x, view(S, N, j)) / s
         mul!(u, view(W, :, N), x)
         c = dot(view(w, N), x) / w₂₂
         for k in 1:p
@@ -327,9 +326,10 @@ function _refit(S::Matrix{T}, P, method::PrimalCoordinate, info) where {T}
       end
       change = max(change, abs(diagonal - Ω[j, j]) / (r[j] * r[j]))
       Ω[j, j] = diagonal
-      for l in 1:p, k in l:p
-        W[k, l] += -w[k] * w[l] / w₂₂ + s * u[k] * u[l]
-        W[l, k] = W[k, l]
+      @inbounds for l in 1:p
+        @simd for k in 1:p
+          W[k, l] += s * (u[k] * u[l]) - (w[k] * w[l]) / w₂₂
+        end
       end
       for k in 1:p
         W[k, j] = W[j, k] = -s * u[k]

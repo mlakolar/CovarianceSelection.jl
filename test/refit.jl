@@ -321,7 +321,8 @@ end
       Ω = @test_logs (:warn, r"without converging") covsel_refit(S, E, method; info)
       @test !info.converged
       @test info.iterations == (method isa RefitADMM ? 2 : 1)
-      @test isfinite(info.kkt) || info.kkt == Inf
+      @test isposdef(Symmetric(Matrix(Ω)))
+      @test isfinite(info.kkt)
       @test all(iszero(Ω[k, j]) for j in 1:9 for k in 1:9 if k != j && !E[k, j])
     end
     unequal = Matrix(Diagonal([8.92; fill(0.01, 8)]))
