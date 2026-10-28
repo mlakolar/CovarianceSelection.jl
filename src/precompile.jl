@@ -16,9 +16,14 @@ using PrecompileTools: @setup_workload, @compile_workload
   Y = X * cholesky(Σy).U
   Sx, Sy = Symmetric(X'X / n), Symmetric(Y'Y / n)
   t = [i / n for i in 1:n]
+  E = BitMatrix([abs(i - j) == 1 for i in 1:p, j in 1:p])
   @compile_workload begin
     covsel!(zeros(p, p), zeros(p, p), zeros(p, p), Matrix(Sy), 0.1)
     covselpath(Matrix(Sy), [0.2, 0.1])
+    covsel_refit(Matrix(Sy), E, ChordalCompletion())
+    covsel_refit(Matrix(Sy), E, DualCoordinate())
+    covsel_refit(Matrix(Sy), E, PrimalCoordinate())
+    covsel_refit(Matrix(Sy), E, RefitADMM())
     fused_graphical_lasso(Matrix(Sx), n, Matrix(Sy), n, 0.05, 0.05)
     tv_covsel(Y, t, [0.3, 0.7], 0.3, 0.1)
     tv_covsel(Y, t, [0.3, 0.7], 0.3, 0.1; λ1 = 0.05)

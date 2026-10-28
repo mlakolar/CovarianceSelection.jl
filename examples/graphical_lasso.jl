@@ -4,17 +4,20 @@
 # Run from the repository root (see examples/README.md for the setup):
 #
 #   julia --project=examples examples/graphical_lasso.jl
+#
+# COVSEL_EXAMPLES_QUICK=1 selects a smaller setting.
 
 using CovarianceSelection
 using LinearAlgebra, Printf, Random, Statistics
 using UnicodePlots
 
 Random.seed!(1)
+const QUICK = get(ENV, "COVSEL_EXAMPLES_QUICK", "0") == "1"
 
 # A random sparse precision matrix Ω, rescaled so that every variable has
 # variance one (the scale on which λ ≍ sqrt(log p / n) is the right size),
 # and n observations from N(0, Ω⁻¹).
-p, n = 50, 400
+p, n = QUICK ? (12, 100) : (50, 400)
 Ω = CovarianceSelection.generate_sparse_spd(p)
 d = sqrt.(diag(inv(Ω)))
 Ω = d .* Ω .* d'
@@ -44,7 +47,7 @@ t = CovarianceSelection.get_confusion_matrix(Ω, Z; diagonal=false)
 # from the largest λ down. With λ above the largest off-diagonal |S[i,j]| the
 # estimate is diagonal.
 λmax = maximum(abs(S[i, j]) for j=1:p for i=1:p if i != j)
-λarr = λmax .* exp.(range(0, log(0.02), length=25))
+λarr = λmax .* exp.(range(0, log(0.02), length=QUICK ? 6 : 25))
 path = covselpath(S, λarr)
 
 println("\n     λ   edges   TPR    FPR   precision")
@@ -64,3 +67,8 @@ println(lineplot([0; fprs; 1], [0; tprs; 1]; xlim=(0, 1), ylim=(0, 1), xlabel="F
 Z = zeros(p, p)
 covsel!(zeros(p, p), Z, zeros(p, p), S, λ; penalize_diag=false)
 @printf("\nunpenalized diagonal: relative error %.3f\n", norm(Z - Ω) / norm(Ω))
+
+# A relaxed graphical lasso
+Ω̂ = covsel_refit(S, Z, PrimalCoordinate())
+@printf("\nrelative error: graphical lasso %.3f, relaxed graphical lasso %.3f\n",
+  norm(Z - Ω) / norm(Ω), norm(Matrix(Ω̂) - Ω) / norm(Ω))

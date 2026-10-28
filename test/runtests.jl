@@ -6,6 +6,7 @@ using LinearAlgebra
 tests = [
   "utils",
   "covsel",
+  "refit",
   "directDifference",
   "fusedDifference",
   "multigroupFusedGraphicalLasso",
