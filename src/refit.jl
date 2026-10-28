@@ -144,6 +144,19 @@ Cholesky failure in `PrimalCoordinate` propagates as `PosDefException`.
 Iterative methods warn and return their estimate if they do not converge;
 the maximum likelihood estimate may not exist.
 
+# Choosing a method
+
+For a chordal graph (test with [`is_chordal`](@ref)), use [`ChordalCompletion`](@ref):
+it is exact and needs no iterations. On the benchmark's band graphs it was
+about 9–19× faster than `DualCoordinate` and 25–980× faster than `PrimalCoordinate`.
+Otherwise try [`DualCoordinate`](@ref), the fastest iterative method in every
+benchmarked case, 1.7–56× faster than `PrimalCoordinate` at p ≥ 500. It can
+break down with singular `S`, for example when a node has at least n neighbours.
+Use [`PrimalCoordinate`](@ref) then: it avoids breakdown in exact arithmetic,
+but a sparse-graph sweep costs O(p³); at p = 2000 it was about as slow as ADMM.
+Use [`RefitADMM`](@ref) as an independent check. See `benchmark/refit` for
+the measurements and accuracy differences from this single-machine run.
+
 # Example
 
 ```julia

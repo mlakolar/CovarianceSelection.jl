@@ -197,4 +197,108 @@ Quick timings validate the harness and do not establish full-suite performance.
 
 ## Results
 
-Results will be added from the archived run.
+These are the results of one run on one machine, dated 2026-10-28.
+CovarianceSelection 0.1.0 at `d61f21a` used ProximalBase 0.5.4 (master,
+`702ba7e`), ProximalSolvers 0.3.0 (master, `f74aeaf`), CliqueTrees 1.19.7,
+Krylov 0.10.12, and Julia 1.13.3. The hardware class was an AMD EPYC 9754
+128-Core Processor. Four single-threaded workers each used one BLAS thread.
+The machine was shared with other workloads. The run covered 40 cases and
+2,550 timed repetitions in 30 minutes.
+
+Both the pairwise and converged-objective gates passed. The largest pairwise
+objective difference was 5.5e-12. The independent recomputation agreed with
+the summary. Objective agreement does not imply equal KKT accuracy: ADMM's
+calibration never reached its target. Every ADMM fit used
+`abstol = reltol = 1e-10`, with KKT residuals from 2.2e-9 to 7.7e-8, while
+DualCoordinate reached ≤ 1e-10, PrimalCoordinate ≤ 6.4e-12, and
+ChordalCompletion ≤ 6.5e-16. ADMM's times therefore describe less accurate
+fits than the other package methods.
+
+### Median times
+
+Times are in seconds, to three significant digits. Failure and skip labels
+are retained from the full summary; — means the method is inapplicable.
+The full tables, including minimum times and iterations, are in the archive's
+`results/summary.md`.
+
+#### p = 500
+
+| graph, n | ChordalCompletion | DualCoordinate | PrimalCoordinate | RefitADMM | cliquetrees |
+|---|---:|---:|---:|---:|---:|
+| band, 250 | 0.00252 | 0.0456 | 0.460 | 1.12 | 0.00323 |
+| band, 1000 | 0.00256 | 0.0411 | 0.435 | 0.823 | 0.00325 |
+| er, 250 | — | 0.0363 | 0.381 | 0.877 | 0.0289 |
+| er, 1000 | — | 0.0311 | 0.325 | 0.687 | 0.0192 |
+| glasso-dense, 250 | — | 1.51 | 2.81 | 4.99 | fails: PosDefException |
+| glasso-dense, 1000 | — | 0.987 | 1.70 | 1.84 | fails: PosDefException |
+| glasso-sparse, 250 | — | 0.199 | 0.680 | 7.64 | 1.45 |
+| glasso-sparse, 1000 | — | 0.146 | 0.686 | 3.53 | 0.824 |
+| grid, 250 | — | 0.0333 | 0.324 | 0.800 | 0.0151 |
+| grid, 1000 | — | 0.0320 | 0.380 | 0.759 | 0.0134 |
+
+#### p = 2000
+
+| graph, n | ChordalCompletion | DualCoordinate | PrimalCoordinate | RefitADMM | cliquetrees |
+|---|---:|---:|---:|---:|---:|
+| band, 1000 | 0.0922 | 0.881 | 49.0 | 45.8 | 0.0589 |
+| band, 4000 | 0.0404 | 0.721 | 39.5 | 36.4 | 0.0407 |
+| er, 1000 | — | 0.818 | 42.4 | 43.9 | 0.620 |
+| er, 4000 | — | 0.641 | 30.4 | 36.7 | 0.394 |
+| glasso-dense, 1000 | — | 89.1 | 198 | 178 | skipped (fill 0.940789) |
+| glasso-dense, 4000 | — | 60.8 | 117 | 103 | skipped (fill 0.947701) |
+| glasso-sparse, 1000 | — | 4.64 | 90.8 | 323 | 133 |
+| glasso-sparse, 4000 | — | 3.18 | 55.1 | 144 | 83.3 |
+| grid, 1000 | — | 0.799 | 42.5 | 42.6 | 0.122 |
+| grid, 4000 | — | 0.643 | 32.4 | 39.7 | 0.0719 |
+
+### Hypotheses and method choice
+
+- **H1: refuted.** PrimalCoordinate was not faster than RefitADMM on every
+  case with maximum degree ≤ 50. The counterexamples were the band cases
+  at p = 2000, n = 1000 and n = 4000. ADMM attained lower accuracy, so these
+  are not comparisons at matched KKT residuals.
+- **H2: confirmed on 14 cases.** Wherever DualCoordinate succeeded, it was
+  faster than PrimalCoordinate at maximum degree ≤ 10 and p ≥ 500.
+- **H3: refuted by one near tie.** On the band case p = 2000, n = 1000,
+  ChordalCompletion took 30 repetitions with minimum 0.051 s, median 0.092 s,
+  and maximum 0.095 s. CliqueTrees had minimum 0.046 s and median 0.059 s.
+  Shared load and this spread limit what can be inferred from the near tie.
+
+DualCoordinate was the fastest iterative method in every case. It never
+broke down: no node had at least n neighbours. Thus this run did not exercise
+its breakdown regime. PrimalCoordinate remains the fallback when it does
+break down. On the band, ER, and grid cases at p = 2000, a primal sweep cost
+5.1–6.1 s, making its full fits about as slow as ADMM. RefitADMM provides an
+independent check, with achieved accuracy reported alongside its timing.
+
+CliqueTrees was fastest on grids at p ≥ 500, running 2.2–9.0× faster than
+DualCoordinate. It was about even with DualCoordinate on Erdős–Rényi graphs,
+but about 6–29× slower on the sparse graphical-lasso graphs at p ≥ 500.
+It raised `PosDefException` on all four dense graphical-lasso cases at
+p ≤ 500, where the package methods agreed on the estimate. Those failures
+are failures of this reference call, not evidence that the estimate does
+not exist. At p ≥ 1000 the dense graphical-lasso cases were skipped because
+their embedding fill fractions were 0.91–0.95.
+
+### Reproduce the archived summary
+
+The [archived run](https://github.com/mlakolar/CovarianceSelection.jl/releases/download/benchmark-evidence/refit-benchmark-20261028-d61f21a.tar.gz)
+contains the per-repetition rows, scripts, lockfile, and independent check.
+Download it, verify its SHA-256, and extract it:
+
+```sh
+curl -fL -o refit-benchmark-20261028-d61f21a.tar.gz \
+  https://github.com/mlakolar/CovarianceSelection.jl/releases/download/benchmark-evidence/refit-benchmark-20261028-d61f21a.tar.gz
+printf '%s  %s\n' \
+  '07f875b17c9557232f00a3c3e6ba10067d24e40fde1072990c761bcc4766b038' \
+  'refit-benchmark-20261028-d61f21a.tar.gz' | shasum -a 256 -c -
+tar -xzf refit-benchmark-20261028-d61f21a.tar.gz
+cd refit-benchmark-20261028-d61f21a
+julia --project=scripts scripts/summarize.jl results
+```
+
+Alternatively, recompute the checks with the archived independent script:
+
+```sh
+python3 -I check/check_benchmark.py results
+```

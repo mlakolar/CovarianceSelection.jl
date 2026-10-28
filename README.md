@@ -214,6 +214,12 @@ julia --project=benchmark benchmark/run.jl
 
 See [`benchmark/README.md`](benchmark/README.md) for details.
 
+The [`precision refit benchmark`](benchmark/refit/README.md) compares the four
+`covsel_refit` methods with CliqueTrees.jl's max-det completion. In the archived
+run, `DualCoordinate` was the fastest iterative method on every case, while
+`ChordalCompletion` provided an exact fit without iterations on chordal graphs.
+Its README gives the timing tables and the differences in achieved accuracy.
+
 ### IHT with automatic step sizes
 
 IHT uses ProximalSolvers' backtracking methods to choose the step size:
