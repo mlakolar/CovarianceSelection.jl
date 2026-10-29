@@ -133,7 +133,7 @@ denseLoss(Sx, Sy, D) = tr(Sx*D*Sy*D) / 2 - tr(D*(Sy - Sx))
       @test_throws ArgumentError CovarianceSelection.diff_loss(Symmetric(hSx), As, U, Symmetric(hSy), 1)
 
       # the residual vanishes at the population solution
-      Δ = SymmetricSparseIterate(sparse(inv(hSx) - inv(hSy)))
+      Δ = SymmetricSparseIterate(sparse(inv(Symmetric(hSx)) - inv(Symmetric(hSy))))
       @test CovarianceSelection.diff_loss(Symmetric(hSx), Δ, Symmetric(hSy), Inf) ≈ 0 atol=1e-10
 
       # dense and sparse matrices give the same loss

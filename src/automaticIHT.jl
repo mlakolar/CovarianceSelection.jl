@@ -79,14 +79,15 @@ function ProximalBase.value_and_gradient!(G::Tuple, f::_LatentLogdet{T}, x::Tupl
     f.inverse[i, i] = one(T)
   end
   ldiv!(F, f.inverse)
-  G[1] .= f.Σ .- f.inverse
+  # Triangular solves leave the inverse symmetric only up to rounding; halving first avoids overflow.
+  G[1] .= f.Σ .- (f.inverse ./ T(2) .+ transpose(f.inverse) ./ T(2))
   mul!(G[2], G[1], x[2], T(-2), zero(T))
   dot(f.Σ, f.Θ) - logdet(F)
 end
 (f::_LatentDTrace)(x::Tuple) = f.loss(_iht_theta!(f.Θ, x, 1))
 function ProximalBase.value_and_gradient!(G::Tuple, f::_LatentDTrace{T}, x::Tuple) where {T}
   value = value_and_gradient!(f.raw, f.loss, _iht_theta!(f.Θ, x, 1))
-  G[1] .= (f.raw .+ transpose(f.raw)) ./ T(2)
+  G[1] .= f.raw ./ T(2) .+ transpose(f.raw) ./ T(2)
   mul!(G[2], G[1], x[2], T(2), zero(T))
   value
 end

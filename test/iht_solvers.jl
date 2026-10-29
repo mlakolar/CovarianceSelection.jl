@@ -40,7 +40,7 @@ end
     value = value_and_gradient!(G, f, x)
     @test value ≈ f(x)
     @test value ≈ loss(S0, U0)
-    @test G[1] ≈ G[1]' atol = 1e-13
+    @test issymmetric(G[1])
     @test norm(G[1]) > 0 && norm(G[2]) > 0
     @test (loss(xp...) - loss(xm...)) / (2h) ≈ dot(G[1], D) + dot(G[2], V) rtol = 1e-6 atol = 1e-7
   end
@@ -48,6 +48,41 @@ end
   invalid = (SymmetricSparseIterate(-S0), zeros(4, 1))
   @test f(invalid) == Inf
   @test value_and_gradient!((zeros(4, 4), zeros(4, 1)), f, invalid) == Inf
+end
+
+@testset "latent gradients are exactly symmetric" begin
+  for T in (Float32, Float64), p in (4, 12)
+    rng = Xoshiro(58 + p)
+    A = randn(rng, T, 3p, p); Σ = Matrix(Symmetric(A'A / (3p) + I))
+    B = randn(rng, T, 3p, p); Σy = Matrix(Symmetric(B'B / (3p) + I))
+    S0 = Matrix{T}(I, p, p) .* T(0.8); U0 = T(0.05) .* randn(rng, T, p, 2)
+    S64, U64 = Float64.(S0), Float64.(U0)
+    Σ64, Σy64 = Float64.(Σ), Float64.(Σy)
+    rtol, atol = T == Float64 ? (1e-6, 1e-7) : (1e-3, 1e-4)
+    for (f, loss64) in ((CS._LatentLogdet(Σ), (S, U) -> logloss(Σ64, S, U)),
+                        (CS._LatentDTrace(Symmetric(Σ), Symmetric(Σy)), (S, U) -> dtrace(Σ64, Σy64, S, U)))
+      x = (SymmetricSparseIterate(S0), U0)
+      G = (zeros(T, p, p), zeros(T, p, 2))
+      value_and_gradient!(G, f, x)
+      @test issymmetric(G[1])
+      @test Matrix(copyto!(SymmetricSparseIterate(T, p), G[1])) == G[1]
+      D = Matrix(Symmetric(randn(rng, p, p)))
+      h = 1e-6
+      @test (loss64(S64 + h * D, U64) - loss64(S64 - h * D, U64)) / (2h) ≈ dot(G[1], D) rtol = rtol atol = atol
+      V = randn(rng, p, 2)
+      @test (loss64(S64, U64 + h * V) - loss64(S64, U64 - h * V)) / (2h) ≈ dot(G[2], V) rtol = rtol atol = atol
+    end
+  end
+  for T in (Float32, Float64)
+    d = T == Float64 ? 6e-309 : 3.5f-39
+    Σ = Matrix{T}(I, 3, 3)
+    f = CS._LatentLogdet(Σ)
+    x = (SymmetricSparseIterate(Matrix{T}(d * I, 3, 3)), zeros(T, 3, 1))
+    G = (zeros(T, 3, 3), zeros(T, 3, 1))
+    @test isfinite(value_and_gradient!(G, f, x))
+    @test all(isfinite, G[1])
+    @test issymmetric(G[1])
+  end
 end
 
 @testset "automatic D-trace IHT is proximal gradient with an exact projection" begin
