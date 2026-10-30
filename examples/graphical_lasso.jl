@@ -64,3 +64,8 @@ println(lineplot([0; fprs; 1], [0; tprs; 1]; xlim=(0, 1), ylim=(0, 1), xlabel="F
 Z = zeros(p, p)
 covsel!(zeros(p, p), Z, zeros(p, p), S, λ; penalize_diag=false)
 @printf("\nunpenalized diagonal: relative error %.3f\n", norm(Z - Ω) / norm(Ω))
+
+# A relaxed graphical lasso
+Ω̂ = covsel_refit(S, Z, PrimalCoordinate())
+@printf("\nrelative error: graphical lasso %.3f, relaxed graphical lasso %.3f\n",
+  norm(Z - Ω) / norm(Ω), norm(Matrix(Ω̂) - Ω) / norm(Ω))

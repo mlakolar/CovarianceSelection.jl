@@ -129,3 +129,32 @@ and the ratio within each of the four rounds is at most 1.01.
   ProximalBase 0.5 names: the same iterations, solutions equal to rounding
   (the IHT solutions are identical).
 - `diff_loss` multiplies dense matrices where it made `p²` sparse products.
+
+## Studies and campaigns
+
+Studies beyond this harness, including validation campaigns, comparisons with
+other packages, and profiling studies, keep their detailed records out of Git.
+
+- **The repository** keeps what detects regressions or informs users: tests
+  with small reference values; cases in this harness; a few fixed-seed checks
+  with tolerance bands for statistical properties such as coverage or error
+  rates; and documentation summary tables for comparisons with other packages.
+  Each comparison table is built from a small committed file and states the
+  package versions, date, and hardware class. Timings are not regression
+  baselines. Compare two versions on one machine, using this repository's
+  [`compare/`](compare) workflow.
+- **The archive** is one compressed file attached to this repository's
+  [`benchmark-evidence` release](https://github.com/mlakolar/CovarianceSelection.jl/releases/tag/benchmark-evidence),
+  with its SHA-256 in the pull request. It holds the per-replication or
+  per-sample results behind the conclusions, harness records behind cited
+  comparisons, scripts and environment files, and profiles or logs supporting
+  a claim. Release assets are public. Remove machine identifiers, local
+  filesystem locations, and execution configuration before publishing them.
+- **Nothing else is kept:** exploratory, canary, and superseded runs,
+  intermediate files, and profiles that support no claim.
+
+A pull request commits at most about 1 MB of study material: scripts,
+aggregated tables, and its report. Remove them before merge unless they belong
+in the repository. A pull request that has already committed larger records
+removes them and is squash-merged to keep those records out of the history of
+master. Its commits remain reachable from the pull request.

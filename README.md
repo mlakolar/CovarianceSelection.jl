@@ -24,6 +24,8 @@ CovarianceSelection was called CovSel before its first release.
 * Sparse matrix inversion with the scaled lasso of each column (Sun and Zhang,
   2013), which needs no tuning: `slassoinv`
 * Graphical lasso by ADMM: `covsel!`, `covselpath`
+* Maximum likelihood on a known graph: `covsel_refit`, with `ChordalCompletion`,
+  `DualCoordinate`, `PrimalCoordinate` and `RefitADMM`; `is_chordal` tests the graph
 * Graphical models with latent variables, with a sparse minus low rank precision
   matrix, by iterative hard thresholding: `covsel_latent_iht!`
 * Fused graphical lasso for K groups (Danaher, Wang and Witten, 2014), with all pairs fused: `fused_graphical_lasso`, `fused_graphical_lasso!`
@@ -66,6 +68,10 @@ Sx, Sy = cov(X), cov(Y)
 
 # graphical lasso: minimize tr(SΩ) - log det Ω + λ‖Ω‖₁
 Ω = covselpath(Sy, [0.2, 0.1])[end]
+
+# relaxed graphical lasso: refit on the selected graph without the ℓ1 penalty
+Ω̂ = covsel_refit(Sy, Ω, PrimalCoordinate())
+Matrix(Ω̂)
 
 # direct difference estimation:
 # minimize tr(Sx⋅Δ⋅Sy⋅Δ)/2 - tr(Δ⋅(Sy - Sx)) + λ‖Δ‖₁
@@ -207,6 +213,12 @@ julia --project=benchmark benchmark/run.jl
 ```
 
 See [`benchmark/README.md`](benchmark/README.md) for details.
+
+The [`precision refit benchmark`](benchmark/refit/README.md) compares the four
+`covsel_refit` methods with CliqueTrees.jl's max-det completion. In the archived
+run, `DualCoordinate` was the fastest iterative method on every case, while
+`ChordalCompletion` provided an exact fit without iterations on chordal graphs.
+Its README gives the timing tables and the differences in achieved accuracy.
 
 ### IHT with automatic step sizes
 

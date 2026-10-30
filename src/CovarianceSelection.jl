@@ -10,6 +10,8 @@ Methods for learning high-dimensional Gaussian graphical models:
 * the precision matrix by the scaled lasso of each column, which needs no
   tuning ([`slassoinv`](@ref));
 * the graphical lasso by ADMM ([`covsel!`](@ref), [`covselpath`](@ref));
+* maximum likelihood refits on a known graph ([`covsel_refit`](@ref)), with
+  four methods ([`RefitMethod`](@ref)) and a chordality test ([`is_chordal`](@ref));
 * sparse minus low rank precision matrices of graphical models with latent
   variables by iterative hard thresholding ([`covsel_latent_iht!`](@ref));
 * the fused graphical lasso for K groups ([`fused_graphical_lasso`](@ref)) and
@@ -39,6 +41,7 @@ using SpecialFunctions: erfcinv
 export
   ADMMOptions, ADMMInfo,
   covsel!, covselpath,
+  covsel_refit, RefitMethod, ChordalCompletion, DualCoordinate, PrimalCoordinate, RefitADMM, RefitInfo, is_chordal,
   covsel_latent_iht!,
 
   # difference estimation
@@ -66,6 +69,8 @@ export
 include("utils.jl")
 
 include("admmCovarianceSelection.jl")
+include("refit.jl")
+include("chordal.jl")
 
 include("directDifference.jl")
 include("automaticIHT.jl")
